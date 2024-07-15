@@ -62,7 +62,6 @@
                         </button>
                     </div>
                     <div class="card-body">
-                        @if($university->majors->isNotEmpty())
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -73,28 +72,25 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($university->majors as $major)
-                                <tr>
-                                    <td>
-                                        @foreach($major->departments as $department)
-                                            <span>{{ $department->name }}</span>
-                                        @endforeach
-                                    </td>
-                                    <td>{{ $major->name }}</td>
-                                    <td>{{ $major->description }}</td>
-                                    <td>
-                                        <a href="{{ getAdminPanelUrl() }}/syllabus/{{ $university->id }}/{{ $major->id }}" class="btn-transparent text-primary">
-                                            <i class="fa fa-eye"></i>
-                                        </a>
-                                        <!-- @include('admin.includes.delete_button', ['url' => getAdminPanelUrl() . '/universities/' . $university->id . '/delete']) -->
-                                    </td>
-                                </tr>
-                                @endforeach
+                                @if($university->majors->isNotEmpty())
+                                    @foreach($universityMajors as $university_major)
+                                    <tr>
+                                        <td>{{ $university_major->department->name }}</td>
+                                        <td>{{ $university_major->major->name }}</td>
+                                        <td>{{ $university_major->major->description }}</td>
+                                        <td>
+                                            <a href="{{ getAdminPanelUrl() }}/syllabus/{{ $university->id }}/{{ $university_major->major->id }}" class="btn-transparent text-primary">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                            <!-- @include('admin.includes.delete_button', ['url' => getAdminPanelUrl() . '/universities/' . $university->id . '/delete']) -->
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                @else
+                                    <tr><td colspan=4>{{ trans('admin/pages/universities.no_majors') }}</td></tr>
+                                @endif
                             </tbody>
                         </table>
-                        @else
-                        <p>{{ trans('admin/pages/universities.no_majors') }}</p>
-                        @endif
                     </div>
                     <div class="card-footer">
                         <a href="{{ getAdminPanelUrl() }}/universities" class="btn btn-secondary">{{ trans('admin/main.back') }}</a>
@@ -142,6 +138,7 @@
                                 <th>{{ trans('admin/pages/universities.actions') }}</th>
                             </tr>
                         </thead>
+
                         <tbody id="majorTableBody">
                             @foreach($allMajors as $major)
                             <tr data-id="{{ $major->id }}">
@@ -155,7 +152,7 @@
 
                 </div>
             </form>
-        </div>
+        </div> 
     </div>
 </div>
 @endsection

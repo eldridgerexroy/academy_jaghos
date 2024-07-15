@@ -42,12 +42,16 @@ class Bucket extends \Google\Collection
    * @var string
    */
   public $etag;
+  protected $hierarchicalNamespaceType = BucketHierarchicalNamespace::class;
+  protected $hierarchicalNamespaceDataType = '';
   protected $iamConfigurationType = BucketIamConfiguration::class;
   protected $iamConfigurationDataType = '';
   /**
    * @var string
    */
   public $id;
+  protected $ipFilterType = BucketIpFilter::class;
+  protected $ipFilterDataType = '';
   /**
    * @var string
    */
@@ -76,6 +80,8 @@ class Bucket extends \Google\Collection
    * @var string
    */
   public $name;
+  protected $objectRetentionType = BucketObjectRetention::class;
+  protected $objectRetentionDataType = '';
   protected $ownerType = BucketOwner::class;
   protected $ownerDataType = '';
   /**
@@ -96,6 +102,8 @@ class Bucket extends \Google\Collection
    * @var string
    */
   public $selfLink;
+  protected $softDeletePolicyType = BucketSoftDeletePolicy::class;
+  protected $softDeletePolicyDataType = '';
   /**
    * @var string
    */
@@ -240,6 +248,20 @@ class Bucket extends \Google\Collection
     return $this->etag;
   }
   /**
+   * @param BucketHierarchicalNamespace
+   */
+  public function setHierarchicalNamespace(BucketHierarchicalNamespace $hierarchicalNamespace)
+  {
+    $this->hierarchicalNamespace = $hierarchicalNamespace;
+  }
+  /**
+   * @return BucketHierarchicalNamespace
+   */
+  public function getHierarchicalNamespace()
+  {
+    return $this->hierarchicalNamespace;
+  }
+  /**
    * @param BucketIamConfiguration
    */
   public function setIamConfiguration(BucketIamConfiguration $iamConfiguration)
@@ -266,6 +288,20 @@ class Bucket extends \Google\Collection
   public function getId()
   {
     return $this->id;
+  }
+  /**
+   * @param BucketIpFilter
+   */
+  public function setIpFilter(BucketIpFilter $ipFilter)
+  {
+    $this->ipFilter = $ipFilter;
+  }
+  /**
+   * @return BucketIpFilter
+   */
+  public function getIpFilter()
+  {
+    return $this->ipFilter;
   }
   /**
    * @param string
@@ -380,6 +416,20 @@ class Bucket extends \Google\Collection
     return $this->name;
   }
   /**
+   * @param BucketObjectRetention
+   */
+  public function setObjectRetention(BucketObjectRetention $objectRetention)
+  {
+    $this->objectRetention = $objectRetention;
+  }
+  /**
+   * @return BucketObjectRetention
+   */
+  public function getObjectRetention()
+  {
+    return $this->objectRetention;
+  }
+  /**
    * @param BucketOwner
    */
   public function setOwner(BucketOwner $owner)
@@ -462,6 +512,20 @@ class Bucket extends \Google\Collection
   public function getSelfLink()
   {
     return $this->selfLink;
+  }
+  /**
+   * @param BucketSoftDeletePolicy
+   */
+  public function setSoftDeletePolicy(BucketSoftDeletePolicy $softDeletePolicy)
+  {
+    $this->softDeletePolicy = $softDeletePolicy;
+  }
+  /**
+   * @return BucketSoftDeletePolicy
+   */
+  public function getSoftDeletePolicy()
+  {
+    return $this->softDeletePolicy;
   }
   /**
    * @param string

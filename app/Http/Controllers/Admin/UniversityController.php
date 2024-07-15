@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\University;
 use App\Models\Major;
 use App\Models\Department;
+use App\Models\UniversityMajor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
@@ -31,7 +32,8 @@ class UniversityController extends Controller
         $university = University::with(['majors.departments'])->findOrFail($id);
         $allMajors = Major::all();
         $allDepartments = Department::all();
-        $universityMajors = $university->majors;
+        // $universityMajors = $university->majors;
+        $universityMajors = UniversityMajor::with('department')->with('major')->where('university_id', $id)->get();
 
         $data = [
             'pageTitle' => trans('admin/main.university_detail'),
@@ -143,9 +145,13 @@ class UniversityController extends Controller
 
         $university = University::findOrFail($universityId);
 
-        // Attach the major to the university
+        if ($university->majors()->where('major_id', $majorId)->wherePivot('department_id', $departmentId)->exists()) {
+            return response()->json(['success' => false, 'message' => 'Major and department already exist for this university.']);
+        }
+
         $university->majors()->attach($majorId, ['department_id' => $departmentId]);
 
         return response()->json(['success' => true, 'message' => 'Major added successfully!']);
     }
+
 }
