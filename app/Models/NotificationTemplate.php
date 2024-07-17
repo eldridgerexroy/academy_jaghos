@@ -51,6 +51,9 @@ class NotificationTemplate extends Model
         'content_type' => '[content_type]',
         'points' => '[points]',
         'form_title' => '[form_title]',
+        'discount_title' => '[discount_title]',
+        'discount_code' => '[discount_code]',
+        'discount_amount' => '[discount_amount]',
     ];
 
     static $notificationTemplateAssignSetting = [

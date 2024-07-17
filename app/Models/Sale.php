@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Mixins\RegistrationBonus\RegistrationBonusAccounting;
+use App\Models\Observers\SaleNumberObserver;
 use Illuminate\Database\Eloquent\Model;
 
 class Sale extends Model
@@ -23,6 +24,14 @@ class Sale extends Model
     public $timestamps = false;
 
     protected $guarded = ['id'];
+
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        Sale::observe(SaleNumberObserver::class);
+    }
 
     public function webinar()
     {

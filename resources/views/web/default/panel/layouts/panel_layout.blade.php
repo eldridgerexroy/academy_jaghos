@@ -85,6 +85,11 @@
     var deleteAlertSuccessHint = '{{ trans('public.deleteAlertSuccessHint') }}';
     var forbiddenRequestToastTitleLang = '{{ trans('public.forbidden_request_toast_lang') }}';
     var forbiddenRequestToastMsgLang = '{{ trans('public.forbidden_request_toast_msg_lang') }}';
+    var deleteRequestLang = '{{ trans('update.delete_request') }}';
+    var deleteRequestDescriptionLang = '{{ trans('update.delete_request_description') }}';
+    var requestDetailsLang = '{{ trans('update.request_details') }}';
+    var sendRequestLang = '{{ trans('update.send_request') }}';
+    var closeLang = '{{ trans('public.close') }}';
     var generatedContentLang = '{{ trans('update.generated_content') }}';
     var copyLang = '{{ trans('public.copy') }}';
     var doneLang = '{{ trans('public.done') }}';
@@ -108,11 +113,15 @@
     </script>
 @endif
 
+@include('web.default.includes.purchase_notifications')
+
+
 @stack('styles_bottom')
 @stack('scripts_bottom')
 
 <script src="/assets/default/js//parts/main.min.js"></script>
 <script src="/assets/default/js/panel/public.min.js"></script>
+<script src="/assets/default/js/parts/content_delete.min.js"></script>
 <script src="/assets/default/js/panel/ai-content-generator.min.js"></script>
 
 @stack('scripts_bottom2')

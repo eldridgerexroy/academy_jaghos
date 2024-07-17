@@ -197,7 +197,7 @@
                                         <td class="text-center align-middle">
                                             @if($support->status == 'close')
                                                 <span class="text-danger font-weight-500 font-14">{{  trans('panel.closed') }}</span>
-                                            @elseif($support->status == 'supporter_replied')
+                                            @elseif(in_array($support->status, ['supporter_replied', 'replied']))
                                                 <span class="text-primary font-weight-500 font-14">{{  trans('panel.replied') }}</span>
                                             @else
                                                 <span class="text-warning font-weight-500 font-14">{{  trans('public.waiting') }}</span>

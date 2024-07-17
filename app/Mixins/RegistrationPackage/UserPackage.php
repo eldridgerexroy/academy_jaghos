@@ -204,7 +204,7 @@ class UserPackage
                     break;
             }
 
-            if (is_null($usedCount) and !empty($package->{$type}) or $usedCount >= $package->{$type}) {
+            if ((is_null($usedCount) and !empty($package->{$type})) or ($usedCount > $package->{$type})) {
                 $resultData = [
                     'type' => $type,
                     'currentCount' => $package->{$type}

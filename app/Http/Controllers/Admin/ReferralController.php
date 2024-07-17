@@ -9,7 +9,6 @@ use App\Models\Accounting;
 use App\Models\Affiliate;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-use Carbon\Carbon; 
 
 class ReferralController extends Controller
 {
@@ -61,54 +60,24 @@ class ReferralController extends Controller
     {
         $this->authorize('admin_referrals_users');
 
-        $currentMonth = Carbon::now()->month;
-        $currentYear = Carbon::now()->year;
 
-        $month = request('month', $currentMonth);
-        $year = request('year', $currentYear);
-
-        $affiliates = Affiliate::with([
-            'affiliateUser' => function ($query) {
-                $query->select('id', 'full_name', 'role_id', 'role_name', 'affiliate')
-                    ->with(['affiliateCode', 'userGroup']);
-            },
-        ])
+        $affiliates = Affiliate::query()
+            ->with([
+                'affiliateUser' => function ($query) {
+                    $query->select('id', 'full_name', 'role_id', 'role_name', 'affiliate');
+                    $query->with([
+                        'affiliateCode',
+                        'userGroup'
+                    ]);
+                },
+            ])
             ->groupBy('affiliate_user_id')
             ->orderBy('created_at', 'desc')
-            ->get();
-        
-        foreach ($affiliates as $affiliate) {
-            $userId = $affiliate->affiliate_user_id;
-        
-            $accountings = Accounting::where('user_id', $userId)
-                ->where('is_affiliate_commission', true)
-                ->where('system', false)
-                ->when($month && $year, function ($query) use ($month, $year) {
-                    $query->whereRaw('MONTH(FROM_UNIXTIME(created_at)) = ?', [$month])
-                        ->whereRaw('YEAR(FROM_UNIXTIME(created_at)) = ?', [$year]);
-                })
-                ->get();
-        
-            $totalAmount = 0;
-            $paidCount = 0;
-        
-            foreach ($accountings as $accounting) {
-                $totalAmount += $accounting->amount;
-                if (!is_null($accounting->paid_date)) {
-                    $paidCount++;
-                }
-            }
-        
-            $affiliate->amount = $totalAmount;
-            $affiliate->paid_count = $paidCount . "/" . $accountings->count();
-            $affiliate->all_paid = ($paidCount == $accountings->count());
-        }
-            
+            ->paginate(10);
+
         $data = [
             'pageTitle' => trans('admin/main.users'),
-            'affiliates' => $affiliates,
-            'selectedMonth' => $month,
-            'selectedYear' => $year
+            'affiliates' => $affiliates
         ];
 
         if ($export) {
@@ -116,26 +85,6 @@ class ReferralController extends Controller
         }
 
         return view('admin.referrals.users', $data);
-    }
-
-    public function getAffiliateDetail(Request $request)
-    {
-        $this->authorize('admin_referrals_users');
-
-        $userId = $request->input('user_id');
-        $month = $request->input('month');
-        $year = $request->input('year');
-
-        $records = Accounting::where('user_id', $userId)
-            ->where('is_affiliate_commission', true)
-            ->where('system', false)
-            ->when($month && $year, function ($query) use ($month, $year) {
-                $query->whereRaw('MONTH(FROM_UNIXTIME(created_at)) = ?', [$month])
-                    ->whereRaw('YEAR(FROM_UNIXTIME(created_at)) = ?', [$year]);
-            })
-            ->get();
-
-        return response()->json($records);
     }
 
     public function exportExcel(Request $request)
@@ -155,29 +104,5 @@ class ReferralController extends Controller
         }
 
         return Excel::download($export, 'referrals_' . $type . '.xlsx');
-    }
-
-    // custom to get referral status
-    public function updatePaidStatus(Request $request)
-    {
-        $id = $request->input('id');
-        $paid_status = $request->input('paid_status');
-        $paid_date = $request->input('paid_date');
-
-        $accounting = Accounting::findOrFail($id);
-
-        if ($paid_status === "true") {
-            $accounting->paid_date = $paid_date;
-        } else {
-            $accounting->paid_date = null; 
-        }
-
-        $accounting->save();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Payment status updated successfully.',
-            'paid_date' => $accounting->paid_date,
-        ]);
     }
 }

@@ -25,4 +25,10 @@ interface IChannel
      * @return mixed
      */
     public function verify(Request $request);
+
+    /**
+     * @return array
+     * */
+    public function getCredentialItems(): array;
+
 }

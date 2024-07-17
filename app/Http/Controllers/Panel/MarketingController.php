@@ -16,6 +16,8 @@ class MarketingController extends Controller
 {
     public function promotions()
     {
+        $this->authorize("panel_marketing_promotions");
+
         $user = auth()->user();
         $webinars = Webinar::select('id', 'creator_id', 'teacher_id')
             ->where(function ($query) use ($user) {

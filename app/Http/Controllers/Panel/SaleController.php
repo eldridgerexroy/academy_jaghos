@@ -12,6 +12,8 @@ class SaleController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize("panel_financial_sales_reports");
+
         $user = auth()->user();
 
         $query = Sale::where('seller_id', $user->id)

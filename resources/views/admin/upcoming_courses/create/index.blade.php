@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="/assets/default/vendors/sweetalert2/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="/assets/default/vendors/daterangepicker/daterangepicker.min.css">
     <link rel="stylesheet" href="/assets/default/vendors/bootstrap-timepicker/bootstrap-timepicker.min.css">
-    <link rel="stylesheet" href="/assets/default/vendors/select2/select2.min.css">
+
     <link rel="stylesheet" href="/assets/default/vendors/bootstrap-tagsinput/bootstrap-tagsinput.min.css">
     <link rel="stylesheet" href="/assets/vendors/summernote/summernote-bs4.min.css">
     <link href="/assets/default/vendors/sortable/jquery-ui.min.css"/>
@@ -59,6 +59,14 @@
                                 </section>
 
                                 @if(!empty($upcomingCourse))
+
+                                    {{-- Related Course --}}
+                                    @include('admin.webinars.relatedCourse.add_related_course', [
+                                            'relatedCourseItemId' => $upcomingCourse->id,
+                                             'relatedCourseItemType' => 'upcomingCourse',
+                                             'relatedCourses' => $upcomingCourse->relatedCourses
+                                        ])
+
 
                                     {{-- FAQ --}}
                                     @include('admin.upcoming_courses.create.includes.faq')
@@ -115,7 +123,7 @@
         var saveSuccessLang = '{{ trans('webinars.success_store') }}';
     </script>
     <script src="/assets/default/vendors/sweetalert2/dist/sweetalert2.min.js"></script>
-    <script src="/assets/default/vendors/select2/select2.min.js"></script>
+
     <script src="/assets/default/vendors/moment.min.js"></script>
     <script src="/assets/default/vendors/daterangepicker/daterangepicker.min.js"></script>
     <script src="/assets/default/vendors/bootstrap-timepicker/bootstrap-timepicker.min.js"></script>

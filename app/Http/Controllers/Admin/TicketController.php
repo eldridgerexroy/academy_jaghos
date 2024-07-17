@@ -40,14 +40,16 @@ class TicketController extends Controller
 
         $date = $data['date'];
         $date = explode(' - ', $date);
+        $startDate = convertTimeToUTCzone($date[0], getTimezone())->getTimestamp();
+        $endDate = convertTimeToUTCzone($date[1], getTimezone())->getTimestamp();
 
         if (!empty($creator)) {
             $ticket = Ticket::create([
                 'creator_id' => $creator->id,
                 'webinar_id' => !empty($data['webinar_id']) ? $data['webinar_id'] : null,
                 'bundle_id' => !empty($data['bundle_id']) ? $data['bundle_id'] : null,
-                'start_date' => strtotime($date[0]),
-                'end_date' => strtotime($date[1]),
+                'start_date' => $startDate,
+                'end_date' => $endDate,
                 'discount' => $data['discount'],
                 'capacity' => $data['capacity'],
                 'created_at' => time()
@@ -109,14 +111,16 @@ class TicketController extends Controller
 
         $ticket = Ticket::find($id);
 
-        $date = $data['date'];
-        $date = explode(' - ', $date);
-
         if (!empty($ticket)) {
 
+            $date = $data['date'];
+            $date = explode(' - ', $date);
+            $startDate = convertTimeToUTCzone($date[0], getTimezone())->getTimestamp();
+            $endDate = convertTimeToUTCzone($date[1], getTimezone())->getTimestamp();
+
             $ticket->update([
-                'start_date' => strtotime($date[0]),
-                'end_date' => strtotime($date[1]),
+                'start_date' => $startDate,
+                'end_date' => $endDate,
                 'discount' => $data['discount'],
                 'capacity' => $data['capacity'],
                 'updated_at' => time()

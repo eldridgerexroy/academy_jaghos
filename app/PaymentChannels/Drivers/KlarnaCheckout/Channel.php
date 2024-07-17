@@ -17,6 +17,12 @@ class Channel extends BasePaymentChannel implements IChannel
     protected $secret;
     protected $api_version;
 
+    protected array $credentialItems = [
+        'username',
+        'secret',
+        'api_version',
+    ];
+
     /**
      * Channel constructor.
      * @param PaymentChannel $paymentChannel
@@ -24,10 +30,7 @@ class Channel extends BasePaymentChannel implements IChannel
     public function __construct(PaymentChannel $paymentChannel)
     {
         $this->currency = currency();
-        $this->test_mode = env('KLARNA_CHECKOUT_TEST_MODE');
-        $this->username = env('KLARNA_CHECKOUT_USERNAME');
-        $this->secret = env('KLARNA_CHECKOUT_SECRET');
-        $this->api_version = env('KLARNA_CHECKOUT_API_VERSION');
+        $this->setCredentialItems($paymentChannel);
     }
 
     protected function makeGateway()

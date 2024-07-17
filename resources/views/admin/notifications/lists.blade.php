@@ -40,7 +40,6 @@
                                 <th class="text-left">{{ trans('admin/main.title') }}</th>
                                 <th class="text-center">{{ trans('notification.sender') }}</th>
                                 <th class="text-center">{{ trans('site.message') }}</th>
-                                <th class="text-center">{{ trans('admin/main.type') }}</th>
                                 <th class="text-center">{{ trans('admin/main.status') }}</th>
                                 <th class="text-center">{{ trans('admin/main.created_at') }}</th>
                                 <th>{{ trans('public.controls') }}</th>
@@ -49,12 +48,14 @@
                             @foreach($notifications as $notification)
                                 <tr>
                                     <td>{{ $notification->title }}</td>
+
                                     <td class="text-center">{{ $notification->sender }}</td>
+
                                     <td class="text-center">
                                         <button type="button" data-item-id="{{ $notification->id }}" class="js-show-description btn btn-outline-primary">{{ trans('admin/main.show') }}</button>
                                         <input type="hidden" value="{{ nl2br($notification->message) }}">
                                     </td>
-                                    <td class="text-center">{{ trans('admin/main.notification_'.$notification->type) }}</td>
+
                                     <td class="text-center">
                                         @if(in_array($notification->id,$unreadNotificationsIds))
                                             <span class="text-danger">{{ trans('admin/main.unread') }}</span>
@@ -62,6 +63,7 @@
                                             <span class="text-success">{{ trans('admin/main.read') }}</span>
                                         @endif
                                     </td>
+
                                     <td class="text-center">{{ dateTimeFormat($notification->created_at,'j M Y | H:i') }}</td>
 
                                     <td width="100">

@@ -111,6 +111,17 @@ class Bundle extends Model implements TranslatableContract
             ->where('type', 'bundle');
     }
 
+
+    public function relatedCourses()
+    {
+        return $this->morphMany('App\Models\RelatedCourse', 'targetable');
+    }
+
+    public function deleteRequest()
+    {
+        return $this->morphOne(ContentDeleteRequest::class, 'targetable');
+    }
+
     /**
      * Return the sluggable configuration array for this model.
      *

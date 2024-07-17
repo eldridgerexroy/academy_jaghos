@@ -33,10 +33,10 @@
                         <div class="d-flex flex-column ml-5">
                             <span class="font-weight-500 text-secondary">{{ $comment->user->full_name }}</span>
                             <span class="font-12 text-gray">
-                                @if($comment->user->isUser() or !empty($course) and $course->checkUserHasBought($comment->user))
-                                    {{ trans('quiz.student') }}
-                                @elseif(!$comment->user->isUser() and !empty($course) and ($course->creator_id == $comment->user->id or $course->teacher_id == $comment->user->id))
+                                @if(!$comment->user->isUser() and !empty($course) and ($course->creator_id == $comment->user_id or $course->teacher_id == $comment->user_id))
                                     {{ trans('panel.teacher') }}
+                                @elseif($comment->user->isUser() or (!empty($course) and $course->checkUserHasBought($comment->user)))
+                                    {{ trans('quiz.student') }}
                                 @elseif($comment->user->isAdmin())
                                     {{ trans('panel.staff') }}
                                 @else
@@ -80,10 +80,10 @@
                                     <div class="d-flex flex-column ml-5">
                                         <span class="font-weight-500 text-secondary">{{ $reply->user->full_name }}</span>
                                         <span class="font-12 text-gray">
-                                            @if($reply->user->isUser() or !empty($course) and $course->checkUserHasBought($reply->user))
-                                                {{ trans('quiz.student') }}
-                                            @elseif(!$reply->user->isUser() and !empty($course) and ($course->creator_id == $reply->user->id or $course->teacher_id == $reply->user->id))
+                                            @if(!$reply->user->isUser() and !empty($course) and ($course->creator_id == $reply->user_id or $course->teacher_id == $reply->user_id))
                                                 {{ trans('panel.teacher') }}
+                                            @elseif($reply->user->isUser() or (!empty($course) and $course->checkUserHasBought($reply->user)))
+                                                {{ trans('quiz.student') }}
                                             @elseif($reply->user->isAdmin())
                                                 {{ trans('panel.staff') }}
                                             @else

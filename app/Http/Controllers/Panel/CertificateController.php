@@ -21,6 +21,8 @@ class CertificateController extends Controller
 
     public function lists(Request $request)
     {
+        $this->authorize("panel_certificates_lists");
+
         $user = auth()->user();
 
         if (!$user->isUser()) {
@@ -82,6 +84,8 @@ class CertificateController extends Controller
 
     public function achievements(Request $request)
     {
+        $this->authorize("panel_certificates_achievements");
+
         $user = auth()->user();
 
         $results = QuizzesResult::where('user_id', $user->id);
@@ -98,7 +102,7 @@ class CertificateController extends Controller
             ->toArray();
         $quizzesIds = array_unique($quizzesIds);
 
-        $query = Quiz::whereIn('id', $quizzesIds)
+        $query = Quiz::query()->whereIn('id', $quizzesIds)
             ->where('status', Quiz::ACTIVE);
 
         $certificatesCount = deepClone($query)->count();
@@ -107,16 +111,22 @@ class CertificateController extends Controller
 
         $query = $this->quizFilters(deepClone($query), $request);
 
-        $quizzes = $query->with([
-            'webinar',
-            'quizResults' => function ($query) {
-                $query->orderBy('id', 'desc');
-            },
-        ])->paginate(10);
+        $quizzes = $query
+            ->whereHas('quizResults', function ($query) {
+                $query->where('status', QuizzesResult::$passed);
+            })
+            ->with([
+                'webinar',
+                'quizResults' => function ($query) {
+                    $query->where('status', QuizzesResult::$passed);
+                    $query->orderBy('created_at', 'desc');
+                },
+            ])->paginate(10);
 
 
-        $canDownloadCertificate = false;
         foreach ($quizzes as $quiz) {
+            $canDownloadCertificate = false;
+
             $userQuizDone = $quiz->quizResults;
 
             if (count($userQuizDone)) {

@@ -4131,9 +4131,3 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
         opacity: 0.0;
     }
 }
-
-
-/* custom css */
-.swal2-container {
-    z-index: 10501 !important;
-}

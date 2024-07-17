@@ -16,6 +16,16 @@
 
     <div class="pick-a-time d-none" id="PickTimeContainer" data-user-id="{{ $user["id"] }}">
 
+        @if(
+               !empty(getFeaturesSettings("frontend_coupons_display_type")) and
+               !empty($instructorDiscounts) and
+               count($instructorDiscounts)
+           )
+            @foreach($instructorDiscounts as $instructorDiscount)
+                @include('web.default.includes.discounts.instructor_discounts_card', ['discount' => $instructorDiscount, 'instructorDiscountClassName' => "my-40"])
+            @endforeach
+        @endif
+
         <div class="d-flex align-items-center my-40 rounded-lg border px-10 py-5">
             <div class="appointment-timezone-icon">
                 <img src="/assets/default/img/icons/timezone.svg" alt="appointment timezone">

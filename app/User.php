@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 use App\Bitwise\UserLevelOfTraining;
@@ -64,7 +65,7 @@ class User extends Authenticatable
     private $userInfo;
 
 
-    static function getAdmin()
+    static function getMainAdmin()
     {
         $role = Role::where('name', Role::$admin)->first();
 
@@ -73,6 +74,17 @@ class User extends Authenticatable
             ->first();
 
         return $admin;
+    }
+
+    static function getMainAdminId()
+    {
+        $admin = self::getMainAdmin();
+
+        if (!empty($admin)) {
+            return $admin->id;
+        }
+
+        return null;
     }
 
     public function isAdmin()
@@ -95,22 +107,14 @@ class User extends Authenticatable
         return $this->role_name === Role::$organization;
     }
 
-    public function isSponsorAffiliate()
-    {
-        // dd($this->role_name);
-        return $this->role_name === Role::$sponsoraffiliate;
-    }
-
     public function hasPermission($section_name)
     {
-        if (self::isAdmin()) {
-            if (!isset($this->permissions)) {
-                $sections_id = Permission::where('role_id', '=', $this->role_id)->where('allow', true)->pluck('section_id')->toArray();
-                $this->permissions = Section::whereIn('id', $sections_id)->pluck('name')->toArray();
-            }
-            return in_array($section_name, $this->permissions);
+        if (!isset($this->permissions)) {
+            $sections_id = Permission::where('role_id', '=', $this->role_id)->where('allow', true)->pluck('section_id')->toArray();
+            $this->permissions = Section::whereIn('id', $sections_id)->pluck('name')->toArray();
         }
-        return false;
+
+        return in_array($section_name, $this->permissions);
     }
 
     public function role()
@@ -150,6 +154,25 @@ class User extends Authenticatable
         }
 
         return $imgUrl;
+    }
+
+    public function getSignature()
+    {
+        $path = null;
+
+        if (!empty($this->userMetas)) {
+            $meta = $this->userMetas->where('name', 'signature')->first();
+
+            if ($meta) {
+                $path = $meta->value;
+            }
+        }
+
+        if (empty($path)) {
+            $path = getPageBackgroundSettings('user_default_signature');
+        }
+
+        return $path;
     }
 
     public function getProfileUrl()
@@ -288,6 +311,11 @@ class User extends Authenticatable
     public function installmentOrders()
     {
         return $this->hasMany('App\Models\InstallmentOrder', 'user_id', 'id');
+    }
+
+    public function loginHistories()
+    {
+        return $this->hasMany('App\Models\UserLoginHistory', 'user_id', 'id');
     }
 
     public function getActiveWebinars($just_count = false)
@@ -520,6 +548,14 @@ class User extends Authenticatable
 
         $balance = $additions - $deductions;
         return $balance > 0 ? $balance : 0;
+    }
+
+    public function getRegisteredDays()
+    {
+        $createdAt = Carbon::parse($this->created_at);
+        $currentDate = Carbon::now();
+
+        return $createdAt->diffInDays($currentDate);
     }
 
     public function getPurchaseAmounts()

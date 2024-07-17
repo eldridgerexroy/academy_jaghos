@@ -11,7 +11,7 @@
 @import "panel/ai_contents";
 
 body {
-    background-color: var(--panel-bg);
+    background-color: var(--body_bg, #fbfbfd) !important;
 }
 
 #panel_app {

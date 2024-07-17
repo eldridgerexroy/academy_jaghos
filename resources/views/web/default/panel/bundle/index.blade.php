@@ -59,20 +59,22 @@
                             <div class="image-box">
                                 <img src="{{ $bundle->getImage() }}" class="img-cover" alt="">
 
-                                @switch($bundle->status)
-                                    @case(\App\Models\Bundle::$active)
-                                    <span class="badge badge-primary">{{  trans('panel.active') }}</span>
-                                    @break
-                                    @case(\App\Models\Bundle::$isDraft)
-                                    <span class="badge badge-danger">{{ trans('public.draft') }}</span>
-                                    @break
-                                    @case(\App\Models\Bundle::$pending)
-                                    <span class="badge badge-warning">{{ trans('public.waiting') }}</span>
-                                    @break
-                                    @case(\App\Models\Bundle::$inactive)
-                                    <span class="badge badge-danger">{{ trans('public.rejected') }}</span>
-                                    @break
-                                @endswitch
+                                <div class="badges-lists">
+                                    @switch($bundle->status)
+                                        @case(\App\Models\Bundle::$active)
+                                            <span class="badge badge-primary">{{  trans('panel.active') }}</span>
+                                            @break
+                                        @case(\App\Models\Bundle::$isDraft)
+                                            <span class="badge badge-danger">{{ trans('public.draft') }}</span>
+                                            @break
+                                        @case(\App\Models\Bundle::$pending)
+                                            <span class="badge badge-warning">{{ trans('public.waiting') }}</span>
+                                            @break
+                                        @case(\App\Models\Bundle::$inactive)
+                                            <span class="badge badge-danger">{{ trans('public.rejected') }}</span>
+                                            @break
+                                    @endswitch
+                                </div>
                             </div>
 
                             <div class="webinar-card-body w-100 d-flex flex-column">
@@ -88,17 +90,28 @@
                                             </button>
                                             <div class="dropdown-menu ">
 
-                                                <a href="/panel/bundles/{{ $bundle->id }}/edit" class="webinar-actions d-block mt-10">{{ trans('public.edit') }}</a>
+                                                @can('panel_bundles_create')
+                                                    <a href="/panel/bundles/{{ $bundle->id }}/edit" class="webinar-actions d-block mt-10">{{ trans('public.edit') }}</a>
+                                                @endcan
 
-                                                <a href="/panel/bundles/{{ $bundle->id }}/courses" class="webinar-actions d-block mt-10">{{ trans('product.courses') }}</a>
-
+                                                @can('panel_bundles_courses')
+                                                    <a href="/panel/bundles/{{ $bundle->id }}/courses" class="webinar-actions d-block mt-10">{{ trans('product.courses') }}</a>
+                                                @endcan
 
                                                 @if($authUser->id == $bundle->teacher_id or $authUser->id == $bundle->creator_id)
-                                                    <a href="/panel/bundles/{{ $bundle->id }}/export-students-list" class="webinar-actions d-block mt-10">{{ trans('public.export_list') }}</a>
+                                                    @can('panel_bundles_export_students_list')
+                                                        <a href="/panel/bundles/{{ $bundle->id }}/export-students-list" class="webinar-actions d-block mt-10">{{ trans('public.export_list') }}</a>
+                                                    @endcan
                                                 @endif
 
                                                 @if($bundle->creator_id == $authUser->id)
-                                                    <a href="/panel/bundles/{{ $bundle->id }}/delete" class="webinar-actions d-block mt-10 text-danger delete-action">{{ trans('public.delete') }}</a>
+                                                    @can('panel_bundles_delete')
+                                                        @include('web.default.panel.includes.content_delete_btn', [
+                                                            'deleteContentUrl' => "/panel/bundles/{$bundle->id}/delete",
+                                                            'deleteContentClassName' => 'webinar-actions d-block mt-10 text-danger',
+                                                            'deleteContentItem' => $bundle,
+                                                        ])
+                                                    @endcan
                                                 @endif
                                             </div>
                                         </div>

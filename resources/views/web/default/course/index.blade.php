@@ -19,7 +19,11 @@
         </div>
     </section>
 
-    <section class="container course-content-section {{ $course->type }} {{ ($hasBought or $course->isWebinar()) ? 'has-progress-bar' : '' }}">
+    @php
+        $percent = $course->getProgress();
+    @endphp
+
+    <section class="container course-content-section {{ $course->type }} {{ ($hasBought or $percent) ? 'has-progress-bar' : '' }}">
         <div class="row">
             <div class="col-12 col-lg-8">
                 <div class="course-content-body user-select-none">
@@ -42,10 +46,6 @@
                             <a href="{{ $course->teacher->getProfileUrl() }}" target="_blank" class="text-decoration-underline text-white font-14 font-weight-500">{{ $course->teacher->full_name }}</a>
                         </div>
 
-                        @php
-                            $percent = $course->getProgress();
-                        @endphp
-
                         @if($hasBought or $percent)
 
                             <div class="mt-30 d-flex align-items-center">
@@ -57,7 +57,7 @@
                                     @if($hasBought and (!$course->isWebinar() or $course->isProgressing()))
                                         {{ trans('public.course_learning_passed',['percent' => $percent]) }}
                                     @elseif(!is_null($course->capacity))
-                                        {{ $course->sales_count }}/{{ $course->capacity }} {{ trans('quiz.students') }}
+                                        {{ $course->getSalesCount() }}/{{ $course->capacity }} {{ trans('quiz.students') }}
                                     @else
                                         {{ trans('public.course_learning_passed',['percent' => $percent]) }}
                                     @endif
@@ -65,6 +65,17 @@
                             </div>
                         @endif
                     </div>
+
+                    @if(
+                            !empty(getFeaturesSettings("frontend_coupons_display_type")) and
+                            getFeaturesSettings("frontend_coupons_display_type") == "before_content" and
+                            !empty($instructorDiscounts) and
+                            count($instructorDiscounts)
+                        )
+                        @foreach($instructorDiscounts as $instructorDiscount)
+                            @include('web.default.includes.discounts.instructor_discounts_card', ['discount' => $instructorDiscount, 'instructorDiscountClassName' => "mt-35"])
+                        @endforeach
+                    @endif
 
                     <div class="mt-35">
                         <ul class="nav nav-tabs bg-secondary rounded-sm p-15 d-flex align-items-center justify-content-between" id="tabs-tab" role="tablist">
@@ -99,6 +110,19 @@
                         </div>
 
                     </div>
+
+
+                    @if(
+                           !empty(getFeaturesSettings("frontend_coupons_display_type")) and
+                           getFeaturesSettings("frontend_coupons_display_type") == "after_content" and
+                           !empty($instructorDiscounts) and
+                           count($instructorDiscounts)
+                       )
+                        @foreach($instructorDiscounts as $instructorDiscount)
+                            @include('web.default.includes.discounts.instructor_discounts_card', ['discount' => $instructorDiscount, 'instructorDiscountClassName' => "mt-35"])
+                        @endforeach
+                    @endif
+
                 </div>
             </div>
 
@@ -141,7 +165,7 @@
                                         </label>
                                     </div>
                                 @endforeach
-                            @endif 
+                            @endif
 
                             @if($course->price > 0)
                                 <div id="priceBox" class="d-flex align-items-center justify-content-center mt-20 {{ !empty($activeSpecialOffer) ? ' flex-column ' : '' }}">
@@ -184,25 +208,37 @@
 
                             @php
                                 $canSale = ($course->canSale() and !$hasBought);
+                                $authUserJoinedWaitlist = false;
+
+                                if (!empty($authUser)) {
+                                    $authUserWaitlist = $course->waitlists()->where('user_id', $authUser->id)->first();
+                                    $authUserJoinedWaitlist = !empty($authUserWaitlist);
+                                }
                             @endphp
 
                             <div class="mt-20 d-flex flex-column">
                                 @if(!$canSale and $course->canJoinToWaitlist())
-                                    <button type="button" data-slug="{{ $course->slug }}" class="btn btn-primary {{ (!empty($authUser)) ? 'js-join-waitlist-user' : 'js-join-waitlist-guest' }}">{{ trans('update.join_waitlist') }}</button>
+                                    <button type="button" data-slug="{{ $course->slug }}" class="btn btn-primary {{ (!$authUserJoinedWaitlist) ? ((!empty($authUser)) ? 'js-join-waitlist-user' : 'js-join-waitlist-guest') : 'disabled' }}" {{ $authUserJoinedWaitlist ? 'disabled' : '' }}>
+                                        @if($authUserJoinedWaitlist)
+                                            {{ trans('update.already_joined') }}
+                                        @else
+                                            {{ trans('update.join_waitlist') }}
+                                        @endif
+                                    </button>
                                 @elseif($hasBought or !empty($course->getInstallmentOrder()))
                                     <a href="{{ $course->getLearningPageUrl() }}" class="btn btn-primary">{{ trans('update.go_to_learning_page') }}</a>
-                                @elseif($course->price > 0)
+                                @elseif(!empty($course->price) and $course->price > 0)
                                     <button type="button" class="btn btn-primary {{ $canSale ? 'js-course-add-to-cart-btn' : ($course->cantSaleStatus($hasBought) .' disabled ') }}">
                                         @if(!$canSale)
-                                            {{ trans('update.disabled_add_to_cart') }}
+                                            @if($course->checkCapacityReached())
+                                                {{ trans('update.capacity_reached') }}
+                                            @else
+                                                {{ trans('update.disabled_add_to_cart') }}
+                                            @endif
                                         @else
                                             {{ trans('public.add_to_cart') }}
                                         @endif
                                     </button>
-
-                                    @if($canSale and $course->subscribe)
-                                        <a href="/subscribes/apply/{{ $course->slug }}" class="btn btn-outline-primary btn-subscribe mt-20 @if(!$canSale) disabled @endif">{{ trans('public.subscribe') }}</a>
-                                    @endif
 
                                     @if($canSale and !empty($course->points))
                                         <a href="{{ !(auth()->check()) ? '/login' : '#' }}" class="{{ (auth()->check()) ? 'js-buy-with-point' : '' }} btn btn-outline-warning mt-20 {{ (!$canSale) ? 'disabled' : '' }}" rel="nofollow">
@@ -222,8 +258,23 @@
                                         </a>
                                     @endif
                                 @else
-                                    <a href="{{ $canSale ? '/course/'. $course->slug .'/free' : '#' }}" class="btn btn-primary {{ (!$canSale) ? (' disabled ' . $course->cantSaleStatus($hasBought)) : '' }}">{{ trans('public.enroll_on_webinar') }}</a>
+                                    <a href="{{ $canSale ? '/course/'. $course->slug .'/free' : '#' }}" class="btn btn-primary {{ (!$canSale) ? (' disabled ' . $course->cantSaleStatus($hasBought)) : '' }}">
+                                        @if(!$canSale)
+                                            @if($course->checkCapacityReached())
+                                                {{ trans('update.capacity_reached') }}
+                                            @else
+                                                {{ trans('public.disabled') }}
+                                            @endif
+                                        @else
+                                            {{ trans('public.enroll_on_webinar') }}
+                                        @endif
+                                    </a>
                                 @endif
+
+                                @if($canSale and $course->subscribe)
+                                    <a href="/subscribes/apply/{{ $course->slug }}" class="btn btn-outline-primary btn-subscribe mt-20 @if(!$canSale) disabled @endif">{{ trans('public.subscribe') }}</a>
+                                @endif
+
                             </div>
 
                         </form>
@@ -231,7 +282,7 @@
                         @if(!empty(getOthersPersonalizationSettings('show_guarantee_text')) and getOthersPersonalizationSettings('show_guarantee_text'))
                             <div class="mt-20 d-flex align-items-center justify-content-center text-gray">
                                 <i data-feather="thumbs-up" width="20" height="20"></i>
-                                <span class="ml-5 font-14">{{ getOthersPersonalizationSettings('guarantee_text') }}</span>
+                                <span class="ml-5 font-14">{{ trans('product.guarantee_text') }}</span>
                             </div>
                         @endif
 
@@ -367,7 +418,7 @@
                                 <i data-feather="users" width="20" height="20"></i>
                                 <span class="ml-5 font-14 font-weight-500">{{ trans('quiz.students') }}:</span>
                             </div>
-                            <span class="font-14">{{ $course->sales_count }}</span>
+                            <span class="font-14">{{ $course->getSalesCount() }}</span>
                         </div>
 
                         @if($course->isWebinar())
@@ -441,7 +492,7 @@
 
                         <div class="d-flex flex-wrap mt-10">
                             @foreach($course->tags as $tag)
-                                <a href="" class="tag-item bg-gray200 p-5 font-14 text-gray font-weight-500 rounded">{{ $tag->title }}</a>
+                                <a href="/tags/courses/{{ urlencode($tag->title) }}" class="tag-item bg-gray200 p-5 font-14 text-gray font-weight-500 rounded">{{ $tag->title }}</a>
                             @endforeach
                         </div>
                     </div>

@@ -7,21 +7,18 @@ use App\Models\PaymentChannel;
 use App\PaymentChannels\BasePaymentChannel;
 use App\PaymentChannels\IChannel;
 use Illuminate\Http\Request;
-use MercadoPago\SDK as Mercado;
-use MercadoPago\Preference as MercadoPreference;
-use MercadoPago\Item as MercadoItem;
-use MercadoPago\Payer as MercadoPagoPayer;
-use Omnipay\Omnipay;
+
 
 class Channel extends BasePaymentChannel implements IChannel
 {
     protected $currency;
-    protected $public_key;
-    protected $access_token;
-    protected $client_id;
-    protected $client_secret;
     protected $order_session_key;
     protected $test_mode;
+    protected $access_token;
+
+    protected array $credentialItems = [
+        'access_token',
+    ];
 
     /**
      * Channel constructor.
@@ -29,73 +26,69 @@ class Channel extends BasePaymentChannel implements IChannel
      */
     public function __construct(PaymentChannel $paymentChannel)
     {
-        $this->currency = currency();
-
-        $this->public_key = env('MERCADO_PAGO_PUBLIC_KEY');
-        $this->access_token = env('MERCADO_PAGO_ACCESS_TOKEN');
-        $this->client_id = env('MERCADO_CLIENT_ID');
-        $this->client_secret = env('MERCADO_CLIENT_SECRET');
-        $this->test_mode = env('MERCADO_TEST_MODE', false);
-
+        $this->currency = currency(); // BRL
         $this->order_session_key = 'mercado.payments.order_id';
+        $this->setCredentialItems($paymentChannel);
     }
-
-    protected function makeGateway()
-    {
-        $gateway = Omnipay::create('MercadoPago');
-
-        $gateway->setClientId($this->client_id);
-        $gateway->setClientSecret($this->client_secret);
-        $gateway->setAccessToken($this->access_token);
-
-        return $gateway;
-    }
-
 
     public function paymentRequest(Order $order)
     {
-        $generalSettings = getGeneralSettings();
+        //$generalSettings = getGeneralSettings();
         $user = $order->user;
 
         try {
-
-            $gateway = $this->makeGateway();
-
-            $card = [
-                'email' => $user->email ?? $generalSettings['site_email'],
-                'billingFirstName' => $user->full_name,
-                'billingLastName' => '',
-                'billingPhone' => $user->mobile,
-                'billingCompany' => $generalSettings['site_name'],
-                'billingAddress1' => '',
-                'billingCity' => '',
-                'billingPostcode' => '',
-                'billingCountry' => '',
+            $payer = [
+                'first_name' => $user->full_name,
+                'last_name' => null,
+                'email' => $user->email,
             ];
 
-            // Send purchase request
-            $response = $gateway->purchase(
-                [
-                    'transactionId' => $order->id,
-                    'amount' => $this->makeAmountByCurrency($order->total_amount, $this->currency),
-                    'currency' => $this->currency,
-                    'testMode' => $this->test_mode,
-                    'returnUrl' => $this->makeCallbackUrl($order, 'success'),
-                    'cancelUrl' => $this->makeCallbackUrl($order, 'cancel'),
-                    'notifyUrl' => $this->makeCallbackUrl($order, 'notify'),
-                    'card' => $card,
-                ]
-            )->send();
-
-            if ($response->isRedirect()) {
-                return $response->redirect();
+            $items = [];
+            foreach ($order->orderItems as $orderItem) {
+                $items[] = [
+                    'title' => "item " . $orderItem->id,
+                    'quantity' => 1,
+                    'unit_price' => $this->makeAmountByCurrency($orderItem->total_amount, $this->currency),
+                ];
             }
 
-        } catch (\Exception $exception) {
-//            dd($exception);
-            throw new \Exception($exception->getMessage(), $exception->getCode());
-        }
+            $preferenceData = [
+                'payer' => $payer,
+                'items' => $items,
+                'back_urls' => [
+                    'success' => $this->makeCallbackUrl("success"),
+                    'pending' => $this->makeCallbackUrl("pending"),
+                    'failure' => $this->makeCallbackUrl("failure"),
+                ],
+            ];
 
+            // Convert data to JSON
+            $preferenceDataJson = json_encode($preferenceData);
+            $createPaymentUrl = 'https://api.mercadopago.com/checkout/preferences';
+
+            $headers = array(
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $this->access_token,
+            );
+
+
+            $ch = curl_init($createPaymentUrl);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $preferenceDataJson);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            $response = curl_exec($ch);
+            $preference = json_decode($response, true);
+
+            curl_close($ch);
+
+            session()->put($this->order_session_key, $order->id);
+
+            return $preference['init_point'];
+        } catch (\Exception $exception) {
+            // dd($exception);
+        }
 
         $toastData = [
             'title' => trans('cart.fail_purchase'),
@@ -106,43 +99,59 @@ class Channel extends BasePaymentChannel implements IChannel
         return redirect()->back()->with(['toast' => $toastData])->withInput();
     }
 
-    private function makeCallbackUrl($order, $status)
+    private function makeCallbackUrl($status)
     {
-        return url("/payments/verify/MercadoPago?status=$status&order_id=$order->id");
+        return url("/payments/verify/MercadoPago");
     }
 
     public function verify(Request $request)
     {
         $data = $request->all();
-        $order_id = $data['order_id'];
+        $paymentId = $data['payment_id'];
 
         $user = auth()->user();
+
+        $order_id = session()->get($this->order_session_key, null);
+        session()->forget($this->order_session_key);
 
         $order = Order::where('id', $order_id)
             ->where('user_id', $user->id)
             ->first();
 
-        // Setup payment gateway
-        $gateway = $this->makeGateway();
-
-        // Accept the notification
-        $response = $gateway->acceptNotification()->send();
-
-        if ($response->isSuccessful() and !empty($order)) {
-            // Mark the order as paid
-
-            $order->update([
-                'status' => Order::$paying
-            ]);
-
-            return $order;
-        }
-
         if (!empty($order)) {
+            $orderStatus = Order::$fail;
+
+            try {
+                $apiUrl = "https://api.mercadopago.com/v1/payments/$paymentId?access_token={$this->access_token}";
+
+                $ch = curl_init($apiUrl);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                $response = curl_exec($ch);
+                $paymentData = json_decode($response, true);
+
+                // Close cURL session
+                curl_close($ch);
+
+                // Check payment status
+                if ($paymentData and isset($paymentData['status'])) {
+                    $status = $paymentData['status'];
+
+                    // Process payment status
+                    if ($status === 'approved') {
+                        $orderStatus = Order::$paying;
+                    }
+                }
+
+            } catch (\Exception $exception) {
+                // dd($exception);
+            }
+
+
             $order->update([
-                'status' => Order::$fail
+                'status' => $orderStatus,
             ]);
         }
+
 
         return $order;
     }

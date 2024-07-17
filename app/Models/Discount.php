@@ -11,7 +11,8 @@ class Discount extends Model
     protected $guarded = ['id'];
     static $discountUserTypes = ['all_users', 'special_users'];
 
-    static $discountSource = ['course', 'bundle', 'category', 'meeting', 'product'];
+    static $discountSource = ['all', 'course', 'bundle', 'category', 'meeting', 'product'];
+    static $panelDiscountSource = ['all', 'course', 'bundle', 'meeting', 'product'];
     static $discountSourceAll = 'all';
     static $discountSourceCourse = 'course';
     static $discountSourceCategory = 'category';
@@ -22,6 +23,11 @@ class Discount extends Model
     static $discountTypes = ['percentage', 'fixed_amount'];
     static $discountTypePercentage = 'percentage';
     static $discountTypeFixedAmount = 'fixed_amount';
+
+    public function creator()
+    {
+        return $this->belongsTo('App\User', 'creator_id', 'id');
+    }
 
     public function discountUsers()
     {
@@ -65,6 +71,28 @@ class Discount extends Model
         return ($count > 0) ? $count : 0;
     }
 
+    public function salesStats()
+    {
+        $count = 0;
+        $amount = 0;
+
+        $orderItems = OrderItem::where('discount_id', $this->id)
+            ->groupBy('order_id')
+            ->get();
+
+        foreach ($orderItems as $orderItem) {
+            if (!empty($orderItem) and !empty($orderItem->order) and $orderItem->order->status == 'paid') {
+                $count = $count + 1;
+                $amount = $amount + $orderItem->total_amount;
+            }
+        }
+
+        return [
+            'count' => $count,
+            'amount' => $amount,
+        ];
+    }
+
     public function checkValidDiscount()
     {
         if ($this->expired_at < time()) {
@@ -75,11 +103,23 @@ class Discount extends Model
         $carts = Cart::where('creator_id', $user->id)->get();
 
 
-        if ($this->source == self::$discountSourceCourse or $this->source == self::$discountSourceCategory) {
+        if (($this->source == self::$discountSourceCourse or $this->source == self::$discountSourceCategory)) {
             $webinarCount = array_filter($carts->pluck('webinar_id')->toArray());
 
             if (empty($webinarCount) or count($webinarCount) < 1) {
                 return trans('update.discount_code_is_for_courses_error');
+            }
+        } elseif ($this->source == self::$discountSourceBundle) {
+            $bundleCount = array_filter($carts->pluck('bundle_id')->toArray());
+
+            if (empty($bundleCount) or count($bundleCount) < 1) {
+                return trans('update.discount_code_is_for_bundles_error');
+            }
+        } elseif ($this->source == self::$discountSourceProduct) {
+            $productCount = array_filter($carts->pluck('product_order_id')->toArray());
+
+            if (empty($productCount) or count($productCount) < 1) {
+                return trans('update.discount_code_is_for_products_error');
             }
         } elseif ($this->source == self::$discountSourceMeeting) {
             $meetingCount = array_filter($carts->pluck('reserve_meeting_id')->toArray());
@@ -89,7 +129,7 @@ class Discount extends Model
             }
         }
 
-        if ($this->source == self::$discountSourceCourse) {
+        if ($this->source == self::$discountSourceCourse and count($this->discountCourses)) {
             $discountWebinarsIds = $this->discountCourses()->pluck('course_id')->toArray();
             $hasSpecialWebinars = false;
 
@@ -105,7 +145,7 @@ class Discount extends Model
             }
         }
 
-        if ($this->source == self::$discountSourceBundle) {
+        if ($this->source == self::$discountSourceBundle and count($this->discountBundles)) {
             $discountBundlesIds = $this->discountBundles()->pluck('bundle_id')->toArray();
             $hasSpecialBundles = false;
 

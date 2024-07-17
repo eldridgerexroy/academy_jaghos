@@ -16,14 +16,16 @@ class Channel extends BasePaymentChannel implements IChannel
     protected $outlet_id;
     protected $api_key;
 
+    protected array $credentialItems = [
+        'outlet_id',
+        'api_key',
+    ];
+
     public function __construct(PaymentChannel $paymentChannel)
     {
         $this->currency = currency();
         $this->order_session_key = 'ngenius.payments.order_id';
-
-        $this->test_mode = env('NGENIUS_TEST_MODE'); // set your outlet reference/ID value here (example only)
-        $this->outlet_id = env('NGENIUS_OUTLET_ID'); // set your outlet reference/ID value here (example only)
-        $this->api_key = env('NGENIUS_API_KEY');
+        $this->setCredentialItems($paymentChannel);
     }
 
     public function paymentRequest(Order $order)

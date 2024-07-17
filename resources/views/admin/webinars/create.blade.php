@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="/assets/default/vendors/sweetalert2/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="/assets/default/vendors/daterangepicker/daterangepicker.min.css">
     <link rel="stylesheet" href="/assets/default/vendors/bootstrap-timepicker/bootstrap-timepicker.min.css">
-    <link rel="stylesheet" href="/assets/default/vendors/select2/select2.min.css">
+
     <link rel="stylesheet" href="/assets/default/vendors/bootstrap-tagsinput/bootstrap-tagsinput.min.css">
     <link rel="stylesheet" href="/assets/vendors/summernote/summernote-bs4.min.css">
     <link href="/assets/default/vendors/sortable/jquery-ui.min.css"/>
@@ -262,6 +262,17 @@
 
 
                                             <div class="form-group mt-15">
+                                                <label class="input-label">{{ trans('update.sales_count_number') }}</label>
+                                                <input type="number" name="sales_count_number" value="{{ !empty($webinar) ? $webinar->sales_count_number : old('sales_count_number') }}" class="form-control @error('sales_count_number')  is-invalid @enderror"/>
+                                                @error('sales_count_number')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                                @enderror
+                                                <p class="mt-1 text-muted text-gray">{{ trans('update.product_sales_count_number_hint') }}</p>
+                                            </div>
+
+                                            <div class="form-group mt-15">
                                                 <label class="input-label">{{ trans('public.capacity') }}</label>
                                                 <input type="number" name="capacity" value="{{ !empty($webinar) ? $webinar->capacity : old('capacity') }}" class="form-control @error('capacity')  is-invalid @enderror"/>
                                                 @error('capacity')
@@ -447,6 +458,11 @@
                                                 </div>
                                             @endif
 
+                                            {{-- Product Badges --}}
+                                            @if(!empty($webinar))
+                                                @include('admin.product_badges.content_include', ['itemTarget' => $webinar])
+                                            @endif
+
                                             <div id="partnerInstructorInput" class="form-group mt-15 {{ (!empty($webinar) && $webinar->partner_instructor) ? '' : 'd-none' }}">
                                                 <label class="input-label d-block">{{ trans('public.select_a_partner_teacher') }}</label>
 
@@ -466,6 +482,7 @@
 
                                                 <div class="text-muted text-small mt-1">{{ trans('admin/main.select_a_partner_hint') }}</div>
                                             </div>
+
 
                                             <div class="form-group mt-15">
                                                 <label class="input-label d-block">{{ trans('public.tags') }}</label>
@@ -557,7 +574,7 @@
                                                                     <th scope="row">{{ $ticket->title }}</th>
                                                                     <td>{{ $ticket->discount }}%</td>
                                                                     <td>{{ $ticket->capacity }}</td>
-                                                                    <td>{{ dateTimeFormat($ticket->start_date,'j F Y') }} - {{ (new DateTime())->setTimestamp($ticket->end_date)->format('j F Y') }}</td>
+                                                                    <td>{{ dateTimeFormat($ticket->start_date, 'j M Y') }} - {{ dateTimeFormat($ticket->end_date, 'j M Y') }}</td>
                                                                     <td>
                                                                         <button type="button" data-ticket-id="{{ $ticket->id }}" data-webinar-id="{{ !empty($webinar) ? $webinar->id : '' }}" class="edit-ticket btn-transparent text-primary mt-1" data-toggle="tooltip" data-placement="top" title="{{ trans('admin/main.edit') }}">
                                                                             <i class="fa fa-edit"></i>
@@ -638,6 +655,15 @@
                                             </div>
                                         </div>
                                     </section>
+
+
+                                    {{-- Related Course --}}
+                                    @include('admin.webinars.relatedCourse.add_related_course', [
+                                            'relatedCourseItemId' => $webinar->id,
+                                             'relatedCourseItemType' => 'webinar',
+                                             'relatedCourses' => $webinar->relatedCourses
+                                        ])
+
 
                                     <section class="mt-30">
                                         <div class="d-flex justify-content-between align-items-center">
@@ -874,7 +900,7 @@
 
     <script src="/assets/default/vendors/sweetalert2/dist/sweetalert2.min.js"></script>
     <script src="/assets/default/vendors/feather-icons/dist/feather.min.js"></script>
-    <script src="/assets/default/vendors/select2/select2.min.js"></script>
+
     <script src="/assets/default/vendors/moment.min.js"></script>
     <script src="/assets/default/vendors/daterangepicker/daterangepicker.min.js"></script>
     <script src="/assets/default/vendors/bootstrap-timepicker/bootstrap-timepicker.min.js"></script>

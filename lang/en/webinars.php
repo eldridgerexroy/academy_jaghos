@@ -124,6 +124,7 @@ return [
     'empty_means_webinar_capacity' => 'Leave it blank to use class capacity',
 
     'show_only_subscribe' => 'Show only subscribe',
+    'show_only_bundles' => 'Show only bundles',
     'show_only_certificate_included' => 'Show only certificate included',
     'show_only_with_quiz' => 'Show only courses with quiz',
     'show_only_featured' => 'Show only featured courses',

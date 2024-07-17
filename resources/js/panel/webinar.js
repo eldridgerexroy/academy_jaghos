@@ -620,6 +620,8 @@
             setSelect2();
         }, 1000);
     });
+
+
     /**
      * add webinar prerequisites
      * */
@@ -668,6 +670,32 @@
         e.preventDefault();
         const $this = $(this);
         let form = $this.closest('.prerequisite-form');
+        handleWebinarItemForm(form, $this);
+    });
+
+
+    /**
+     * add webinar Related Courses
+     * */
+    $('body').on('click', '#webinarAddRelatedCourses', function (e) {
+        e.preventDefault();
+        const key = randomString();
+
+        let add = $('#newRelatedCourseForm').html();
+        add = add.replaceAll('record', key);
+        add = add.replaceAll('relatedCourses-select2', 'panel-search-webinar-select2');
+
+        $('#relatedCoursesAccordion').prepend(add);
+
+        panelSearchWebinarSelect2();
+
+        feather.replace();
+    });
+
+    $('body').on('click', '.js-save-related-course', function (e) {
+        e.preventDefault();
+        const $this = $(this);
+        let form = $this.closest('.related-course-form');
         handleWebinarItemForm(form, $this);
     });
 
@@ -835,6 +863,7 @@
 
         const $fileTypeVolumeInputs = $form.find('.js-file-type-volume');
         const $volumeInputs = $form.find('.js-file-volume-field');
+        const $typeInputs = $form.find('.js-file-type-field');
         const $downloadableInput = $form.find('.js-downloadable-input');
         const $onlineViewerInput = $form.find('.js-online_viewer-input');
 
@@ -842,11 +871,14 @@
         const $s3FilePathInputGroup = $form.find('.js-s3-file-path-input');
         const $filePathButton = $form.find('.js-file-path-input button');
         const $filePathInput = $form.find('.js-file-path-input input');
+        const $secureHostUploadTypeField = $form.find('.js-secure-host-upload-type-field');
 
         $filePathButton.addClass('panel-file-manager');
         $filePathInputGroup.removeClass('d-none');
         $s3FilePathInputGroup.addClass('d-none');
         $volumeInputs.addClass('d-none');
+        $typeInputs.removeClass('d-none'); // parent is hidden or visible
+        $secureHostUploadTypeField.addClass('d-none');
 
         $s3FilePathInputGroup.find('input').removeAttr("accept")
 
@@ -906,6 +938,7 @@
                 $downloadableInput.find('input').prop('checked', false);
                 $downloadableInput.addClass('d-none');
                 $onlineViewerInput.addClass('d-none');
+                $secureHostUploadTypeField.removeClass('d-none');
 
                 $s3FilePathInputGroup.find('input').attr('accept', "video/mp4,video/x-m4v,video/*");
                 break;
@@ -953,6 +986,37 @@
         }
 
     }
+
+    function handleSecureHostUploadType($form, value) {
+        const $pathInput = $form.find('.js-secure-host-path-input');
+        const $uploadInput = $form.find('.js-s3-file-path-input');
+        const $fileTypeVolumeInputs = $form.find('.js-file-type-volume');
+        const $volumeInputs = $form.find('.js-file-volume-field');
+        const $typeInputs = $form.find('.js-file-type-field');
+
+        $typeInputs.addClass('d-none')
+
+        if (value === "manual") {
+            $fileTypeVolumeInputs.removeClass('d-none')
+            $volumeInputs.removeClass('d-none')
+            $pathInput.removeClass('d-none')
+            $uploadInput.addClass('d-none')
+        } else {
+            $fileTypeVolumeInputs.addClass('d-none')
+            $volumeInputs.addClass('d-none')
+            $pathInput.addClass('d-none')
+            $uploadInput.removeClass('d-none')
+        }
+    }
+
+    $('body').on('change', '.js-secure-host-upload-type-field input', function (e) {
+        e.preventDefault();
+
+        const value = $(this).val();
+        const $form = $(this).closest('.file-form');
+
+        handleSecureHostUploadType($form, value)
+    })
 
     $('body').on('click', '.js-s3-file-path-input button', function () {
 
@@ -1051,6 +1115,11 @@
                     const source = $form.find('.js-file-storage').val();
                     const fileType = $form.find('.js-ajax-file_type').val();
                     handleShowFileInputsBySource($form, source, fileType);
+
+                    const secureHostType = $form.find('.js-secure-host-upload-type-field input:checked').val();
+                    if (secureHostType) {
+                        handleSecureHostUploadType($form, secureHostType)
+                    }
                 }
             });
         }

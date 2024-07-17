@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Exports\CertificatesExport;
+use App\Http\Controllers\Admin\traits\CertificateSettingsTrait;
 use App\Http\Controllers\Controller;
 use App\Mixins\Certificate\MakeCertificate;
 use App\Models\Certificate;
@@ -17,6 +18,8 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class CertificateController extends Controller
 {
+    use CertificateSettingsTrait;
+
     public function index(Request $request)
     {
         $this->authorize('admin_certificate_list');
@@ -102,67 +105,208 @@ class CertificateController extends Controller
         return view('admin.certificates.templates', $data);
     }
 
+    private function getElements()
+    {
+        $enable = [
+            [
+                'type' => 'switch',
+                'name' => 'enable',
+                'label' => trans('admin/main.active')
+            ],
+        ];
+
+        $font = [
+            [
+                'type' => 'number_input',
+                'name' => 'font_size',
+                'label' => trans('admin/main.font_size')
+            ],
+            [
+                'type' => 'color_input',
+                'name' => 'font_color',
+                'label' => trans('admin/main.text_color')
+            ],
+        ];
+
+        $popular = [
+            ...$font,
+            [
+                'type' => 'text_input',
+                'name' => 'styles',
+                'label' => trans('update.styles')
+            ],
+            [
+                'type' => 'switch',
+                'name' => 'font_weight_bold',
+                'label' => trans('update.font_weight_bold')
+            ],
+            [
+                'type' => 'switch',
+                'name' => 'text_center',
+                'label' => trans('update.text_center')
+            ],
+            [
+                'type' => 'switch',
+                'name' => 'text_right',
+                'label' => trans('update.text_right')
+            ],
+            ...$enable,
+        ];
+
+        $elements = [
+            'title' => [
+                [
+                    'type' => 'text_input',
+                    'name' => 'content',
+                    'label' => trans('admin/main.title')
+                ],
+                ...$popular,
+            ],
+            'subtitle' => [
+                [
+                    'type' => 'text_input',
+                    'name' => 'content',
+                    'label' => trans('admin/main.title')
+                ],
+                ...$popular,
+            ],
+            'body' => [
+                [
+                    'type' => 'textarea',
+                    'name' => 'content',
+                    'label' => trans('admin/main.description')
+                ],
+                ...$popular,
+            ],
+            'date' => [
+                [
+                    'type' => 'select',
+                    'name' => 'display_date',
+                    'label' => trans('update.display_type'),
+                    'options' => [
+                        'textual' => trans('update.textual'),
+                        'numerical' => trans('update.numerical'),
+                    ]
+                ],
+                ...$popular,
+            ],
+            'qr_code' => [
+                [
+                    'type' => 'select',
+                    'name' => 'image_size',
+                    'label' => trans('update.image_size'),
+                    'options' => [
+                        '128' => trans('update.128x128'),
+                        '192' => trans('update.192x192'),
+                        '256' => trans('update.256x256'),
+                    ]
+                ],
+                ...$enable,
+            ],
+            'hint' => [
+                [
+                    'type' => 'text_input',
+                    'name' => 'content',
+                    'label' => trans('admin/main.title')
+                ],
+                ...$popular,
+            ],
+            'student_name' => [
+                ...$popular,
+            ],
+            'instructor_name' => [
+                ...$popular,
+            ],
+            'platform_name' => [
+                ...$popular,
+            ],
+            'course_name' => [
+                ...$popular,
+            ],
+            'instructor_signature' => [
+                ...$enable,
+            ],
+            'platform_signature' => [
+                [
+                    'type' => 'file_input_manager',
+                    'name' => 'image',
+                    'label' => trans('admin/main.image')
+                ],
+                [
+                    'type' => 'select',
+                    'name' => 'image_size',
+                    'label' => trans('update.image_size'),
+                    'options' => [
+                        '128' => trans('update.128x128'),
+                        '192' => trans('update.192x192'),
+                        '256' => trans('update.256x256'),
+                    ]
+                ],
+                ...$enable,
+            ],
+            'stamp' => [
+                [
+                    'type' => 'file_input_manager',
+                    'name' => 'image',
+                    'label' => trans('admin/main.image')
+                ],
+                [
+                    'type' => 'select',
+                    'name' => 'image_size',
+                    'label' => trans('update.image_size'),
+                    'options' => [
+                        '128' => trans('update.128x128'),
+                        '192' => trans('update.192x192'),
+                        '256' => trans('update.256x256'),
+                    ]
+                ],
+                ...$enable,
+            ],
+        ];
+
+        return $elements;
+    }
+
     public function CertificatesNewTemplate()
     {
         $this->authorize('admin_certificate_template_create');
 
         removeContentLocale();
+        $elements = $this->getElements();
 
         $data = [
             'pageTitle' => trans('admin/main.certificate_new_template_page_title'),
+            'elements' => $elements
         ];
 
-        return view('admin.certificates.new_templates', $data);
+        return view('admin.certificates.create_template.index', $data);
     }
 
     public function CertificatesTemplateStore(Request $request, $template_id = null)
     {
         $this->authorize('admin_certificate_template_create');
 
-        $rules = [
+        $this->validate($request, [
             'title' => 'required',
             'image' => 'required',
-            'body' => 'required',
             'type' => 'required|in:quiz,course',
-            'position_x' => 'required',
-            'position_y' => 'required',
-            'font_size' => 'required',
-            'text_color' => 'required',
-        ];
-        $this->validate($request, $rules);
+        ]);
 
         $data = $request->all();
 
-        if ($data['status'] and $data['status'] == 'publish') { // set draft for other templates
-            CertificateTemplate::where('status', 'publish')
-                ->where('type', $data['type'])
-                ->update([
-                    'status' => 'draft'
-                ]);
-        }
-
         if (!empty($template_id)) {
-
             $template = CertificateTemplate::findOrFail($template_id);
+
             $template->update([
                 'image' => $data['image'],
                 'status' => $data['status'],
                 'type' => $data['type'],
-                'position_x' => $data['position_x'],
-                'position_y' => $data['position_y'],
-                'font_size' => $data['font_size'],
-                'text_color' => $data['text_color'],
-                'updated_at' => time(),
             ]);
         } else {
             $template = CertificateTemplate::create([
                 'image' => $data['image'],
                 'status' => $data['status'],
                 'type' => $data['type'],
-                'position_x' => $data['position_x'],
-                'position_y' => $data['position_y'],
-                'font_size' => $data['font_size'],
-                'text_color' => $data['text_color'],
                 'created_at' => time(),
             ]);
         }
@@ -172,13 +316,13 @@ class CertificateController extends Controller
             'locale' => mb_strtolower($data['locale']),
         ], [
             'title' => $data['title'],
-            'body' => $data['body'],
-            'rtl' => $data['rtl'],
+            'body' => $data['template_contents'],
+            'elements' => json_encode($data['elements']),
         ]);
 
         removeContentLocale();
 
-        return redirect(getAdminPanelUrl().'/certificates/templates');
+        return redirect(getAdminPanelUrl("/certificates/templates/{$template->id}/edit?locale={$data['locale']}"));
     }
 
     public function CertificatesTemplatePreview(Request $request)
@@ -234,11 +378,15 @@ class CertificateController extends Controller
         $locale = $request->get('locale', app()->getLocale());
         storeContentLocale($locale, $template->getTable(), $template->id);
 
+        $elements = $this->getElements();
+
         $data = [
             'pageTitle' => trans('admin/main.certificate_template_edit_page_title'),
-            'template' => $template
+            'template' => $template,
+            'elements' => $elements,
         ];
-        return view('admin.certificates.new_templates', $data);
+
+        return view('admin.certificates.create_template.index', $data);
     }
 
     public function CertificatesTemplatesDelete($template_id)
@@ -249,7 +397,7 @@ class CertificateController extends Controller
 
         $template->delete();
 
-        return redirect(getAdminPanelUrl().'/certificates/templates');
+        return redirect(getAdminPanelUrl() . '/certificates/templates');
     }
 
     public function CertificatesDownload($id)
@@ -289,14 +437,14 @@ class CertificateController extends Controller
         $certificates = $query
             ->whereHas('quiz')
             ->with(
-            [
-                'quiz' => function ($query) {
-                    $query->with('webinar');
-                },
-                'student',
-                'quizzesResult'
-            ]
-        )->orderBy('created_at', 'desc')
+                [
+                    'quiz' => function ($query) {
+                        $query->with('webinar');
+                    },
+                    'student',
+                    'quizzesResult'
+                ]
+            )->orderBy('created_at', 'desc')
             ->get();
 
         $export = new CertificatesExport($certificates);

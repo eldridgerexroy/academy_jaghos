@@ -86,6 +86,12 @@ class Product extends Model implements TranslatableContract
         return SlugService::createSlug(self::class, 'slug', $title);
     }
 
+    public function getImage()
+    {
+        return $this->thumbnail;
+    }
+
+
     /*
      * Relations
      * */
@@ -143,6 +149,18 @@ class Product extends Model implements TranslatableContract
     {
         return $this->hasMany('App\Models\ProductOrder', 'product_id', 'id');
     }
+
+    public function relatedCourses()
+    {
+        return $this->morphMany('App\Models\RelatedCourse', 'targetable');
+    }
+
+    public function deleteRequest()
+    {
+        return $this->morphOne(ContentDeleteRequest::class, 'targetable');
+    }
+
+
 
     public function sales($withoutRefunds = true)
     {

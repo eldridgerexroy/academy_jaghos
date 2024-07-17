@@ -4,13 +4,13 @@ namespace App\Models;
 
 use App\Mixins\Certificate\MakeCertificate;
 use App\User;
-use Cviebrock\EloquentSluggable\Services\SlugService;
-use Illuminate\Database\Eloquent\Model;
-use Cviebrock\EloquentSluggable\Sluggable;
-use Jorenvh\Share\ShareFacade;
-use Spatie\CalendarLinks\Link;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Cviebrock\EloquentSluggable\Services\SlugService;
+use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Model;
+use Jorenvh\Share\ShareFacade;
+use Spatie\CalendarLinks\Link;
 
 class Webinar extends Model implements TranslatableContract
 {
@@ -184,6 +184,23 @@ class Webinar extends Model implements TranslatableContract
     {
         return $this->hasMany('App\Models\CourseForum', 'webinar_id', 'id');
     }
+
+
+    public function relatedCourses()
+    {
+        return $this->morphMany('App\Models\RelatedCourse', 'targetable');
+    }
+
+    public function deleteRequest()
+    {
+        return $this->morphOne(ContentDeleteRequest::class, 'targetable');
+    }
+
+    public function waitlists()
+    {
+        return $this->hasMany(Waitlist::class, 'webinar_id', 'id');
+    }
+
 
     public function getRate()
     {
@@ -685,10 +702,10 @@ class Webinar extends Model implements TranslatableContract
                 $this->handleLearningProgress100Reward($progress, $user_id, $this->id);
             }
         } else if (!is_null($this->capacity)) {
-            $salesCount = !empty($this->sales_count) ? $this->sales_count : $this->sales()->count();
+            $salesCount = $this->getSalesCount();
 
             if ($salesCount > 0) {
-                $progress = ($salesCount * 100) / $this->capacity;
+                $progress = (!empty($this->capacity) and $this->capacity > 0) ? (($salesCount * 100) / $this->capacity) : 0;
             }
         }
 
@@ -786,6 +803,19 @@ class Webinar extends Model implements TranslatableContract
             if (!$result and $this->isPartnerTeacher($user->id)) {
                 $result = true;
             }
+        }
+
+        return $result;
+    }
+
+    public function checkCapacityReached()
+    {
+        $result = false;
+
+        if (!is_null($this->capacity)) {
+            $salesCount = !empty($this->sales_count) ? $this->sales_count : $this->sales()->count();
+
+            $result = $salesCount >= $this->capacity;
         }
 
         return $result;
@@ -1088,6 +1118,17 @@ class Webinar extends Model implements TranslatableContract
                 RewardAccounting::makeRewardAccounting($userCertificate->student_id, $certificateReward, Reward::CERTIFICATE, $userCertificate->id, true);
             }
         }
+    }
+
+    public function getSalesCount()
+    {
+        $count = $this->sales()->count();
+
+        if (!is_null($this->sales_count_number)) { // Add fake sales numbers
+            $count += $this->sales_count_number;
+        }
+
+        return $count;
     }
 
 }

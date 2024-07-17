@@ -98,6 +98,11 @@
                                             @enderror
                                         </div>
 
+                                        {{-- Product Badges --}}
+                                        @if(!empty($post))
+                                            @include('admin.product_badges.content_include', ['itemTarget' => $post])
+                                        @endif
+
                                         <div class="form-group">
                                             <label class="input-label">{{ trans('public.cover_image') }}</label>
                                             <div class="input-group">

@@ -36,7 +36,11 @@
 
                                         <tr>
                                             <td>
-                                                <img src="{{ $category->icon }}" width="30" alt="">
+                                                @if(!empty($category->icon))
+                                                    <img src="{{ $category->icon }}" width="30" alt="">
+                                                @else
+                                                    -
+                                                @endif
                                             </td>
                                             <td class="text-left">{{ $category->order }}</td>
                                             <td class="text-left">{{ $category->title }}</td>

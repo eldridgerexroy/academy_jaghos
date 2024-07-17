@@ -25,9 +25,11 @@
             <div class="col-12 col-lg-8">
                 <div class="post-show mt-30">
 
-                    <div class="post-img pb-30">
-                        <img src="{{ url($textLesson->image) }}" alt="{{ $textLesson->title }}"/>
-                    </div>
+                    @if(!empty($textLesson->image))
+                        <div class="post-img pb-30">
+                            <img src="{{ url($textLesson->image) }}" alt="{{ $textLesson->title }}"/>
+                        </div>
+                    @endif
 
                     {!! nl2br($textLesson->content) !!}
                 </div>

@@ -10,7 +10,7 @@
                     <h1 class="font-20 mt-30">{{ trans('update.installment_request_rejected') }}</h1>
                     <p class="font-14 text-gray mt-5">{{ trans('update.installment_request_rejected_hint') }}</p>
 
-                    <a href="/panel/" class="btn btn-primary mt-15">{{ trans('update.back_to_installments') }}</a>
+                    <a href="/panel/financial/installments" class="btn btn-primary mt-15">{{ trans('update.back_to_installments') }}</a>
                 </div>
             </div>
         </div>

@@ -15,6 +15,8 @@ class SpecialOfferController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize("panel_marketing_special_offers");
+
         $user = auth()->user();
         $webinars = Webinar::select('id')
             ->where(function ($qu) use ($user) {
@@ -47,6 +49,8 @@ class SpecialOfferController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize("panel_marketing_special_offers");
+
         $data = $request->all();
 
         $validator = Validator::make($data, [

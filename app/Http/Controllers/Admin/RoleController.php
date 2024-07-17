@@ -63,12 +63,13 @@ class RoleController extends Controller
             'created_at' => time(),
         ]);
 
-        if ($role->is_admin and $request->has('permissions')) {
+        if ($request->has('permissions')) {
             $this->storePermission($role, $data['permissions']);
         }
+
         Cache::forget('sections');
 
-        return redirect(getAdminPanelUrl().'/roles');
+        return redirect(getAdminPanelUrl("/roles/{$role->id}/edit"));
     }
 
     public function edit($id)
@@ -98,7 +99,6 @@ class RoleController extends Controller
         $role = Role::find($id);
 
         $this->validate($request, [
-            'name' => 'required',
             'caption' => 'required',
         ]);
 
@@ -111,13 +111,13 @@ class RoleController extends Controller
 
         Permission::where('role_id', '=', $role->id)->delete();
 
-        if ($role->is_admin and !empty($data['permissions'])) {
+        if (!empty($data['permissions'])) {
             $this->storePermission($role, $data['permissions']);
         }
 
         Cache::forget('sections');
 
-        return redirect(getAdminPanelUrl().'/roles');
+        return redirect(getAdminPanelUrl("/roles/{$role->id}/edit"));
     }
 
     public function destroy(Request $request, $id)
@@ -129,7 +129,7 @@ class RoleController extends Controller
             $role->delete();
         }
 
-        return redirect(getAdminPanelUrl().'/roles');
+        return redirect(getAdminPanelUrl() . '/roles');
     }
 
     public function storePermission($role, $sections)

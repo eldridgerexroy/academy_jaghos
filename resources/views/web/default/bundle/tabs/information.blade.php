@@ -52,6 +52,20 @@
     @endforeach
 @endif
 
+{{-- Related Course --}}
+@if(!empty($bundle->relatedCourses) and $bundle->relatedCourses->count() > 0)
+
+    <div class="mt-20">
+        <h2 class="section-title after-line">{{ trans('update.related_courses') }}</h2>
+
+        @foreach($bundle->relatedCourses as $relatedCourse)
+            @if($relatedCourse->course)
+                @include('web.default.includes.webinar.list-card',['webinar' => $relatedCourse->course])
+            @endif
+        @endforeach
+    </div>
+@endif
+{{-- ./ Related Course --}}
 
 {{-- course Comments --}}
 @include('web.default.includes.comments',[

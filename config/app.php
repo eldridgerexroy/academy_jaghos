@@ -206,6 +206,8 @@ return [
         App\Providers\MinioStorageServiceProvider::class,
         Ssheduardo\Redsys\RedsysServiceProvider::class,
         Jubaer\Zoom\ZoomServiceProvider::class,
+        \Torann\GeoIP\GeoIPServiceProvider::class,
+        niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
     ],
 
     /*
@@ -227,6 +229,8 @@ return [
         //'Rave' => KingFlamez\Rave\Facades\Rave::class,
         'Redsys'    => Ssheduardo\Redsys\Facades\Redsys::class,
         'Zoom' => Jubaer\Zoom\Facades\Zoom::class,
+        'GeoIP' => \Torann\GeoIP\Facades\GeoIP::class,
+        'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class
     ])->toArray(),
 
 ];

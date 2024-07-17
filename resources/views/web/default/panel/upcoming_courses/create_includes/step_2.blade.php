@@ -128,17 +128,19 @@
             </div>
         </div>
 
-        <div class="form-group mt-30 d-flex align-items-center justify-content-between">
-            <label class="cursor-pointer input-label" for="certificateSwitch">{{ trans('update.certificate_included') }}</label>
-            <div class="custom-control custom-switch">
-                <input type="checkbox" name="certificate" class="custom-control-input" id="certificateSwitch" {{ ((!empty($upcomingCourse) && $upcomingCourse->certificate) or old('certificate') == 'on') ? 'checked' :  '' }}>
-                <label class="custom-control-label" for="certificateSwitch"></label>
+        @if(!empty(getCertificateMainSettings("status")))
+            <div class="form-group mt-30 d-flex align-items-center justify-content-between">
+                <label class="cursor-pointer input-label" for="certificateSwitch">{{ trans('update.certificate_included') }}</label>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" name="certificate" class="custom-control-input" id="certificateSwitch" {{ ((!empty($upcomingCourse) && $upcomingCourse->certificate) or old('certificate') == 'on') ? 'checked' :  '' }}>
+                    <label class="custom-control-label" for="certificateSwitch"></label>
+                </div>
             </div>
-        </div>
 
-        <div>
-            <p class="font-12 text-gray">{{ trans('update.upcoming_certificate_hint') }}</p>
-        </div>
+            <div>
+                <p class="font-12 text-gray">{{ trans('update.upcoming_certificate_hint') }}</p>
+            </div>
+        @endif
 
         <div class="form-group mt-30 d-flex align-items-center justify-content-between">
             <label class="cursor-pointer input-label" for="quizzesSwitch">{{ trans('update.include_quizzes') }}</label>

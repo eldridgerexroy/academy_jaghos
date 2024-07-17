@@ -13,6 +13,8 @@ class CourseNoticeboardController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize("panel_noticeboard_course_notices");
+
         $user = auth()->user();
 
         if (!$user->isOrganization() and !$user->isTeacher()) {
@@ -74,6 +76,8 @@ class CourseNoticeboardController extends Controller
 
     public function create()
     {
+        $this->authorize("panel_noticeboard_course_notices_create");
+
         $user = auth()->user();
 
         if (!$user->isOrganization() and !$user->isTeacher()) {
@@ -99,6 +103,8 @@ class CourseNoticeboardController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize("panel_noticeboard_course_notices_create");
+
         $user = auth()->user();
 
         if (!$user->isOrganization() and !$user->isTeacher()) {
@@ -162,6 +168,8 @@ class CourseNoticeboardController extends Controller
 
     public function edit($noticeboard_id)
     {
+        $this->authorize("panel_noticeboard_course_notices_create");
+
         $user = auth()->user();
 
         if (!$user->isOrganization() and !$user->isTeacher()) {
@@ -196,6 +204,8 @@ class CourseNoticeboardController extends Controller
 
     public function update(Request $request, $noticeboard_id)
     {
+        $this->authorize("panel_noticeboard_course_notices_create");
+
         $user = auth()->user();
 
         if (!$user->isOrganization() and !$user->isTeacher()) {
@@ -256,6 +266,8 @@ class CourseNoticeboardController extends Controller
 
     public function delete($noticeboard_id)
     {
+        $this->authorize("panel_noticeboard_delete");
+
         $user = auth()->user();
 
         if (!$user->isOrganization() and !$user->isTeacher()) {

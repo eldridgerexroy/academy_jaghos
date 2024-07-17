@@ -158,13 +158,13 @@
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
-                                                <i class="fas fa-dollar-sign"></i>
+                                                {{ $currency }}
                                             </div>
                                         </div>
 
                                         <input type="number" name="max_amount"
                                                class="form-control text-center @error('max_amount') is-invalid @enderror"
-                                               value="{{ !empty($discount) ? $discount->max_amount : old('max_amount') }}"
+                                               value="{{ (!empty($discount) and !empty($discount->max_amount)) ? convertPriceToUserCurrency($discount->max_amount) : old('max_amount') }}"
                                                placeholder="{{ trans('update.discount_max_amount_placeholder') }}"/>
                                         @error('max_amount')
                                         <div class="invalid-feedback">
@@ -179,13 +179,13 @@
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
-                                                <i class="fas fa-dollar-sign"></i>
+                                                {{ $currency }}
                                             </div>
                                         </div>
 
                                         <input type="number" name="amount"
                                                class="form-control text-center @error('amount') is-invalid @enderror"
-                                               value="{{ !empty($discount) ? $discount->amount : old('amount') }}"
+                                               value="{{ (!empty($discount) and !empty($discount->amount)) ? convertPriceToUserCurrency($discount->amount) : old('amount') }}"
                                                placeholder="{{ trans('update.discount_amount_placeholder') }}"/>
                                         @error('amount')
                                         <div class="invalid-feedback">
@@ -200,13 +200,13 @@
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
-                                                <i class="fas fa-dollar-sign"></i>
+                                                {{ $currency }}
                                             </div>
                                         </div>
 
                                         <input type="number" name="minimum_order"
                                                class="form-control text-center @error('minimum_order') is-invalid @enderror"
-                                               value="{{ !empty($discount) ? $discount->minimum_order : old('minimum_order') }}"
+                                               value="{{ (!empty($discount) and !empty($discount->minimum_order)) ? convertPriceToUserCurrency($discount->minimum_order) : old('minimum_order') }}"
                                                placeholder="{{ trans('update.discount_minimum_order_placeholder') }}"/>
                                         @error('minimum_order')
                                         <div class="invalid-feedback">

@@ -26,6 +26,8 @@ class BundlesController extends Controller
 {
     public function index()
     {
+        $this->authorize("panel_bundles_lists");
+
         $user = auth()->user();
 
         if ($user->isUser()) {
@@ -79,6 +81,8 @@ class BundlesController extends Controller
 
     public function create()
     {
+        $this->authorize("panel_bundles_create");
+
         $user = auth()->user();
 
         if (!$user->isTeacher() and !$user->isOrganization()) {
@@ -112,6 +116,8 @@ class BundlesController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize("panel_bundles_create");
+
         $user = auth()->user();
 
         if (!$user->isTeacher() and !$user->isOrganization()) {
@@ -179,6 +185,8 @@ class BundlesController extends Controller
 
     public function edit(Request $request, $id, $step = 1)
     {
+        $this->authorize("panel_bundles_create");
+
         $user = auth()->user();
         $isOrganization = $user->isOrganization();
 
@@ -292,6 +300,8 @@ class BundlesController extends Controller
 
     public function update(Request $request, $id)
     {
+        $this->authorize("panel_bundles_create");
+
         $user = auth()->user();
 
         if (!$user->isTeacher() and !$user->isOrganization()) {
@@ -437,7 +447,22 @@ class BundlesController extends Controller
 
     public function destroy(Request $request, $id)
     {
+        $this->authorize("panel_bundles_delete");
+
         $user = auth()->user();
+
+        if (!canDeleteContentDirectly()) {
+            if ($request->ajax()) {
+                return response()->json([], 422);
+            } else {
+                $toastData = [
+                    'title' => trans('public.request_failed'),
+                    'msg' => trans('update.it_is_not_possible_to_delete_the_content_directly'),
+                    'status' => 'error'
+                ];
+                return redirect()->back()->with(['toast' => $toastData]);
+            }
+        }
 
         if (!$user->isTeacher() and !$user->isOrganization()) {
             abort(404);
@@ -514,6 +539,8 @@ class BundlesController extends Controller
 
     public function exportStudentsList($id)
     {
+        $this->authorize("panel_bundles_export_students_list");
+
         $user = auth()->user();
 
         if (!$user->isTeacher() and !$user->isOrganization()) {
@@ -555,6 +582,8 @@ class BundlesController extends Controller
 
     public function courses($id)
     {
+        $this->authorize("panel_bundles_courses");
+
         $user = auth()->user();
 
         if (!$user->isTeacher() and !$user->isOrganization()) {

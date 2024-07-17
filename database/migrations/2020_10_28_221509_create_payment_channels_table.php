@@ -20,7 +20,7 @@ class CreatePaymentChannelsTable extends Migration
             $table->string('title');
             $table->string('class_name');
             $table->string('image')->nullable();
-            $table->text('settings')->nullable();
+            $table->text('credentials')->nullable();
             $table->integer('created_at')->unsigned();
             $table->string('disabled_at')->nullable();
         });

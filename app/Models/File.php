@@ -56,6 +56,11 @@ class File extends Model implements TranslatableContract
         return $this->hasOne('App\Models\CourseLearning', 'file_id', 'id');
     }
 
+    public function personalNote()
+    {
+        return $this->morphOne('App\Models\CoursePersonalNote', 'targetable');
+    }
+
     public function isVideo()
     {
         return (in_array($this->file_type, self::$videoTypes));

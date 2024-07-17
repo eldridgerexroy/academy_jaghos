@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="/assets/default/vendors/sweetalert2/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="/assets/default/vendors/daterangepicker/daterangepicker.min.css">
     <link rel="stylesheet" href="/assets/default/vendors/bootstrap-timepicker/bootstrap-timepicker.min.css">
-    <link rel="stylesheet" href="/assets/default/vendors/select2/select2.min.css">
+
     <link rel="stylesheet" href="/assets/default/vendors/bootstrap-tagsinput/bootstrap-tagsinput.min.css">
     <link rel="stylesheet" href="/assets/vendors/summernote/summernote-bs4.min.css">
     <style>
@@ -113,7 +113,7 @@
                                                 <label class="input-label d-block">{{ trans('admin/main.select_a_instructor') }}</label>
 
 
-                                                <select name="teacher_id" data-search-option="just_teacher_role" class="form-control search-user-select2"
+                                                <select name="teacher_id" data-search-option="except_user" class="form-control search-user-select2"
                                                         data-placeholder="{{ trans('public.select_a_teacher') }}"
                                                 >
                                                     @if(!empty($bundle))
@@ -274,6 +274,12 @@
                                                 </div>
                                                 @enderror
                                             </div>
+
+                                            {{-- Product Badges --}}
+                                            @if(!empty($bundle))
+                                                @include('admin.product_badges.content_include', ['itemTarget' => $bundle])
+                                            @endif
+
 
                                             <div class="form-group mt-15">
                                                 <label class="input-label d-block">{{ trans('public.tags') }}</label>
@@ -442,6 +448,13 @@
                                         </div>
                                     </section>
 
+                                    {{-- Related Course --}}
+                                    @include('admin.webinars.relatedCourse.add_related_course', [
+                                            'relatedCourseItemId' => $bundle->id,
+                                             'relatedCourseItemType' => 'bundle',
+                                             'relatedCourses' => $bundle->relatedCourses
+                                        ])
+
                                     <section class="mt-30">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <h2 class="section-title after-line">{{ trans('public.faq') }}</h2>
@@ -543,7 +556,7 @@
 
     <script src="/assets/default/vendors/sweetalert2/dist/sweetalert2.min.js"></script>
     <script src="/assets/default/vendors/feather-icons/dist/feather.min.js"></script>
-    <script src="/assets/default/vendors/select2/select2.min.js"></script>
+
     <script src="/assets/default/vendors/moment.min.js"></script>
     <script src="/assets/default/vendors/daterangepicker/daterangepicker.min.js"></script>
     <script src="/assets/default/vendors/bootstrap-timepicker/bootstrap-timepicker.min.js"></script>

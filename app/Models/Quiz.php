@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Mixins\Certificate\MakeCertificate;
 use App\Models\Traits\SequenceContent;
 use Illuminate\Database\Eloquent\Model;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
@@ -62,6 +63,11 @@ class Quiz extends Model implements TranslatableContract
         return $this->belongsTo('App\Models\WebinarChapter', 'chapter_id', 'id');
     }
 
+    public function personalNote()
+    {
+        return $this->morphOne('App\Models\CoursePersonalNote', 'targetable');
+    }
+
 
     public function increaseTotalMark($grade)
     {
@@ -78,10 +84,9 @@ class Quiz extends Model implements TranslatableContract
     public function getUserCertificate($user, $quiz_result)
     {
         if (!empty($user) and !empty($quiz_result)) {
-            return Certificate::where('quiz_id', $this->id)
-                ->where('student_id', $user->id)
-                ->where('quiz_result_id', $quiz_result->id)
-                ->first();
+            $makeCertificate = (new MakeCertificate());
+
+            return $makeCertificate->saveQuizCertificate($user, $this, $quiz_result);
         }
 
         return null;

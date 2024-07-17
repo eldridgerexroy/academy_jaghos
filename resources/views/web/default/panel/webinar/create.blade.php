@@ -44,7 +44,11 @@
                 <button type="button" id="saveAsDraft" class=" btn btn-sm btn-primary">{{ trans('public.save_as_draft') }}</button>
 
                 @if(!empty($webinar) and $webinar->creator_id == $authUser->id)
-                    <a href="/panel/webinars/{{ $webinar->id }}/delete?redirect_to=/panel/webinars" class="delete-action webinar-actions btn btn-sm btn-danger mt-20 mt-md-0">{{ trans('public.delete') }}</a>
+                    @include('web.default.panel.includes.content_delete_btn', [
+                        'deleteContentUrl' => "/panel/webinars/{$webinar->id}/delete?redirect_to=/panel/webinars",
+                        'deleteContentClassName' => 'webinar-actions btn btn-danger btn-sm mt-20 mt-md-0',
+                        'deleteContentItem' => $webinar,
+                    ])
                 @endif
             </div>
         </div>

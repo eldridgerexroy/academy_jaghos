@@ -30,30 +30,32 @@
                             <div class="image-box">
                                 <img src="{{ $webinar->getImage() }}" class="img-cover" alt="">
 
-                                @switch($webinar->status)
-                                    @case(\App\Models\Webinar::$active)
-                                    @if($webinar->isWebinar())
-                                        @if($webinar->start_date > time())
-                                            <span class="badge badge-primary">{{  trans('panel.not_conducted') }}</span>
-                                        @elseif($webinar->isProgressing())
-                                            <span class="badge badge-secondary">{{ trans('webinars.in_progress') }}</span>
-                                        @else
-                                            <span class="badge badge-secondary">{{ trans('public.finished') }}</span>
-                                        @endif
-                                    @else
-                                        <span class="badge badge-secondary">{{ trans('webinars.'.$webinar->type) }}</span>
-                                    @endif
-                                    @break
-                                    @case(\App\Models\Webinar::$isDraft)
-                                    <span class="badge badge-danger">{{ trans('public.draft') }}</span>
-                                    @break
-                                    @case(\App\Models\Webinar::$pending)
-                                    <span class="badge badge-warning">{{ trans('public.waiting') }}</span>
-                                    @break
-                                    @case(\App\Models\Webinar::$inactive)
-                                    <span class="badge badge-danger">{{ trans('public.rejected') }}</span>
-                                    @break
-                                @endswitch
+                                <div class="badges-lists">
+                                    @switch($webinar->status)
+                                        @case(\App\Models\Webinar::$active)
+                                            @if($webinar->isWebinar())
+                                                @if($webinar->start_date > time())
+                                                    <span class="badge badge-primary">{{  trans('panel.not_conducted') }}</span>
+                                                @elseif($webinar->isProgressing())
+                                                    <span class="badge badge-secondary">{{ trans('webinars.in_progress') }}</span>
+                                                @else
+                                                    <span class="badge badge-secondary">{{ trans('public.finished') }}</span>
+                                                @endif
+                                            @else
+                                                <span class="badge badge-secondary">{{ trans('webinars.'.$webinar->type) }}</span>
+                                            @endif
+                                            @break
+                                        @case(\App\Models\Webinar::$isDraft)
+                                            <span class="badge badge-danger">{{ trans('public.draft') }}</span>
+                                            @break
+                                        @case(\App\Models\Webinar::$pending)
+                                            <span class="badge badge-warning">{{ trans('public.waiting') }}</span>
+                                            @break
+                                        @case(\App\Models\Webinar::$inactive)
+                                            <span class="badge badge-danger">{{ trans('public.rejected') }}</span>
+                                            @break
+                                    @endswitch
+                                </div>
 
                                 @if($webinar->isWebinar())
                                     <div class="progress">

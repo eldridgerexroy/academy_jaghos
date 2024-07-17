@@ -155,8 +155,13 @@
         });
     }
 
-    window.panelSearchWebinarSelect2 = () => {
-        $('.panel-search-webinar-select2').select2({
+    window.panelSearchWebinarSelect2 = ($el = null) => {
+
+        if (!$el) {
+            $el = $('.panel-search-webinar-select2');
+        }
+
+        $el.select2({
             minimumInputLength: 3,
             ajax: {
                 url: '/panel/webinars/search',
@@ -184,8 +189,16 @@
             }
         });
     };
-    if ($('.panel-search-webinar-select2').length) {
-        panelSearchWebinarSelect2();
+
+    const $panelWebinarSearchSelect2 = $('.panel-search-webinar-select2');
+
+    if ($panelWebinarSearchSelect2.length) {
+        setTimeout(() => {
+            for (const panelWebinarSearchSelect2Element of $panelWebinarSearchSelect2) {
+                panelSearchWebinarSelect2($(panelWebinarSearchSelect2Element));
+            }
+        }, 1500);
+
     }
 
     window.panelSearchUserSelect2 = () => {
@@ -227,7 +240,7 @@
         const $sidebarActiveItem = $('.sidenav-item.sidenav-item-active');
 
         if ($sidebarScroll && $sidebarActiveItem.length) {
-            $sidebarScroll.getScrollElement().scrollTo(0,$sidebarActiveItem.position().top);
+            $sidebarScroll.getScrollElement().scrollTo(0, $sidebarActiveItem.position().top);
         }
     });
 
@@ -238,26 +251,6 @@
             width: '100%',
         });
     }
-
-    $('body').on('click', '.js-copy', function (e) {
-        e.preventDefault();
-
-        const $this = $(this);
-        const inputName = $this.attr('data-input');
-        const copyText = $this.attr('data-copy-text');
-        const doneText = $this.attr('data-done-text');
-
-        const input = $this.closest('.form-group').find('input[name="' + inputName + '"]');
-
-        input.removeAttr('disabled');
-        input.focus();
-        input.select();
-        document.execCommand("copy");
-
-        $this.attr('data-original-title', doneText)
-            .tooltip('show');
-        $this.attr('data-original-title', copyText);
-    });
 
     $('body').on('change', '.js-panel-list-switch-filter', function (e) {
         $(this).closest('form').trigger('submit');

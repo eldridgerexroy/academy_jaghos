@@ -55,6 +55,13 @@ class Blog extends Model implements TranslatableContract
         return $this->hasMany('App\Models\Comment', 'blog_id', 'id');
     }
 
+    public function deleteRequest()
+    {
+        return $this->morphOne(ContentDeleteRequest::class, 'targetable');
+    }
+
+
+
     public function getUrl()
     {
         return '/blog/' . $this->slug;

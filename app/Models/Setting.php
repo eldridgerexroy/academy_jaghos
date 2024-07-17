@@ -38,7 +38,7 @@ class Setting extends Model implements TranslatableContract
         $registrationPackagesGeneral, $registrationPackagesInstructors, $registrationPackagesOrganizations, $becomeInstructorSection,
         $themeColors, $themeFonts, $forumHomeSection, $cookieSettings, $mobileAppSettings, $remindersSettings, $generalSecuritySettings, $advertisingModal,
         $othersPersonalization, $installmentsSettings, $installmentsTermsSettings, $registrationBonusSettings, $registrationBonusTermsSettings, $statisticsSettings,
-        $maintenanceSettings, $generalOptions, $giftsGeneralSettings, $aiContentsSettings;
+        $maintenanceSettings, $restrictionSettings, $generalOptions, $giftsGeneralSettings, $aiContentsSettings, $certificateSettings, $abandonedCartSettings;
 
     // settings name , Using these keys, values are taken from the settings table
     static $seoMetasName = 'seo_metas';
@@ -85,12 +85,15 @@ class Setting extends Model implements TranslatableContract
     static $registrationBonusTermsSettingsName = 'registration_bonus_terms_settings';
     static $statisticsSettingsName = 'statistics';
     static $maintenanceSettingsName = 'maintenance_settings';
+    static $restrictionSettingsName = 'restriction_settings';
     static $generalOptionsName = 'general_options';
     static $giftsGeneralSettingsName = 'gifts_general_settings';
     static $aiContentsSettingsName = 'ai_contents_settings';
+    static $abandonedCartSettingsName = 'abandoned_cart_settings';
+    static $certificateSettingsName = 'certificate_settings';
 
     //statics
-    static $pagesSeoMetas = ['home', 'search', 'categories', 'classes', 'login', 'register', 'contact', 'blog', 'certificate_validation',
+    static $pagesSeoMetas = ['home', 'search', 'tags', 'categories', 'classes', 'login', 'register', 'contact', 'blog', 'certificate_validation',
         'instructors', 'organizations', 'instructor_finder_wizard', 'instructor_finder', 'reward_courses', 'products_lists', 'reward_products',
         'forum', 'upcoming_courses_lists'
     ];
@@ -466,6 +469,11 @@ class Setting extends Model implements TranslatableContract
         return self::getSetting(self::$maintenanceSettings, self::$maintenanceSettingsName, $key);
     }
 
+    static function getRestrictionSettings($key = null)
+    {
+        return self::getSetting(self::$restrictionSettings, self::$restrictionSettingsName, $key);
+    }
+
     static function getGeneralOptionsSettings($key = null)
     {
         return self::getSetting(self::$generalOptions, self::$generalOptionsName, $key);
@@ -479,5 +487,15 @@ class Setting extends Model implements TranslatableContract
     static function getAiContentsSettingsName($key = null)
     {
         return self::getSetting(self::$aiContentsSettings, self::$aiContentsSettingsName, $key);
+    }
+
+    static function getCertificateMainSettings($key = null)
+    {
+        return self::getSetting(self::$certificateSettings, self::$certificateSettingsName, $key);
+    }
+
+    static function getAbandonedCartSettings($key = null)
+    {
+        return self::getSetting(self::$abandonedCartSettings, self::$abandonedCartSettingsName, $key);
     }
 }

@@ -17,6 +17,12 @@ class Channel extends BasePaymentChannel implements IChannel
     protected $public_key;
     protected $private_key;
 
+    protected array $credentialItems = [
+        'merchant_id',
+        'public_key',
+        'private_key',
+    ];
+
     /**
      * Channel constructor.
      * @param PaymentChannel $paymentChannel
@@ -24,11 +30,7 @@ class Channel extends BasePaymentChannel implements IChannel
     public function __construct(PaymentChannel $paymentChannel)
     {
         $this->currency = currency();
-
-        $this->test_mode = env('BRAINTREE_TEST_MODE');
-        $this->merchant_id = env('BRAINTREE_MERCHANT_ID');
-        $this->public_key = env('BRAINTREE_PUBLIC_KEY');
-        $this->private_key = env('BRAINTREE_PRIVATE_KEY');
+        $this->setCredentialItems($paymentChannel);
     }
 
     protected function makeGateway()

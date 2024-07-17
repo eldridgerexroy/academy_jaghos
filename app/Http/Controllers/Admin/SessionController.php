@@ -289,6 +289,8 @@ class SessionController extends Controller
 
     private function handleBigBlueButtonApi($session, $user)
     {
+        $this->handleBigBlueButtonConfigs();
+
         $createMeeting = \Bigbluebutton::initCreateMeeting([
             'meetingID' => $session->id,
             'meetingName' => $session->title,
@@ -300,5 +302,13 @@ class SessionController extends Controller
         \Bigbluebutton::create($createMeeting);
 
         return true;
+    }
+
+    private function handleBigBlueButtonConfigs()
+    {
+        $settings = getFeaturesSettings();
+
+        \Config::set("bigbluebutton.BBB_SECURITY_SALT", !empty($settings['bigbluebutton_security_salt']) ? $settings['bigbluebutton_security_salt'] : '');
+        \Config::set("bigbluebutton.BBB_SERVER_BASE_URL", !empty($settings['bigbluebutton_server_base_url']) ? $settings['bigbluebutton_server_base_url'] : '');
     }
 }

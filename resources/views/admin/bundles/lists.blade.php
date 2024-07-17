@@ -271,17 +271,17 @@
                                             <td>
                                                 @switch($bundle->status)
                                                     @case(\App\Models\Webinar::$active)
-                                                    <div class="text-success font-600-bold">{{ trans('admin/main.published') }}</div>
-                                                    @break
+                                                        <div class="text-success font-600-bold">{{ trans('admin/main.published') }}</div>
+                                                        @break
                                                     @case(\App\Models\Bundle::$isDraft)
-                                                    <span class="text-dark">{{ trans('admin/main.is_draft') }}</span>
-                                                    @break
+                                                        <span class="text-dark">{{ trans('admin/main.is_draft') }}</span>
+                                                        @break
                                                     @case(\App\Models\Bundle::$pending)
-                                                    <span class="text-warning">{{ trans('admin/main.waiting') }}</span>
-                                                    @break
+                                                        <span class="text-warning">{{ trans('admin/main.waiting') }}</span>
+                                                        @break
                                                     @case(\App\Models\Bundle::$inactive)
-                                                    <span class="text-danger">{{ trans('public.rejected') }}</span>
-                                                    @break
+                                                        <span class="text-danger">{{ trans('public.rejected') }}</span>
+                                                        @break
                                                 @endswitch
                                             </td>
                                             <td width="150">
@@ -290,6 +290,31 @@
                                                         <i class="fa fa-ellipsis-v"></i>
                                                     </button>
                                                     <div class="dropdown-menu text-left webinars-lists-dropdown">
+
+                                                        @if(in_array($bundle->status, [\App\Models\Bundle::$pending, \App\Models\Bundle::$inactive]))
+                                                            @include('admin.includes.delete_button',[
+                                                                'url' => getAdminPanelUrl("/bundles/{$bundle->id}/approve"),
+                                                                'btnClass' => 'd-flex align-items-center text-success text-decoration-none btn-transparent btn-sm mt-1',
+                                                                'btnText' => '<i class="fa fa-check"></i><span class="ml-2">'. trans("admin/main.approve") .'</span>'
+                                                                ])
+                                                        @endif
+
+                                                        @if($bundle->status == \App\Models\Bundle::$pending)
+                                                            @include('admin.includes.delete_button',[
+                                                                'url' => getAdminPanelUrl("/bundles/{$bundle->id}/reject"),
+                                                                'btnClass' => 'd-flex align-items-center text-danger text-decoration-none btn-transparent btn-sm mt-1',
+                                                                'btnText' => '<i class="fa fa-times"></i><span class="ml-2">'. trans("admin/main.reject") .'</span>'
+                                                                ])
+                                                        @endif
+
+                                                        @if($bundle->status == \App\Models\Bundle::$active)
+                                                            @include('admin.includes.delete_button',[
+                                                                'url' => getAdminPanelUrl("/bundles/{$bundle->id}/unpublish"),
+                                                                'btnClass' => 'd-flex align-items-center text-danger text-decoration-none btn-transparent btn-sm mt-1',
+                                                                'btnText' => '<i class="fa fa-times"></i><span class="ml-2">'. trans("admin/main.unpublish") .'</span>'
+                                                                ])
+                                                        @endif
+
                                                         @can('admin_webinar_notification_to_students')
                                                             <a href="{{ getAdminPanelUrl() }}/bundles/{{ $bundle->id }}/sendNotification" target="_blank" class="d-flex align-items-center text-dark text-decoration-none btn-transparent btn-sm text-primary mt-1 ">
                                                                 <i class="fa fa-bell"></i>

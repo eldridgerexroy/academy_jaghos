@@ -7,8 +7,21 @@ use Illuminate\Support\Carbon;
 class ZoomOAuth
 {
 
+    private function handleConfigs()
+    {
+        $settings = getFeaturesSettings();
+
+        \Config::set("zoom.client_id", !empty($settings['zoom_client_id']) ? $settings['zoom_client_id'] : '');
+        \Config::set("zoom.client_secret", !empty($settings['zoom_client_secret']) ? $settings['zoom_client_secret'] : '');
+        \Config::set("zoom.account_id", !empty($settings['zoom_account_id']) ? $settings['zoom_account_id'] : '');
+        \Config::set("zoom.base_url", "https://api.zoom.us/v2/");
+    }
+
+
     public function makeMeeting($session): bool
     {
+        $this->handleConfigs();
+
         $meeting = \Zoom::createMeeting([
             "agenda" => $session->title,
             "topic" => 'New meeting',

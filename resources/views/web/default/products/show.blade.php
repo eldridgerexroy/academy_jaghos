@@ -227,6 +227,17 @@
             </div>
         </div>
 
+        @if(
+               !empty(getFeaturesSettings("frontend_coupons_display_type")) and
+               getFeaturesSettings("frontend_coupons_display_type") == "before_content" and
+               !empty($instructorDiscounts) and
+               count($instructorDiscounts)
+           )
+            @foreach($instructorDiscounts as $instructorDiscount)
+                @include('web.default.includes.discounts.instructor_discounts_card', ['discount' => $instructorDiscount, 'instructorDiscountClassName' => "mt-30"])
+            @endforeach
+        @endif
+
         <div class="mt-30">
             <ul class="product-show__nav-tabs nav nav-tabs p-15 d-flex align-items-center" id="tabs-tab" role="tablist">
                 <li class="nav-item mr-20 mr-lg-30">
@@ -289,6 +300,16 @@
 
         </div>
 
+        @if(
+               !empty(getFeaturesSettings("frontend_coupons_display_type")) and
+               getFeaturesSettings("frontend_coupons_display_type") == "after_content" and
+               !empty($instructorDiscounts) and
+               count($instructorDiscounts)
+           )
+            @foreach($instructorDiscounts as $instructorDiscount)
+                @include('web.default.includes.discounts.instructor_discounts_card', ['discount' => $instructorDiscount, 'instructorDiscountClassName' => "mt-30"])
+            @endforeach
+        @endif
 
         {{-- Ads Bannaer --}}
         @if(!empty($advertisingBanners) and count($advertisingBanners))

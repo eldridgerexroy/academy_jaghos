@@ -13,6 +13,19 @@ use Unicodeveloper\Paystack\Paystack;
 class Channel extends BasePaymentChannel implements IChannel
 {
     protected $currency;
+    protected $test_mode;
+    protected $publicKey;
+    protected $secretKey;
+    protected $paymentUrl;
+    protected $merchantEmail;
+
+
+    protected array $credentialItems = [
+        'publicKey',
+        'secretKey',
+        'paymentUrl',
+        'merchantEmail',
+    ];
 
     /**
      * Channel constructor.
@@ -21,10 +34,21 @@ class Channel extends BasePaymentChannel implements IChannel
     public function __construct(PaymentChannel $paymentChannel)
     {
         $this->currency = currency();
+        $this->setCredentialItems($paymentChannel);
+    }
+
+    private function handleConfigs()
+    {
+        \Config::set('paystack.paymentUrl', $this->paymentUrl);
+        \Config::set('paystack.secretKey', $this->secretKey);
+        \Config::set('paystack.paymentUrl', $this->paymentUrl);
+        \Config::set('paystack.merchantEmail', $this->merchantEmail);
     }
 
     public function paymentRequest(Order $order)
     {
+        $this->handleConfigs();
+
         $payStack = new Paystack();
 
         $payStack->getAuthorizationResponse([
@@ -50,6 +74,8 @@ class Channel extends BasePaymentChannel implements IChannel
 
     public function verify(Request $request)
     {
+        $this->handleConfigs();
+
         $payStack = new Paystack();
         $payment = $payStack->getPaymentData();
 

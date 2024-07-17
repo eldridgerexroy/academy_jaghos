@@ -10,7 +10,7 @@
     <div class="learning-page">
 
         @include('web.default.course.learningPage.components.navbar')
- 
+
         <div class="d-flex position-relative">
             <div class="learning-page-content flex-grow-1 bg-info-light p-15">
                 @include('web.default.course.learningPage.components.content')
@@ -79,11 +79,14 @@
     <script src="/assets/default/vendors/video/vimeo.js"></script>
 
     <script>
-        var defaultItemType = '{{ request()->get('type') }}'
-        var defaultItemId = '{{ request()->get('item') }}'
+        var defaultItemType = '{{ !empty(request()->get('type')) ? request()->get('type') : (!empty($userLearningLastView) ? $userLearningLastView->item_type : '') }}'
+        var defaultItemId = '{{ !empty(request()->get('item')) ? request()->get('item') : (!empty($userLearningLastView) ? $userLearningLastView->item_id : '') }}'
         var loadFirstContent = {{ (!empty($dontAllowLoadFirstContent) and $dontAllowLoadFirstContent) ? 'false' : 'true' }}; // allow to load first content when request item is empty
 
+        var appUrl = '{{ url('') }}';
         var courseUrl = '{{ $course->getUrl() }}';
+        var courseNotesStatus = '{{ !empty(getFeaturesSettings('course_notes_status')) }}';
+        var courseNotesShowAttachment = '{{ !empty(getFeaturesSettings('course_notes_attachment')) }}';
 
         // lang
         var pleaseWaitForTheContentLang = '{{ trans('update.please_wait_for_the_content_to_load') }}';
@@ -101,7 +104,7 @@
         var thisSessionWillBeStartedOnLang = '{{ trans('update.this_session_will_be_started_on') }}';
         var sessionIsFinishedLang = '{{ trans('update.session_is_finished') }}';
         var sessionIsFinishedHintLang = '{{ trans('update.this_session_is_finished_You_cant_join_it') }}';
-        var goToTheQuizPageForgureInformationLang = '{{ trans('update.go_to_the_quiz_page_for_more_information') }}';
+        var goToTheQuizPageForMoreInformationLang = '{{ trans('update.go_to_the_quiz_page_for_more_information') }}';
         var downloadCertificateLang = '{{ trans('update.download_certificate') }}';
         var enjoySharingYourCertificateWithOthersLang = '{{ trans('update.enjoy_sharing_your_certificate_with_others') }}';
         var attachmentsLang = '{{ trans('public.attachments') }}';
@@ -122,6 +125,12 @@
         var learningPageEmptyContentTitleLang = '{{ trans('update.learning_page_empty_content_title') }}';
         var learningPageEmptyContentHintLang = '{{ trans('update.learning_page_empty_content_hint') }}';
         var expiredQuizLang = '{{ trans('update.expired_quiz') }}';
+        var personalNoteLang = '{{ trans('update.personal_note') }}';
+        var personalNoteHintLang = '{{ trans('update.this_note_will_be_displayed_for_you_privately') }}';
+        var attachmentLang = '{{ trans('update.attachment') }}';
+        var saveNoteLang = '{{ trans('update.save_note') }}';
+        var clearNoteLang = '{{ trans('update.clear_note') }}';
+        var personalNoteStoredSuccessfullyLang = '{{ trans('update.personal_note_stored_successfully') }}';
     </script>
     <script type="text/javascript" src="/assets/default/vendors/dropins/dropins.js"></script>
     <script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>

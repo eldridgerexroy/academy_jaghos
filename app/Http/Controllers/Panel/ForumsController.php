@@ -13,6 +13,8 @@ class ForumsController extends Controller
 {
     public function topics(Request $request)
     {
+        $this->authorize("panel_forums_my_topics");
+
         if (getFeaturesSettings('forums_status')) {
             $user = auth()->user();
 
@@ -102,6 +104,8 @@ class ForumsController extends Controller
 
     public function posts(Request $request)
     {
+        $this->authorize("panel_forums_my_posts");
+
         if (getFeaturesSettings('forums_status')) {
             $user = auth()->user();
 
@@ -124,7 +128,7 @@ class ForumsController extends Controller
                     'topic' => function ($query) {
                         $query->with([
                             'creator' => function ($query) {
-                                $query->select('id', 'full_name', 'avatar');
+                                $query->select('id', 'full_name', 'avatar', 'avatar_settings');
                             },
                             'forum' => function ($query) {
                                 $query->select('id', 'slug');
@@ -155,6 +159,8 @@ class ForumsController extends Controller
 
     public function bookmarks()
     {
+        $this->authorize("panel_forums_bookmarks");
+
         if (getFeaturesSettings('forums_status')) {
             $user = auth()->user();
 

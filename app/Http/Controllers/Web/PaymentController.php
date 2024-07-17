@@ -98,7 +98,7 @@ class PaymentController extends Controller
             return Redirect::away($redirect_url);
 
         } catch (\Exception $exception) {
-
+            
             $toastData = [
                 'title' => trans('cart.fail_purchase'),
                 'msg' => trans('cart.gateway_error'),

@@ -19,7 +19,7 @@ class CartManagerController extends Controller
 
     public function getCarts()
     {
-        $carts = null;
+        $carts = collect();
 
         if (auth()->check()) {
             $user = auth()->user();

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Mixins\Cart\AbandonedCartReminder;
 use App\Models\File;
 use App\Models\Gift;
 use App\Models\InstallmentOrder;
@@ -325,6 +326,17 @@ class JobsController extends Controller
         return response()->json([
             'count' => $gifts->count(),
             'message' => "Notifications were sent for gifts"
+        ]);
+    }
+
+    public function sendAbandonedCartReminders()
+    {
+        $abandonedCartReminder = (new AbandonedCartReminder());
+        $abandonedCartReminder->sendAbandonedReminders();
+
+        return response()->json([
+            'status' => 200,
+            'message' => "Notifications were sent for Abandoned Cart Rules"
         ]);
     }
 

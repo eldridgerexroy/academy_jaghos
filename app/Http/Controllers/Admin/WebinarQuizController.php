@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Quiz;
+use App\Models\WebinarChapterItem;
 use Illuminate\Http\Request;
 
 
@@ -29,6 +30,8 @@ class WebinarQuizController extends Controller
             $quiz->webinar_id = $data['webinar_id'];
             $quiz->chapter_id = $data['chapter_id'] ?? null;
             $quiz->save();
+
+            $this->handleChapterItem($quiz);
 
             return response()->json([
                 'code' => 200,
@@ -70,9 +73,12 @@ class WebinarQuizController extends Controller
         $quiz = Quiz::findOrFail($data['quiz_id']);
 
         if (!empty($quiz)) {
-            $quiz->webinar_id = $data['webinar_id'];
-            $quiz->chapter_id = $data['chapter_id'] ?? null;
-            $quiz->save();
+            $quiz->update([
+                'webinar_id' => $data['webinar_id'],
+                'chapter_id' => !empty($data['chapter_id']) ? $data['chapter_id'] : null,
+            ]);
+
+            $this->handleChapterItem($quiz);
 
             return response()->json([
                 'code' => 200,
@@ -94,4 +100,27 @@ class WebinarQuizController extends Controller
 
         return redirect()->back();
     }
+
+    private function handleChapterItem($quiz)
+    {
+        $user = $quiz->creator;
+
+        $checkChapterItem = WebinarChapterItem::where('user_id', $user->id)
+            ->where('item_id', $quiz->id)
+            ->where('type', WebinarChapterItem::$chapterQuiz)
+            ->first();
+
+        if (!empty($quiz->chapter_id)) {
+            if (empty($checkChapterItem)) {
+                WebinarChapterItem::makeItem($user->id, $quiz->chapter_id, $quiz->id, WebinarChapterItem::$chapterQuiz);
+            } elseif ($checkChapterItem->chapter_id != $quiz->chapter_id) {
+                $checkChapterItem->delete(); // remove quiz from old chapter and assign it to new chapter
+
+                WebinarChapterItem::makeItem($user->id, $quiz->chapter_id, $quiz->id, WebinarChapterItem::$chapterQuiz);
+            }
+        } else if (!empty($checkChapterItem)) {
+            $checkChapterItem->delete();
+        }
+    }
+
 }

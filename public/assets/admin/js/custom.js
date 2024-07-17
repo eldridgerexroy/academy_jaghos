@@ -208,6 +208,8 @@
 
         handleSearchableSelect2('search-blog-select2', adminPanelPrefix + '/blog/search', 'title');
 
+        handleSearchableSelect2('search-upcoming-course-select2', adminPanelPrefix + '/upcoming_courses/search', 'title');
+
 
         var datefilter = $('.datefilter');
         datefilter.daterangepicker({
@@ -260,9 +262,12 @@
         }
     });
 
-    if ($(".colorpickerinput").length) {
-        $(".colorpickerinput").colorpicker({
-            format: 'hex',
+    var $colorpickerinput = $(".colorpickerinput");
+    if ($colorpickerinput.length) {
+        var colorpickerinputFormat = $colorpickerinput.attr('data-format') ?? 'hex';
+
+        $colorpickerinput.colorpicker({
+            format: colorpickerinputFormat,
             component: '.input-group-append',
         });
     }

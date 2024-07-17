@@ -66,7 +66,7 @@
                         </a>
                     </li>
 
-                    @if(!$authUser->isUser())
+                    @if(!$authUser->isUser() and empty(getFeaturesSettings('mobile_app_status')))
                         <li class="navbar-auth-user-dropdown-item">
                             <a href="{{ $authUser->getProfileUrl() }}" class="d-flex align-items-center w-100 px-15 py-10 text-gray font-14 bg-transparent">
                                 <img src="/assets/default/img/icons/user_menu/profile.svg" class="icons">

@@ -139,7 +139,7 @@ class FormsController extends Controller
                 }
 
                 $notifyOptions = [
-                    '[u.name]' => $user->full_name,
+                    '[u.name]' => !empty($user) ? $user->full_name : trans('update.guest_(not_login)'),
                     '[form_title]' => $form->title,
                     '[time.date]' => dateTimeFormat($submission->created_at, 'j M Y H:i')
                 ];

@@ -15,7 +15,7 @@ mix
 // .js('resources/js/app.js', 'public/assets/default/js')
 //
 // scss
-// .sass('resources/sass/app.scss', 'public/assets/default/css')
+.sass('resources/sass/app.scss', 'public/assets/default/css')
 // .sass('resources/sass/panel.scss', 'public/assets/default/css')
 // .sass('resources/sass/rtl-app.scss', 'public/assets/default/css')
 
@@ -67,6 +67,7 @@ mix
 // .js('resources/js/parts/forms.js', 'public/assets/default/js/parts/forms.min.js')
 // .js('resources/js/parts/register.js', 'public/assets/default/js/parts/register.min.js')
 // .js('resources/js/parts/forgot_password.js', 'public/assets/default/js/parts/forgot_password.min.js')
+// .js('resources/js/parts/content_delete.js', 'public/assets/default/js/parts/content_delete.min.js')
 
 
 // .js('resources/js/panel/public.js', 'public/assets/default/js/panel/public.min.js')
@@ -111,6 +112,7 @@ mix
 // .js('resources/js/panel/my_assignments.js', 'public/assets/default/js/panel/my_assignments.min.js')
 // .js('resources/js/panel/registration_bonus.js', 'public/assets/default/js/panel/registration_bonus.min.js')
 // .js('resources/js/panel/ai-content-generator.js', 'public/assets/default/js/panel/ai-content-generator.min.js')
+.js('resources/js/panel/personal_note.js', 'public/assets/default/js/panel/personal_note.min.js')
 
 //
 // admin
@@ -123,7 +125,7 @@ mix
 // .js('resources/js/admin/contact_us.js', 'public/assets/default/js/admin/contact_us.min.js')
 // .js('resources/js/admin/appointments.js', 'public/assets/default/js/admin/appointments.min.js')
 // .js('resources/js/admin/categories.js', 'public/assets/default/js/admin/categories.min.js')
-// .js('resources/js/admin/certificates.js', 'public/assets/default/js/admin/certificates.min.js')
+.js('resources/js/admin/create_certificate_template.js', 'public/assets/default/js/admin/create_certificate_template.min.js')
 // .js('resources/js/admin/comments.js', 'public/assets/default/js/admin/comments.min.js')
 // .js('resources/js/admin/contacts.js', 'public/assets/default/js/admin/contacts.min.js')
 // .js('resources/js/admin/filters.js', 'public/assets/default/js/admin/filters.min.js')
@@ -173,5 +175,12 @@ mix
 // .js('resources/js/admin/ai_content_settings.js', 'public/assets/default/js/admin/ai_content_settings.min.js')
 // .js('resources/js/admin/ai_contents_lists.js', 'public/assets/default/js/admin/ai_contents_lists.min.js')
 // .js('resources/js/admin/related_courses.js', 'public/assets/default/js/admin/related_courses.min.js')
+// .js('resources/js/admin/purchase_notifications.js', 'public/assets/default/js/admin/purchase_notifications.min.js')
+// .js('resources/js/admin/content-delete-requests.js', 'public/assets/default/js/admin/content-delete-requests.min.js')
+// .js('resources/js/admin/ip-restriction.js', 'public/assets/default/js/admin/ip-restriction.min.js')
+// .js('resources/js/admin/product_badges.js', 'public/assets/default/js/admin/product_badges.min.js')
+.js('resources/js/admin/abandoned_cart_rules.js', 'public/assets/default/js/admin/abandoned_cart_rules.min.js')
+// .js('resources/js/admin/abandoned_cart_settings.js', 'public/assets/default/js/admin/abandoned_cart_settings.min.js')
+// .js('resources/js/admin/personal_note.js', 'public/assets/default/js/admin/personal_note.min.js')
 ;
 

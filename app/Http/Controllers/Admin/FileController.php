@@ -38,7 +38,7 @@ class FileController extends Controller
 
         if (in_array($data['storage'], $sourceDefaultFileTypeAndVolume)) {
             $data['file_type'] = 'video';
-            $data['volume'] = 0;
+            $data['volume'] = !empty($data['volume']) ? $data['volume'] : 0;
         }
 
         $rules = [
@@ -57,9 +57,20 @@ class FileController extends Controller
             $rules['interactive_file_name'] = Rule::requiredIf($data['interactive_type'] == 'custom');
         }
 
-        if (in_array($data['storage'], ['s3', 'secure_host'])) {
-            $rules ['file_path'] = 'nullable';
-            $rules ['s3_file'] = 'required';
+        if ($data['storage'] == 's3') {
+            $rules['file_path'] = 'nullable';
+            $rules['s3_file'] = 'required';
+        }
+
+        if ($data['storage'] == 'secure_host') {
+            $rules['file_path'] = 'nullable';
+            $rules['s3_file'] = 'required';
+
+            if ($data['secure_host_upload_type'] == "manual") {
+                $rules['s3_file'] = 'nullable';
+                $rules['secure_host_file_path'] = 'required';
+                $rules['volume'] = 'required';
+            }
         }
 
         $validator = Validator::make($data, $rules);
@@ -114,12 +125,17 @@ class FileController extends Controller
                 $uploadFile = $this->fileInfo($data['file_path']);
                 $volume = convertToMB($uploadFile['size'] ?? 0);
             } elseif (in_array($data['storage'], ['s3', 'secure_host'])) {
-                $data['volume'] = $request->file('s3_file')->getSize();;
-
                 if ($data['storage'] == 's3') {
+                    $data['volume'] = $request->file('s3_file')->getSize();
                     $result = $this->uploadFileToS3($data['s3_file'], $user->id);
                 } else {
-                    $result = $this->uploadFileToBunny($webinar, $data['s3_file']);
+                    if ($data['secure_host_upload_type'] == "direct") {
+                        $data['volume'] = $request->file('s3_file')->getSize();
+                        $result = $this->uploadFileToBunny($webinar, $data['s3_file']);
+                    } else {
+                        $result['status'] = true;
+                        $result['path'] = $data['secure_host_file_path'];
+                    }
                 }
 
                 if (!$result['status']) {
@@ -128,7 +144,13 @@ class FileController extends Controller
 
                 $data['file_path'] = $result['path'];
                 $fileInfos['extension'] = $data['file_type'];
-                $volume = convertToMB(($data['volume'] ?? 0));
+                $fileInfos['size'] = $data['volume'];
+
+                if ($data['storage'] == 'secure_host' and $data['secure_host_upload_type'] == "manual") {
+                    $volume = $data['volume'];
+                } else {
+                    $volume = convertToMB(($data['volume'] ?? 0));
+                }
             } else {
                 $volume = !empty($data['volume']) ? $data['volume'] : 0; // input is MB
             }
@@ -142,6 +164,7 @@ class FileController extends Controller
                 'file_type' => !empty($fileInfos) ? $fileInfos['extension'] : $data['file_type'],
                 'accessibility' => $data['accessibility'],
                 'storage' => $data['storage'],
+                'secure_host_upload_type' => $data['secure_host_upload_type'] ?? null,
                 'interactive_type' => $data['interactive_type'] ?? null,
                 'interactive_file_name' => $data['interactive_file_name'] ?? null,
                 'interactive_file_path' => $data['interactive_file_path'] ?? null,
@@ -227,6 +250,15 @@ class FileController extends Controller
             $data['file_path'] = $data['file_path'][0];
         }
 
+        $sourceRequiredFileType = ['external_link', 's3', 'google_drive', 'upload'];
+        $sourceRequiredFileVolume = ['external_link', 'google_drive'];
+        $sourceDefaultFileTypeAndVolume = ['youtube', 'vimeo', 'iframe', 'secure_host'];
+
+        if (in_array($data['storage'], $sourceDefaultFileTypeAndVolume)) {
+            $data['file_type'] = 'video';
+            $data['volume'] = !empty($data['volume']) ? $data['volume'] : 0;
+        }
+
         $rules = [
             'webinar_id' => 'required',
             'chapter_id' => 'required',
@@ -243,9 +275,14 @@ class FileController extends Controller
             $rules['interactive_file_name'] = Rule::requiredIf($data['interactive_type'] == 'custom');
         }
 
-        if ($data['storage'] == 's3') {
-            $rules ['file_path'] = 'nullable';
-            $rules ['s3_file'] = 'nullable';
+        if ($data['storage'] == 'secure_host') {
+            $rules['file_path'] = 'nullable';
+            $rules['s3_file'] = 'nullable';
+
+            if ($data['secure_host_upload_type'] == "manual") {
+                $rules['secure_host_file_path'] = 'required';
+                $rules['volume'] = 'required';
+            }
         }
 
         $validator = Validator::make($data, $rules);
@@ -300,28 +337,32 @@ class FileController extends Controller
                 $uploadFile = $this->fileInfo($data['file_path']);
                 $volume = convertToMB($uploadFile['size'] ?? 0);
             } elseif (in_array($data['storage'], ['s3', 'secure_host'])) {
-
-                if (!empty($data['s3_file'])) {
+                if ($data['storage'] == 's3') {
                     $data['volume'] = $request->file('s3_file')->getSize();
-                    $fileInfos['real_size'] = formatSizeUnits($data['volume']);
-
-                    if ($data['storage'] == 's3') {
-                        $result = $this->uploadFileToS3($data['s3_file'], $file->creator_id);
-                    } else {
-                        $result = $this->uploadFileToBunny($webinar, $data['s3_file']);
-                    }
-
-                    if (!$result['status']) {
-                        return $result['path'];
-                    }
-
-                    $data['file_path'] = $result['path'];
+                    $result = $this->uploadFileToS3($data['s3_file'], $file->creator_id);
                 } else {
-                    $fileInfos['real_size'] = $data['volume'];
+                    if ($data['secure_host_upload_type'] == "direct") {
+                        $data['volume'] = $request->file('s3_file')->getSize();
+                        $result = $this->uploadFileToBunny($webinar, $data['s3_file']);
+                    } else {
+                        $result['status'] = true;
+                        $result['path'] = $data['secure_host_file_path'];
+                    }
                 }
 
+                if (!$result['status']) {
+                    return $result['path'];
+                }
+
+                $data['file_path'] = $result['path'];
                 $fileInfos['extension'] = $data['file_type'];
-                $volume = convertToMB(($data['volume'] ?? 0));
+                $fileInfos['size'] = $data['volume'];
+
+                if ($data['storage'] == 'secure_host' and $data['secure_host_upload_type'] == "manual") {
+                    $volume = $data['volume'];
+                } else {
+                    $volume = convertToMB(($data['volume'] ?? 0));
+                }
             } else {
                 $volume = !empty($data['volume']) ? $data['volume'] : 0; // input is MB
             }
@@ -337,6 +378,7 @@ class FileController extends Controller
                 'file_type' => !empty($fileInfos) ? $fileInfos['extension'] : $data['file_type'],
                 'accessibility' => $data['accessibility'],
                 'storage' => $data['storage'],
+                'secure_host_upload_type' => $data['secure_host_upload_type'] ?? null,
                 'interactive_type' => $data['interactive_type'] ?? null,
                 'interactive_file_name' => $data['interactive_file_name'] ?? null,
                 'interactive_file_path' => $data['interactive_file_path'] ?? null,

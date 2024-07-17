@@ -1,4 +1,3 @@
-<!-- Right Sidebar course learning page   -->
 @if(!empty($course->chapters) and count($course->chapters))
     <div class="accordion-content-wrapper mt-15" id="chapterAccordion" role="tablist" aria-multiselectable="true">
         @foreach($course->chapters as $chapter)
@@ -25,6 +24,7 @@
 
                 <div id="collapseChapter{{ $chapter->id  }}" aria-labelledby="chapter_{{ $chapter->id  }}" class="collapse" role="tabpanel">
                     <div class="panel-collapse text-gray">
+
                         @if(!empty($chapter->chapterItems) and count($chapter->chapterItems))
                             @foreach($chapter->chapterItems as $chapterItem)
                                 @if($chapterItem->type == \App\Models\WebinarChapterItem::$chapterSession and !empty($chapterItem->session) and $chapterItem->session->status == 'active')

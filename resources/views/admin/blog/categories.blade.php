@@ -74,6 +74,24 @@
                                                 <form action="{{ getAdminPanelUrl() }}/blog/categories/{{ !empty($editCategory) ? $editCategory->id.'/update' : 'store' }}" method="post">
                                                     {{ csrf_field() }}
 
+                                                    @if(!empty(getGeneralSettings('content_translate')) and !empty($userLanguages))
+                                                        <div class="form-group">
+                                                            <label class="input-label">{{ trans('auth.language') }}</label>
+                                                            <select name="locale" class="form-control {{ !empty($editCategory) ? 'js-edit-content-locale' : '' }}">
+                                                                @foreach($userLanguages as $lang => $language)
+                                                                    <option value="{{ $lang }}" @if(mb_strtolower(request()->get('locale', app()->getLocale())) == mb_strtolower($lang)) selected @endif>{{ $language }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                            @error('locale')
+                                                            <div class="invalid-feedback">
+                                                                {{ $message }}
+                                                            </div>
+                                                            @enderror
+                                                        </div>
+                                                    @else
+                                                        <input type="hidden" name="locale" value="{{ getDefaultLocale() }}">
+                                                    @endif
+
                                                     <div class="form-group">
                                                         <label>{{ trans('/admin/main.title') }}</label>
                                                         <input type="text" name="title"
@@ -104,5 +122,5 @@
 @endsection
 
 @push('scripts_bottom')
-    <script src="/assets/default/vendors/select2/select2.min.js"></script>
+
 @endpush

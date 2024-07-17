@@ -44,7 +44,11 @@
                 <button type="button" id="saveAsDraft" class=" btn btn-sm btn-primary">{{ trans('public.save_as_draft') }}</button>
 
                 @if(!empty($product) and $product->creator_id == $authUser->id)
-                    <a href="/panel/store/products/{{ $product->id }}/delete?redirect_to=/panel/store/products" class="delete-action webinar-actions btn btn-sm btn-danger mt-20 mt-md-0">{{ trans('public.delete') }}</a>
+                    @include('web.default.panel.includes.content_delete_btn', [
+                        'deleteContentUrl' => "/panel/store/products/{$product->id}/delete?redirect_to=/panel/store/products",
+                        'deleteContentClassName' => 'webinar-actions btn btn-sm btn-danger mt-20 mt-md-0',
+                        'deleteContentItem' => $product,
+                    ])
                 @endif
             </div>
         </div>

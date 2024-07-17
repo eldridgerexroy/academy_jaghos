@@ -251,10 +251,7 @@ class QuizQuestionController extends Controller
         $quiz = Quiz::where('id', $data['quiz_id'])->first();
 
         if (!empty($quiz)) {
-            $creator = $quiz->creator;
-
             $quizQuestion = QuizzesQuestion::where('id', $id)
-                ->where('creator_id', $creator->id)
                 ->where('quiz_id', $quiz->id)
                 ->first();
 
@@ -263,7 +260,6 @@ class QuizQuestionController extends Controller
 
                 $quizQuestion->update([
                     'quiz_id' => $data['quiz_id'],
-                    'creator_id' => $creator->id,
                     'grade' => $data['grade'],
                     'type' => $data['type'],
                     'image' => $data['image'] ?? null,

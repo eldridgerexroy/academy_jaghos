@@ -13,6 +13,8 @@ class AiContentController extends Controller
 
     public function index(Request $request)
     {
+        $this->authorize("panel_ai_contents_lists");
+
         $user = auth()->user();
 
         if ($user->checkAccessToAIContentFeature()) {
