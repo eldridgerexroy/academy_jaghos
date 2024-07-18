@@ -26,7 +26,7 @@
 
             <a class="navbar-brand navbar-order d-flex align-items-center justify-content-center mr-0 {{ (empty($navBtnUrl) and empty($navBtnText)) ? 'ml-auto' : '' }}" href="/">
                 @if(!empty($generalSettings['logo']))
-                    <img src="{{ $generalSettings['logo'] }}" style="height:auto !important;" class="img-cover" alt="site logo">
+                    <img src="{{ $generalSettings['logo'] }}" class="img-cover" alt="site logo">
                 @endif
             </a>
 
@@ -55,7 +55,10 @@
                                                 <li>
                                                     <a href="{{ $category->getUrl() }}" class="{{ (!empty($category->subCategories) and count($category->subCategories)) ? 'js-has-subcategory' : '' }}">
                                                         <div class="d-flex align-items-center">
-                                                            <img src="{{ $category->icon }}" class="cat-dropdown-menu-icon mr-10" alt="{{ $category->title }} icon">
+                                                            @if(!empty($category->icon))
+                                                                <img src="{{ $category->icon }}" class="cat-dropdown-menu-icon mr-10" alt="{{ $category->title }} icon">
+                                                            @endif
+
                                                             {{ $category->title }}
                                                         </div>
 
@@ -86,7 +89,7 @@
                                     </li>
                                 </ul>
                             </div>
-                        </li> 
+                        </li>
                     @endif
 
                     @if(!empty($navbarPages) and count($navbarPages))

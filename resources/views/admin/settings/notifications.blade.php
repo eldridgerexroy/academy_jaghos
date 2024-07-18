@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 
 @push('styles_top')
-    <link rel="stylesheet" href="/assets/default/vendors/select2/select2.min.css">
+
 @endpush
 
 @section('content')
@@ -77,6 +77,6 @@
 @endsection
 
 @push('scripts_bottom')
-    <script src="/assets/default/vendors/select2/select2.min.js"></script>
+
 
 @endpush

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Exports\UpcomingCoursesExport;
+use App\Http\Controllers\Admin\traits\ProductBadgeTrait;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Role;
@@ -17,6 +18,8 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class UpcomingCoursesController extends Controller
 {
+    use ProductBadgeTrait;
+
     public function index(Request $request)
     {
         $this->authorize('admin_upcoming_courses_list');
@@ -266,6 +269,8 @@ class UpcomingCoursesController extends Controller
             $reject = (!empty($data['draft']) and $data['draft'] == 'reject');
             $publish = (!empty($data['draft']) and $data['draft'] == 'publish');
 
+            // Product Badge
+            $this->handleProductBadges($upcomingCourse, $data);
 
             $storeData = $this->makeStoreData($data);
             $storeData['status'] = $publish ? UpcomingCourse::$active : ($reject ? UpcomingCourse::$inactive : ($isDraft ? UpcomingCourse::$isDraft : UpcomingCourse::$pending));
@@ -530,4 +535,14 @@ class UpcomingCoursesController extends Controller
         abort(404);
     }
 
+    public function search(Request $request)
+    {
+        $term = $request->get('term');
+
+        $upcomingCourse = UpcomingCourse::select('id')
+            ->whereTranslationLike('title', "%$term%")
+            ->get();
+
+        return response()->json($upcomingCourse, 200);
+    }
 }

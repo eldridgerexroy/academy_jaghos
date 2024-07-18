@@ -11,6 +11,8 @@ class NotificationsController extends Controller
 {
     public function index()
     {
+        $this->authorize("panel_notifications_lists");
+
         $user = auth()->user();
 
         $notifications = Notification::where(function ($query) use ($user) {

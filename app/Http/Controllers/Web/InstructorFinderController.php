@@ -419,66 +419,66 @@ class InstructorFinderController extends Controller
         $provinces = null;
         $cities = null;
         $districts = null;
-        $mapCenter = [25.0330, 121.5654]; // Taipei, Taiwan
-        $mapZoom = 6;
+        $mapCenter = [37.718590, 37.617188]; // default Location
+        $mapZoom = 3;
 
-        // if ($request->get('country_id')) {
-        //     $provinces = Region::select(DB::raw(' *, ST_AsText(geo_center) as geo_center'))
-        //         ->where('type', Region::$province)
-        //         ->where('country_id', $request->get('country_id'))
-        //         ->get();
+        if ($request->get('country_id')) {
+            $provinces = Region::select(DB::raw(' *, ST_AsText(geo_center) as geo_center'))
+                ->where('type', Region::$province)
+                ->where('country_id', $request->get('country_id'))
+                ->get();
 
-        //     $country = $countries->where('id', $request->get('country_id'))->first();
+            $country = $countries->where('id', $request->get('country_id'))->first();
 
-        //     if ($country) {
-        //         $mapCenter = \Geo::get_geo_array($country->geo_center);
-        //         $mapZoom = 5;
-        //     }
-        // }
+            if ($country) {
+                $mapCenter = \Geo::get_geo_array($country->geo_center);
+                $mapZoom = 5;
+            }
+        }
 
-        // if ($request->get('province_id')) {
+        if ($request->get('province_id')) {
 
-        //     if (!empty($provinces)) {
-        //         $province = $provinces->where('id', $request->get('province_id'))->first();
+            if (!empty($provinces)) {
+                $province = $provinces->where('id', $request->get('province_id'))->first();
 
-        //         if ($province) {
-        //             $mapCenter = \Geo::get_geo_array($province->geo_center);
-        //             $mapZoom = 7;
-        //         }
-        //     }
+                if ($province) {
+                    $mapCenter = \Geo::get_geo_array($province->geo_center);
+                    $mapZoom = 7;
+                }
+            }
 
-        //     $cities = Region::select(DB::raw(' *, ST_AsText(geo_center) as geo_center'))
-        //         ->where('type', Region::$city)
-        //         ->where('province_id', $request->get('province_id'))
-        //         ->get();
-        // }
+            $cities = Region::select(DB::raw(' *, ST_AsText(geo_center) as geo_center'))
+                ->where('type', Region::$city)
+                ->where('province_id', $request->get('province_id'))
+                ->get();
+        }
 
-        // if ($request->get('city_id')) {
+        if ($request->get('city_id')) {
 
-        //     if (!empty($cities)) {
-        //         $city = $cities->where('id', $request->get('city_id'))->first();
+            if (!empty($cities)) {
+                $city = $cities->where('id', $request->get('city_id'))->first();
 
-        //         if ($city) {
-        //             $mapCenter = \Geo::get_geo_array($city->geo_center);
-        //             $mapZoom = 12;
-        //         }
-        //     }
+                if ($city) {
+                    $mapCenter = \Geo::get_geo_array($city->geo_center);
+                    $mapZoom = 12;
+                }
+            }
 
-        //     $districts = Region::select(DB::raw(' *, ST_AsText(geo_center) as geo_center'))
-        //         ->where('type', Region::$district)
-        //         ->where('city_id', $request->get('city_id'))
-        //         ->get();
-        // }
+            $districts = Region::select(DB::raw(' *, ST_AsText(geo_center) as geo_center'))
+                ->where('type', Region::$district)
+                ->where('city_id', $request->get('city_id'))
+                ->get();
+        }
 
 
-        // if (!empty($districts) and $request->get('district_id')) {
-        //     $district = $districts->where('id', $request->get('district_id'))->first();
+        if (!empty($districts) and $request->get('district_id')) {
+            $district = $districts->where('id', $request->get('district_id'))->first();
 
-        //     if ($district) {
-        //         $mapCenter = \Geo::get_geo_array($district->geo_center);
-        //         $mapZoom = 14;
-        //     }
-        // }
+            if ($district) {
+                $mapCenter = \Geo::get_geo_array($district->geo_center);
+                $mapZoom = 14;
+            }
+        }
 
         return [
             'countries' => $countries,

@@ -49,7 +49,6 @@ class CategoryController extends Controller
         $this->validate($request, [
             'title' => 'required|min:3|max:128',
             'slug' => 'nullable|max:255|unique:categories,slug',
-            'icon' => 'required'
         ]);
 
         $data = $request->all();
@@ -62,7 +61,7 @@ class CategoryController extends Controller
 
         $category = Category::create([
             'slug' => $data['slug'] ?? Category::makeSlug($data['title']),
-            'icon' => $data['icon'],
+            'icon' => !empty($data['icon']) ? $data['icon'] : null,
             'order' => $order,
         ]);
 
@@ -113,13 +112,12 @@ class CategoryController extends Controller
         $this->validate($request, [
             'title' => 'required|min:3|max:255',
             'slug' => 'nullable|max:255|unique:categories,slug,' . $category->id,
-            'icon' => 'required',
         ]);
 
         $data = $request->all();
 
         $category->update([
-            'icon' => $data['icon'],
+            'icon' => !empty($data['icon']) ? $data['icon'] : null,
             'slug' => $data['slug'] ?? Category::makeSlug($data['title']),
             'order' => $data['order'] ?? $category->order,
         ]);

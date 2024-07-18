@@ -17,6 +17,8 @@ class InstallmentsController extends Controller
 
     public function index()
     {
+        $this->authorize("panel_financial_installments");
+
         $user = auth()->user();
 
         $query = InstallmentOrder::query()

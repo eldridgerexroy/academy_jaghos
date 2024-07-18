@@ -21,9 +21,6 @@ class ChannelManager
      */
     public static function makeCallbackUrl(Order $order)
     {
-        return route('receipt_verify', [
-            'token' => config('services.bank_callback_token'),
-            'receiptId' => $order->id
-        ]);
+        return "";
     }
 }

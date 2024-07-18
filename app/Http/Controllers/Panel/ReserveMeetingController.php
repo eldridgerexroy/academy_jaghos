@@ -19,6 +19,8 @@ class ReserveMeetingController extends Controller
 {
     public function reservation(Request $request)
     {
+        $this->authorize("panel_meetings_my_reservation");
+
         $user = auth()->user();
         $reserveMeetingsQuery = ReserveMeeting::where('user_id', $user->id)
             ->whereNotNull('reserved_at')
@@ -87,6 +89,8 @@ class ReserveMeetingController extends Controller
 
     public function requests(Request $request)
     {
+        $this->authorize("panel_meetings_requests");
+
         $meetingIds = Meeting::where('creator_id', auth()->user()->id)->pluck('id');
 
         $reserveMeetingsQuery = ReserveMeeting::whereIn('meeting_id', $meetingIds)

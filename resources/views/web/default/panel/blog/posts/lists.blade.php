@@ -84,7 +84,15 @@
                                                 </button>
                                                 <div class="dropdown-menu font-weight-normal">
                                                     <a href="/panel/blog/posts/{{ $post->id }}/edit" class="webinar-actions d-block mt-10">{{ trans('public.edit') }}</a>
-                                                    <a href="/panel/blog/posts/{{ $post->id }}/delete" data-item-id="1" class="webinar-actions d-block mt-10 delete-action">{{ trans('public.delete') }}</a>
+
+                                                    @can('panel_blog_delete_article')
+                                                        @include('web.default.panel.includes.content_delete_btn', [
+                                                            'deleteContentUrl' => "/panel/blog/posts/{$post->id}/delete",
+                                                            'deleteContentClassName' => 'webinar-actions d-block mt-10',
+                                                            'deleteContentItem' => $post,
+                                                        ])
+                                                    @endcan
+
                                                 </div>
                                             </div>
                                         </td>

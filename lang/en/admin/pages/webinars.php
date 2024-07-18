@@ -74,27 +74,4 @@ return [
     'webinars_reports' => 'Webinars reports',
     'webinars_reports_lists_lead' => 'List of webinars reports. You can edit or delete any row.',
 
-    //Webinar Recording Request
-    'webinars_recording_request_title' => 'Webinar Recording Request',
-    'webinars_recording_request_reason' => 'Request Reason',
-    'webinars_recording_request_requester' => 'Requester Name',
-    'webinars_recording_request_email' => 'Email (link will be sent to email)',
-    'webinars_recording_request_course' => 'Webinar Recording Courses',
-    'webinars_recording_request_created_at' => 'Webinar Recording Created At',
-    'webinars_recording_request_actions' => 'Actions',
-    'webinars_recording_request_date' => 'Course Date',
-    'webinars_recording_request_link' => 'Recording Link',
-    
-
-    //Webinar Recording 
-    'webinars_recording_title' => 'Webinar Recordings',
-    'webinars_recording_webinar' => 'Course',
-    'webinars_recording_reason' => 'Reason',
-    'webinars_recording_requester' => 'Requester Name',
-    'webinars_recording_email' => 'Email (link will be sent to email)',
-    'webinars_recording_course' => 'Webinar Recording Courses',
-    'webinars_recording_created_at' => 'Webinar Recording Created At',
-    'webinars_recording_actions' => 'Actions',
-    'webinars_recording_date' => 'Course Date',
-    'webinars_recording_link' => 'Recording Link',
 ];

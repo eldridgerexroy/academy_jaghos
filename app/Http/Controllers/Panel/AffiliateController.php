@@ -6,13 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Models\Accounting;
 use App\Models\Affiliate;
 use App\Models\AffiliateCode;
-use Illuminate\Http\Request; 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AffiliateController extends Controller
 {
     public function affiliates()
     {
+        $this->authorize("panel_marketing_affiliates");
+
         $user = auth()->user();
 
         $affiliateCode = $user->affiliateCode;
@@ -28,16 +30,10 @@ class AffiliateController extends Controller
             ->where('user_id', $user->id)
             ->sum('amount');
 
-        $sumAffiliateBonus = Accounting::where('is_affiliate_commission', true)
-        ->where('system', false)
-        ->where('user_id', $user->id)
-        ->sum('amount');
-
         $affiliateBonus = Accounting::where('is_affiliate_commission', true)
             ->where('system', false)
             ->where('user_id', $user->id)
-            // ->sum('amount');
-            ->get();
+            ->sum('amount');
 
         $affiliates = Affiliate::where('affiliate_user_id', $user->id)
             ->with([
@@ -46,12 +42,12 @@ class AffiliateController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        $data = [ 
+
+        $data = [
             'pageTitle' => trans('panel.affiliates_page'),
             'affiliateCode' => $affiliateCode,
             'registrationBonus' => $registrationBonus,
             'affiliateBonus' => $affiliateBonus,
-            'sumAffiliateBonus' => $sumAffiliateBonus,
             'referredUsersCount' => $referredUsersCount,
             'affiliates' => $affiliates,
         ];

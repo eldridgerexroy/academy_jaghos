@@ -57,6 +57,11 @@
             @enderror
         </div>
 
+        {{-- Product Badges --}}
+        @if(!empty($product))
+            @include('admin.product_badges.content_include', ['itemTarget' => $product])
+        @endif
+
         <div class="form-group mb-1 d-flex align-items-center">
             <label class="cursor-pointer mb-0 input-label mr-2" for="unlimitedInventorySwitch">{{ trans('update.unlimited_inventory') }}</label>
             <div class="custom-control custom-switch d-inline-block">

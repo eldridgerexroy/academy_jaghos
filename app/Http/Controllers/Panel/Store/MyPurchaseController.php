@@ -14,6 +14,8 @@ class MyPurchaseController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize("panel_products_purchases");
+
         $user = auth()->user();
 
         $giftsIds = Gift::query()

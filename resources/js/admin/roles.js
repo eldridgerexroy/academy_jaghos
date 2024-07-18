@@ -2,14 +2,19 @@
     "use strict";
 
     $('body').on('change', '#isAdmin', function () {
+        const $card = $('.section-card');
+        $card.addClass('d-none');
+
+        $card.find('input').prop('checked', false);
+
         if (this.checked) {
-            $('#sections').removeClass('d-none');
+            $('.section-card.is_admin').removeClass('d-none');
         } else {
-            $('#sections').addClass('d-none');
+            $('.section-card.is_panel').removeClass('d-none');
         }
     });
 
-    $('.section-parent').on('change', function (e) {
+    $('body').on('change', '.section-parent', function (e) {
         let $this = $(this);
         let parent = $this.parent().closest('.section-box');
         let isChecked = e.target.checked;
@@ -21,7 +26,7 @@
         }
     });
 
-    $('.section-child').on('change', function (e) {
+    $('body').on('change', '.section-child', function (e) {
         let $this = $(this);
         let parent = $(this).parent().closest('.section-box');
         let setChecked = false;
@@ -35,5 +40,14 @@
 
         let parentInput = parent.find('input[type="checkbox"].section-parent');
         parentInput.prop('checked', setChecked);
+    });
+
+
+    $('body').on('keyup', 'input[name="name"]', function (e) {
+        const value = $(this).val();
+
+        if (value) {
+            $(this).val(value.replaceAll(' ', '_'))
+        }
     });
 })(jQuery);

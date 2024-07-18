@@ -12,6 +12,21 @@ use App\User;
 
 class SocialiteController extends Controller
 {
+
+    public function __construct()
+    {
+        $settings = getFeaturesSettings();
+
+        \Config::set('services.google.client_id', !empty($settings['google_client_id']) ? $settings['google_client_id'] : '');
+        \Config::set('services.google.client_secret', !empty($settings['google_client_secret']) ? $settings['google_client_secret'] : '');
+        \Config::set('services.google.redirect', url("/google/callback"));
+
+        \Config::set('services.facebook.client_id', !empty($settings['facebook_client_id']) ? $settings['facebook_client_id'] : '');
+        \Config::set('services.facebook.client_secret', !empty($settings['facebook_client_secret']) ? $settings['facebook_client_secret'] : '');
+        \Config::set('services.facebook.redirect', url("/facebook/callback"));
+
+    }
+
     /**
      * Create a new controller instance.
      *

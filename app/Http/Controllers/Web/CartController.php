@@ -6,12 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Web\traits\RegionsDataByUser;
 use App\Mixins\Cashback\CashbackRules;
 use App\Models\Cart;
+use App\Models\CartDiscount;
 use App\Models\Discount;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\PaymentChannel;
 use App\Models\Product;
-use App\Models\ProductOrder; 
+use App\Models\ProductOrder;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -64,6 +65,12 @@ class CartController extends Controller
 
                 $totalCashbackAmount = $this->getTotalCashbackAmount($carts, $user, $calculate["sub_total"]);
 
+                $cartDiscount = CartDiscount::query()
+                    ->where('show_only_on_empty_cart', false)
+                    ->where('enable', true)
+                    ->first();
+
+
                 $data = [
                     'pageTitle' => trans('public.cart_page_title'),
                     'user' => $user,
@@ -79,11 +86,23 @@ class CartController extends Controller
                     'hasPhysicalProduct' => (count($hasPhysicalProduct) > 0),
                     'deliveryEstimateTime' => $deliveryEstimateTime,
                     'totalCashbackAmount' => $totalCashbackAmount,
+                    'cartDiscount' => $cartDiscount,
                 ];
 
                 $data = array_merge($data, $this->getLocationsData($user));
 
                 return view('web.default.cart.cart', $data);
+            }
+        } else {
+            $cartDiscount = CartDiscount::query()->where('enable', true)->first();
+
+            if (!empty($cartDiscount)) {
+                $data = [
+                    'pageTitle' => trans('update.cart_is_empty'),
+                    'cartDiscount' => $cartDiscount,
+                ];
+
+                return view('web.default.cart.empty_cart', $data);
             }
         }
 
@@ -144,7 +163,8 @@ class CartController extends Controller
 
             foreach ($carts as $cart) {
                 $webinar = $cart->webinar;
-                if (!empty($webinar) and in_array($webinar->id, $discountWebinarsIds)) {
+
+                if (!empty($webinar) and (in_array($webinar->id, $discountWebinarsIds) or count($discountWebinarsIds) < 1)) {
                     $totalWebinarsAmount += $webinar->price;
                     //$webinarOtherDiscounts += $webinar->getDiscount($cart->ticket, $user);
                 }
@@ -166,7 +186,7 @@ class CartController extends Controller
 
             foreach ($carts as $cart) {
                 $bundle = $cart->bundle;
-                if (!empty($bundle) and in_array($bundle->id, $discountBundlesIds)) {
+                if (!empty($bundle) and (in_array($bundle->id, $discountBundlesIds) or count($discountBundlesIds) < 1)) {
                     $totalBundlesAmount += $bundle->price;
                     //$bundleOtherDiscounts += $bundle->getDiscount($cart->ticket, $user);
                 }
@@ -257,6 +277,7 @@ class CartController extends Controller
 
             foreach ($carts as $cart) {
                 $webinar = $cart->webinar;
+                $bundle = $cart->bundle;
                 $reserveMeeting = $cart->reserveMeeting;
 
                 if (!empty($webinar)) {
@@ -267,6 +288,20 @@ class CartController extends Controller
                 if (!empty($reserveMeeting)) {
                     $totalCartAmount += $reserveMeeting->paid_amount;
                     //$totalCartOtherDiscounts += $reserveMeeting->getDiscountPrice($user);
+                }
+
+                if (!empty($bundle)) {
+                    $totalCartAmount += $bundle->price;
+                    //$bundleOtherDiscounts += $bundle->getDiscount($cart->ticket, $user);
+                }
+
+                if (!empty($cart->productOrder)) {
+                    $product = $cart->productOrder->product;
+
+                    if (!empty($product)) {
+                        $totalCartAmount += ($product->price * $cart->productOrder->quantity);
+                        //$productOtherDiscounts += $product->getDiscountPrice();
+                    }
                 }
             }
 
@@ -345,7 +380,7 @@ class CartController extends Controller
         return $fee;
     }
 
-    private function calculatePrice($carts, $user, $discountCoupon = null)
+    public function calculatePrice($carts, $user, $discountCoupon = null)
     {
         $financialSettings = getFinancialSettings();
 

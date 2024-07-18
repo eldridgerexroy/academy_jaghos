@@ -23,6 +23,8 @@ class BlogPostsController extends Controller
 
     public function index()
     {
+        $this->authorize("panel_blog_my_articles");
+
         $user = auth()->user();
 
         $this->handleAuthorize($user);
@@ -55,6 +57,8 @@ class BlogPostsController extends Controller
 
     public function create()
     {
+        $this->authorize("panel_blog_new_article");
+
         $user = auth()->user();
 
         $this->handleAuthorize($user);
@@ -71,6 +75,8 @@ class BlogPostsController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize("panel_blog_new_article");
+
         $user = auth()->user();
 
         $this->handleAuthorize($user);
@@ -129,6 +135,8 @@ class BlogPostsController extends Controller
 
     public function edit(Request $request, $post_id)
     {
+        $this->authorize("panel_blog_new_article");
+
         $user = auth()->user();
 
         $this->handleAuthorize($user);
@@ -155,6 +163,8 @@ class BlogPostsController extends Controller
 
     public function update(Request $request, $post_id)
     {
+        $this->authorize("panel_blog_new_article");
+
         $user = auth()->user();
 
         $this->handleAuthorize($user);
@@ -200,8 +210,23 @@ class BlogPostsController extends Controller
         abort(404);
     }
 
-    public function delete($post_id)
+    public function delete(Request $request, $post_id)
     {
+        $this->authorize("panel_blog_delete_article");
+
+        if (!canDeleteContentDirectly()) {
+            if ($request->ajax()) {
+                return response()->json([], 422);
+            } else {
+                $toastData = [
+                    'title' => trans('public.request_failed'),
+                    'msg' => trans('update.it_is_not_possible_to_delete_the_content_directly'),
+                    'status' => 'error'
+                ];
+                return redirect()->back()->with(['toast' => $toastData]);
+            }
+        }
+
         $user = auth()->user();
 
         $this->handleAuthorize($user);

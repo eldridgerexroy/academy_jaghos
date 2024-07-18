@@ -8,8 +8,8 @@
 
                 @php
                     $pages = ['admin_login','admin_dashboard', 'login','register','remember_pass','verification',
-                        'search','categories','become_instructor','certificate_validation','blog','instructors',
-                        'organizations','dashboard','user_cover','instructor_finder_wizard','products_lists', 'upcoming_courses_lists'
+                        'search', 'tags', 'categories','become_instructor','certificate_validation','blog','instructors',
+                        'organizations','dashboard','user_cover','instructor_finder_wizard','products_lists', 'upcoming_courses_lists', 'user_default_signature'
                     ];
                 @endphp
 

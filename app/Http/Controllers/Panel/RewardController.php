@@ -11,6 +11,8 @@ class RewardController extends Controller
 {
     public function index()
     {
+        $this->authorize("panel_rewards_lists");
+
         $rewardsSettings = getRewardsSettings();
 
         if (empty($rewardsSettings) or ($rewardsSettings and $rewardsSettings['status'] != '1')) {

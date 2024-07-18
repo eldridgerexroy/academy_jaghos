@@ -1,20 +1,22 @@
 <div class="webinar-card webinar-list webinar-list-2 d-flex mt-30">
     <div class="image-box">
-        @if($webinar->bestTicket() < $webinar->price)
-            <span class="badge badge-danger">{{ trans('public.offer',['off' => $webinar->bestTicket(true)['percent']]) }}</span>
-        @elseif(empty($isFeature) and !empty($webinar->feature))
-            <span class="badge badge-warning">{{ trans('home.featured') }}</span>
-        @elseif($webinar->type == 'webinar')
-            @if($webinar->start_date > time())
-                <span class="badge badge-primary">{{  trans('panel.not_conducted') }}</span>
-            @elseif($webinar->isProgressing())
-                <span class="badge badge-secondary">{{ trans('webinars.in_progress') }}</span>
+        <div class="badges-lists">
+            @if($webinar->bestTicket() < $webinar->price)
+                <span class="badge badge-danger">{{ trans('public.offer',['off' => $webinar->bestTicket(true)['percent']]) }}</span>
+            @elseif(empty($isFeature) and !empty($webinar->feature))
+                <span class="badge badge-warning">{{ trans('home.featured') }}</span>
+            @elseif($webinar->type == 'webinar')
+                @if($webinar->start_date > time())
+                    <span class="badge badge-primary">{{  trans('panel.not_conducted') }}</span>
+                @elseif($webinar->isProgressing())
+                    <span class="badge badge-secondary">{{ trans('webinars.in_progress') }}</span>
+                @else
+                    <span class="badge badge-secondary">{{ trans('public.finished') }}</span>
+                @endif
             @else
-                <span class="badge badge-secondary">{{ trans('public.finished') }}</span>
+                <span class="badge badge-primary">{{ trans('webinars.'.$webinar->type) }}</span>
             @endif
-        @else
-            <span class="badge badge-primary">{{ trans('webinars.'.$webinar->type) }}</span>
-        @endif
+        </div>
 
         <a href="{{ $webinar->getUrl() }}">
             <img src="{{ $webinar->getImage() }}" class="img-cover" alt="{{ $webinar->title }}">
@@ -72,7 +74,7 @@
             </div>
 
             <div class="webinar-price-box d-flex flex-column justify-content-center align-items-center">
-            @if(!empty($webinar->price) and $webinar->price > 0)
+                @if(!empty($webinar->price) and $webinar->price > 0)
                     @if($webinar->bestTicket() < $webinar->price)
                         <span class="off">{{ handlePrice($webinar->price, true, true, false, null, true) }}</span>
                         <span class="real">{{ handlePrice($webinar->bestTicket(), true, true, false, null, true) }}</span>

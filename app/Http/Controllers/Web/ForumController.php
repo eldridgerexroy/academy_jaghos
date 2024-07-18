@@ -95,7 +95,7 @@ class ForumController extends Controller
                 'topic' => function ($query) {
                     $query->with([
                         'creator' => function ($query) {
-                            $query->select('id', 'full_name', 'avatar');
+                            $query->select('id', 'full_name', 'avatar', 'avatar_settings');
                         },
                         'posts'
                     ]);
@@ -229,7 +229,7 @@ class ForumController extends Controller
 
         $topics = $query->with([
             'creator' => function ($query) {
-                $query->select('id', 'full_name', 'avatar');
+                $query->select('id', 'full_name', 'avatar', 'avatar_settings');
             }
         ])
             ->withCount([
@@ -265,7 +265,7 @@ class ForumController extends Controller
             ->whereHas('creator')
             ->with([
                 'creator' => function ($query) {
-                    $query->select('id', 'full_name', 'avatar');
+                    $query->select('id', 'full_name', 'avatar', 'avatar_settings');
                 }
             ])
             ->orderBy('posts_count', 'desc')

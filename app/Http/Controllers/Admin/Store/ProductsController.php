@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Store;
 
 use App\Exports\StoreProductsExport;
+use App\Http\Controllers\Admin\traits\ProductBadgeTrait;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductCategory;
@@ -23,6 +24,8 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ProductsController extends Controller
 {
+    use ProductBadgeTrait;
+
     public function index(Request $request)
     {
         $this->authorize('admin_store_products');
@@ -555,6 +558,9 @@ class ProductsController extends Controller
             }
         }
 
+        // Product Badge
+        $this->handleProductBadges($product, $data);
+
         $url = getAdminPanelUrl('/store/products/' . $product->id . '/edit?locale=' . $data['locale']);
 
         return redirect($url);
@@ -798,4 +804,63 @@ class ProductsController extends Controller
 
         return Excel::download($export, 'storeProducts.xlsx');
     }
+
+
+    public function approve(Request $request, $id)
+    {
+        $this->authorize('admin_store_edit_product');
+
+        $bundle = Product::query()->findOrFail($id);
+
+        $bundle->update([
+            'status' => Product::$active
+        ]);
+
+        $toastData = [
+            'title' => trans('public.request_success'),
+            'msg' => trans('update.product_status_changes_to_approved'),
+            'status' => 'success'
+        ];
+
+        return redirect(getAdminPanelUrl("/store/products"))->with(['toast' => $toastData]);
+    }
+
+    public function reject(Request $request, $id)
+    {
+        $this->authorize('admin_store_edit_product');
+
+        $bundle = Product::query()->findOrFail($id);
+
+        $bundle->update([
+            'status' => Product::$inactive
+        ]);
+
+        $toastData = [
+            'title' => trans('public.request_success'),
+            'msg' => trans('update.product_status_changes_to_rejected'),
+            'status' => 'success'
+        ];
+
+        return redirect(getAdminPanelUrl("/store/products"))->with(['toast' => $toastData]);
+    }
+
+    public function unpublish(Request $request, $id)
+    {
+        $this->authorize('admin_store_edit_product');
+
+        $bundle = Product::query()->findOrFail($id);
+
+        $bundle->update([
+            'status' => Product::$pending
+        ]);
+
+        $toastData = [
+            'title' => trans('public.request_success'),
+            'msg' => trans('update.product_status_changes_to_unpublished'),
+            'status' => 'success'
+        ];
+
+        return redirect(getAdminPanelUrl("/store/products"))->with(['toast' => $toastData]);
+    }
+
 }

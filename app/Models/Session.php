@@ -22,7 +22,7 @@ class Session extends Model implements TranslatableContract
     static $Inactive = 'inactive';
     static $Status = ['active', 'inactive'];
 
-    static $sessionApis = ['local', 'big_blue_button', 'zoom', 'agora', 'jitsi', 'google_meet'];
+    static $sessionApis = ['local', 'big_blue_button', 'zoom', 'agora', 'jitsi'];
 
 
     public $translatedAttributes = ['title', 'description'];
@@ -66,6 +66,11 @@ class Session extends Model implements TranslatableContract
     public function agoraHistory()
     {
         return $this->hasOne('App\Models\AgoraHistory', 'session_id', 'id');
+    }
+
+    public function personalNote()
+    {
+        return $this->morphOne('App\Models\CoursePersonalNote', 'targetable');
     }
 
     public function addToCalendarLink()

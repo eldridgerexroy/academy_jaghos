@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Observers\OrderItemNumberObserver;
 use Illuminate\Database\Eloquent\Model;
 
 class OrderItem extends Model
@@ -9,6 +10,14 @@ class OrderItem extends Model
     public $timestamps = false;
 
     protected $guarded = ['id'];
+
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        OrderItem::observe(OrderItemNumberObserver::class);
+    }
 
     public function user()
     {

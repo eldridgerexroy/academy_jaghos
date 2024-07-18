@@ -81,6 +81,7 @@
                                     {{ trans('update.resolved') }}
                                 </div>
                             @endif
+
                         @endif
                     </div>
                 </div>

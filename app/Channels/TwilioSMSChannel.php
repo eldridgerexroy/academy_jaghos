@@ -19,9 +19,12 @@ class TwilioSMSChannel
     {
         $message = $notification->toTwilioSMS($notifiable);
 
-        $account_sid = getenv("TWILIO_SID");
-        $auth_token = getenv("TWILIO_AUTH_TOKEN");
-        $twilio_number = getenv("TWILIO_NUMBER");
+        $settings = getFeaturesSettings();
+
+
+        $account_sid = !empty($settings['twilio_sid']) ? $settings['twilio_sid'] : '';
+        $auth_token = !empty($settings['twilio_auth_token']) ? $settings['twilio_auth_token'] : '';
+        $twilio_number = !empty($settings['twilio_number']) ? $settings['twilio_number'] : '';
 
         $twilio = new Client($account_sid, $auth_token);
 

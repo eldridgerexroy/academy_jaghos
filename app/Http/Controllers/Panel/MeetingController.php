@@ -11,8 +11,11 @@ use Illuminate\Support\Facades\Validator;
 
 class MeetingController extends Controller
 {
+
     public function setting(Request $request)
     {
+        $this->authorize("panel_meetings_settings");
+
         $user = auth()->user();
 
         $meeting = Meeting::where('creator_id', $user->id)
@@ -54,6 +57,8 @@ class MeetingController extends Controller
 
     public function update(Request $request, $id)
     {
+        $this->authorize("panel_meetings_settings");
+
         $user = auth()->user();
         $data = $request->all();
 

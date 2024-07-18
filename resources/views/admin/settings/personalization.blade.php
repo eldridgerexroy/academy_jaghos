@@ -26,7 +26,7 @@
                                 $items = ['page_background','home_sections','home_hero','home_hero2','home_video_or_image_box',
                                             'panel_sidebar','find_instructors','reward_program','become_instructor_section',
                                             'theme_colors', 'theme_fonts', 'forums_section', 'navbar_button','cookie_settings', 'mobile_app', 'maintenance_settings',
-                                            'others_personalization', 'statistics'
+                                            'others_personalization', 'statistics', 'restriction_settings'
                                          ];
                             @endphp
 

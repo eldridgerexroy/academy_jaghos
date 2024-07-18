@@ -433,8 +433,6 @@ return [
 'paid_failed' => 'Paid/Failed',
 'paid_waiting' => 'Paid/Pending',
 'paid_successful' => 'Paid/Successful',
-'paid_status' => 'Paid Status',
-'paid_date' => 'Paid Date',
 'success' => 'Successful',
 'invoice' => 'Invoice',
 'purchase_date' => 'Purchased Date',
@@ -585,6 +583,7 @@ return [
 'admin_roles_edit' => 'Roles Edit',
 'admin_roles_delete' => 'Roles Delete',
 
+<<<<<<< HEAD
 // University
 
 'university' => 'University',
@@ -643,6 +642,8 @@ return [
 'admin_major_edit' => 'Majors Edit',
 'admin_major_delete' => 'Majors Delete',
 
+=======
+>>>>>>> 1.9.0
 // Pages Title
 
 'webinar_new_page_title' => 'New Course',
@@ -1015,12 +1016,6 @@ return [
 'contacts_lists' => 'Contact Messages Lists',
 'contacts_message' => 'Contact Message',
 'user_role_updated' => 'The user role updated.',
-
-// Recording Request
-'webinar_recording' => 'Webinar Recordings',
-'request_recording' => 'Request Recording',
-'webinars_recording_detail' => 'Request Recording Detail',
-'webinars_recording_create' => 'Create Request Recording',
 
 //Classes
 
@@ -1568,5 +1563,13 @@ By enabling this feature, newly registered users will require approval using thi
 'notification_forms' => 'Forms',
 'notification_submit_form_by_users' => 'Form Submission (for Admin)',
 'form_title' => 'Form Title',
+'restriction_settings' => 'IP Restriction State',
+'upcoming_courses_lists_background' => 'Upcoming Courses List',
+'user_default_signature_background' => 'User Default Signature',
+'tags_background' => 'Tags Page',
+'seo_metas_tags' => 'Tags Page',
+'teacher' => 'Instructor',
+'discount_amount' => 'Discount Amount',
+'discount_title' => 'Discount Title',
 
 ];

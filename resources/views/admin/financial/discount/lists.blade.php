@@ -109,7 +109,10 @@
                             <div class="table-responsive">
                                 <table class="table table-striped font-14">
                                     <tr>
-                                        <th width="150">{{ trans('admin/main.title') }}</th>
+                                        <th class="text-left" width="150">{{ trans('admin/main.title') }}</th>
+                                        @if($isInstructorCoupons)
+                                            <th class="text-left" width="150">{{ trans('admin/main.creator') }}</th>
+                                        @endif
                                         <th width="150">{{ trans('admin/main.type') }}</th>
                                         <th class="text-left" width="150">{{ trans('admin/main.code') }}</th>
                                         <th class="text-left" width="150">{{ trans('admin/main.user') }}</th>
@@ -126,7 +129,31 @@
 
                                     @foreach($discounts as $discount)
                                         <tr>
-                                            <td>{{ $discount->title }}</td>
+                                            <td>
+                                                <div class="white-space-nowrap">{{ $discount->title }}</div>
+                                            </td>
+
+                                            @if($isInstructorCoupons)
+                                                <td class="text-left">
+                                                    <div class="d-flex align-items-center">
+                                                        <figure class="avatar mr-2">
+                                                            <img src="{{ $discount->creator->getAvatar() }}" alt="{{ $discount->creator->full_name }}">
+                                                        </figure>
+                                                        <div class="media-body ml-1">
+                                                            <div class="mt-0 mb-1 font-weight-bold">{{ $discount->creator->full_name }}</div>
+
+                                                            @if($discount->creator->mobile)
+                                                                <div class="text-primary text-small font-600-bold">{{ $discount->creator->mobile }}</div>
+                                                            @endif
+
+                                                            @if($discount->creator->email)
+                                                                <div class="text-primary text-small font-600-bold">{{ $discount->creator->email }}</div>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            @endif
+
                                             <td>
                                                 @if($discount->discount_type == \App\Models\Discount::$discountTypeFixedAmount)
                                                     {{ trans('update.fixed_amount') }}

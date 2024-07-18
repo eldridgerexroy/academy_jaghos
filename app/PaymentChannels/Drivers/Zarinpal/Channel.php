@@ -14,6 +14,12 @@ use Shetabit\Payment\Facade\Payment as Paymenter;
 class Channel extends BasePaymentChannel implements IChannel
 {
     protected $currency;
+    protected $test_mode;
+    protected $merchant_id;
+
+    protected array $credentialItems = [
+        'merchant_id',
+    ];
 
     /**
      * Channel constructor.
@@ -22,10 +28,19 @@ class Channel extends BasePaymentChannel implements IChannel
     public function __construct(PaymentChannel $paymentChannel)
     {
         $this->currency = currency();
+        $this->setCredentialItems($paymentChannel);
+    }
+
+    private function handleConfigs()
+    {
+        \Config::set('payment.drivers.zarinpal.mode', $this->test_mode ? 'sandbox' : 'normal'); // can be normal, sandbox, zaringate
+        \Config::set('payment.drivers.zarinpal.merchantId', $this->merchant_id);
     }
 
     public function paymentRequest(Order $order)
     {
+        $this->handleConfigs();
+
         $invoice = (new Invoice)->amount($this->makeAmountByCurrency($order->total_amount, $this->currency))
             ->detail([
                 'description' => trans('public.paid_form_online_payment'),
@@ -45,6 +60,7 @@ class Channel extends BasePaymentChannel implements IChannel
 
     public function verify(Request $request)
     {
+        $this->handleConfigs();
         $user = auth()->user();
 
         $transactionId = session()->get('zarinpal.payments.transaction_id', null);

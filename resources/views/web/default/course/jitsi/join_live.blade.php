@@ -22,7 +22,7 @@
     function jitsiMeeting() {
         const meeting_id = "{{ $session->id }}";
 
-        const domain = '{{ env('JITSI_LIVE_URL') }}';
+        const domain = '{{ getFeaturesSettings("jitsi_live_url") }}';
         const options = {
             roomName: meeting_id,
             role: '{{ $role }}',

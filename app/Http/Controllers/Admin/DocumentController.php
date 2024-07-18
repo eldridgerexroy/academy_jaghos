@@ -111,7 +111,7 @@ class DocumentController extends Controller
 
         $notifyOptions = [
             '[c.title]' => '',
-            '[f.d.type]' => $data['type'],
+            '[f.d.type]' => trans("update.{$data['type']}"),
             '[amount]' => handlePrice($amount, true, true, false, $user),
         ];
 

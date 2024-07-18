@@ -22,6 +22,7 @@ use App\Models\Role;
 use App\Models\Sale;
 use App\Models\UserBadge;
 use App\Models\UserBank;
+use App\Models\UserLoginHistory;
 use App\Models\UserManualPurchase;
 use App\Models\UserMeta;
 use App\Models\UserOccupation;
@@ -647,6 +648,13 @@ class UserController extends Controller
 
         $formFieldsHtml = $this->getFormFieldsByUserType($request, $userType, true, $user);
 
+        $userLoginHistories = null;
+
+        if ($request->get('tab') == "loginHistory") {
+            $userLoginHistories = UserLoginHistory::query()->where('user_id', $user->id)
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
+        }
 
         $data = [
             'pageTitle' => trans('admin/pages/users.edit_page_title'),
@@ -666,6 +674,7 @@ class UserController extends Controller
             'userBanks' => $userBanks,
             'formFieldsHtml' => $formFieldsHtml,
             'becomeInstructorFormFieldValues' => $becomeInstructorFormFieldValues,
+            'userLoginHistories' => $userLoginHistories,
         ];
 
         // Purchased Classes Data

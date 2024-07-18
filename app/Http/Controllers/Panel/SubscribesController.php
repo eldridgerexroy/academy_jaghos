@@ -20,6 +20,8 @@ class SubscribesController extends Controller
 
     public function index()
     {
+        $this->authorize("panel_financial_subscribes");
+
         $user = auth()->user();
         $subscribes = Subscribe::all();
 

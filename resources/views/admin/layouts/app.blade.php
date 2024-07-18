@@ -5,10 +5,9 @@
     $isRtl = ((in_array(mb_strtoupper(app()->getLocale()), $rtlLanguages)) or (!empty($generalSettings['rtl_layout']) and $generalSettings['rtl_layout'] == 1));
 @endphp
 <head>
-    <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+    @include('web.default.includes.metas')
     <title>{{ $pageTitle ?? '' }} </title>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <!-- General CSS File -->
     <link rel="stylesheet" href="/assets/admin/vendor/bootstrap/bootstrap.min.css"/>
     <link rel="stylesheet" href="/assets/vendors/fontawesome/css/all.min.css"/>

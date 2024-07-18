@@ -12,6 +12,21 @@ use Illuminate\Http\Request;
 class Channel extends BasePaymentChannel implements IChannel
 {
     protected $currency;
+    protected $test_mode;
+    protected $merchant_id;
+    protected $merchant_key;
+    protected $merchant_website;
+    protected $channel;
+    protected $industry_type;
+
+    protected array $credentialItems = [
+        'merchant_id',
+        'merchant_key',
+        'merchant_website',
+        'channel',
+        'industry_type',
+    ];
+
     /**
      * Channel constructor.
      * @param PaymentChannel $paymentChannel
@@ -19,10 +34,23 @@ class Channel extends BasePaymentChannel implements IChannel
     public function __construct(PaymentChannel $paymentChannel)
     {
         $this->currency = currency();
+        $this->setCredentialItems($paymentChannel);
     }
+
+    private function handleConfigs()
+    {
+        \Config::set('services.paytm-wallet.env', $this->test_mode ? 'local' : 'production');
+        \Config::set('services.paytm-wallet.merchant_id', $this->merchant_id);
+        \Config::set('services.paytm-wallet.merchant_key', $this->merchant_key);
+        \Config::set('services.paytm-wallet.merchant_website', $this->merchant_website);
+        \Config::set('services.paytm-wallet.channel', $this->channel);
+    }
+
 
     public function paymentRequest(Order $order)
     {
+        $this->handleConfigs();
+
         $payment = PaytmWallet::with('receive');
 
         $payment->prepare([
@@ -48,13 +76,15 @@ class Channel extends BasePaymentChannel implements IChannel
 
     public function verify(Request $request)
     {
+        $this->handleConfigs();
+
         $paytmWallet = PaytmWallet::with('receive');
 
         $order = Order::find($paytmWallet->getOrderId());
 
         if ($paytmWallet->isSuccessful()) {
             $order->update(['status' => Order::$paying]);
-        } else if($paytmWallet->isFailed()){
+        } else if ($paytmWallet->isFailed()) {
             $order->update(['status' => Order::$fail]);
         }
 

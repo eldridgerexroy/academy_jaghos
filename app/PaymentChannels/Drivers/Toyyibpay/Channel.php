@@ -18,14 +18,16 @@ class Channel extends BasePaymentChannel implements IChannel
     protected $toyyibpay_key;
     protected $toyyibpay_category;
 
+    protected array $credentialItems = [
+        'toyyibpay_key',
+        'toyyibpay_category',
+    ];
+
     public function __construct(PaymentChannel $paymentChannel)
     {
         $this->currency = currency();
         $this->order_session_key = 'toyyibpay.payments.order_id';
-
-        $this->test_mode = env('TOYYIBPAY_TEST_MODE');
-        $this->toyyibpay_key = env('TOYYIBPAY_KEY');
-        $this->toyyibpay_category = env('TOYYIBPAY_CATEGORY');
+        $this->setCredentialItems($paymentChannel);
     }
 
     public function paymentRequest(Order $order)

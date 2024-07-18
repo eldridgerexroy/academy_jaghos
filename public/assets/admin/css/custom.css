@@ -1497,6 +1497,17 @@ li {
     color: #6c757d !important;
 }
 
+.payment-channel-credentials-card {
+    padding: 16px;
+    border-radius: 10px;
+}
+
+.payment-channel-credentials-card h5 {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000000;
+}
+
 .note-editable ul {
     list-style: disc !important;
     list-style-position: inside !important;
@@ -1513,4 +1524,19 @@ li {
 
 .note-editable ol li {
     list-style: inherit !important;
+}
+
+.white-space-nowrap {
+    white-space: nowrap;
+}
+
+.swal2-popup #swal2-content {
+    text-align: left !important;
+}
+.rtl .swal2-popup #swal2-content {
+    text-align: right !important;
+}
+
+.text-decoration-line-through {
+    text-decoration: line-through;
 }

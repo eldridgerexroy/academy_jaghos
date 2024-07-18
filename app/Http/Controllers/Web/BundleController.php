@@ -10,10 +10,12 @@ use App\Mixins\Installment\InstallmentPlans;
 use App\Models\AdvertisingBanner;
 use App\Models\Bundle;
 use App\Models\Cart;
+use App\Models\Discount;
 use App\Models\Favorite;
 use App\Models\RewardAccounting;
 use App\Models\Sale;
 use App\Models\Webinar;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class BundleController extends Controller
@@ -38,6 +40,11 @@ class BundleController extends Controller
             ->with([
                 'tickets' => function ($query) {
                     $query->orderBy('order', 'asc');
+                },
+                'relatedCourses' => function ($query) {
+                    $query->whereHas('course', function ($query) {
+                        $query->where('status', 'active');
+                    });
                 },
                 'filterOptions',
                 'category',
@@ -126,6 +133,33 @@ class BundleController extends Controller
             $cashbackRules = $cashbackRulesMixin->getRules('bundles', $bundle->id, $bundle->type, $bundle->category_id, $bundle->teacher_id);
         }
 
+        $instructorDiscounts = null;
+
+        if (!empty(getFeaturesSettings('frontend_coupons_status'))) {
+            $instructorDiscounts = Discount::query()
+                ->where(function (Builder $query) use ($bundle) {
+                    $query->where('creator_id', $bundle->creator_id);
+                    $query->orWhere('creator_id', $bundle->teacher_id);
+                })
+                ->where(function (Builder $query) use ($bundle) {
+                    $query->where('source', 'all');
+                    $query->orWhere(function (Builder $query) use ($bundle) {
+                        $query->where('source', Discount::$discountSourceBundle);
+
+                        $query->where(function (Builder $query) use ($bundle) {
+                            $query->whereHas('discountBundles', function ($query) use ($bundle) {
+                                $query->where('bundle_id', $bundle->id);
+                            });
+
+                            $query->whereDoesntHave('discountBundles');
+                        });
+                    });
+                })
+                ->where('status', 'active')
+                ->where('expired_at', '>', time())
+                ->get();
+        }
+
         $pageRobot = getPageRobot('bundle_show'); // index
 
         $data = [
@@ -141,6 +175,7 @@ class BundleController extends Controller
             'activeSpecialOffer' => $bundle->activeSpecialOffer(),
             'cashbackRules' => $cashbackRules ?? null,
             'installments' => $installments ?? null,
+            'instructorDiscounts' => $instructorDiscounts,
         ];
 
         return view('web.default.bundle.index', $data);

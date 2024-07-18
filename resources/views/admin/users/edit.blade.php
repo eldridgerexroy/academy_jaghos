@@ -2,7 +2,7 @@
 
 @push('styles_top')
     <link rel="stylesheet" href="/assets/default/vendors/sweetalert2/dist/sweetalert2.min.css">
-    <link rel="stylesheet" href="/assets/default/vendors/select2/select2.min.css">
+
 @endpush
 
 @section('content')
@@ -33,7 +33,7 @@
 
                             <ul class="nav nav-pills" id="myTab3" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link @if(empty($becomeInstructor)) active @endif" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">{{ trans('admin/main.main_general') }}</a>
+                                    <a class="nav-link @if(empty($becomeInstructor) and empty(request()->get('tab'))) active @endif" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">{{ trans('admin/main.main_general') }}</a>
                                 </li>
 
                                 @if(!empty($formFieldsHtml))
@@ -96,6 +96,11 @@
                                 <li class="nav-item">
                                     <a class="nav-link" id="topics-tab" data-toggle="tab" href="#topics" role="tab" aria-controls="topics" aria-selected="true">{{ trans('update.forum_topics') }}</a>
                                 </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link {{ (request()->get('tab') == "loginHistory") ? 'active' : '' }}" href="{{ getAdminPanelUrl("/users/{$user->id}/edit?tab=loginHistory") }}" role="tab" aria-controls="loginHistory" aria-selected="true">{{ trans('update.login_history') }}</a>
+                                </li>
+
                             </ul>
 
                             <div class="tab-content" id="myTabContent2">
@@ -138,6 +143,8 @@
 
                                 @include('admin.users.editTabs.topics')
 
+                                @include('admin.users.editTabs.login_history')
+
                             </div>
                         </div>
                     </div>
@@ -149,7 +156,7 @@
 
 @push('scripts_bottom')
     <script src="/assets/default/vendors/sweetalert2/dist/sweetalert2.min.js"></script>
-    <script src="/assets/default/vendors/select2/select2.min.js"></script>
+
 
     <script>
         var saveSuccessLang = '{{ trans('webinars.success_store') }}';

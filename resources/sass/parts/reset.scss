@@ -93,6 +93,8 @@ body.modal-open, body.swal2-shown {
 body {
     font-family: var(--font-family-base) !important;
     overflow: hidden;
+    background-color: var(--body_bg, #ffffff) !important;
+
     @media (max-width: $screen-xs-max) {
         font-size: 14px;
     }

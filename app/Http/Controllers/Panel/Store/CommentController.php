@@ -13,6 +13,8 @@ class CommentController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize("panel_products_comments");
+
         $user = auth()->user();
 
         $query = Comment::where('status', 'active')
@@ -56,6 +58,8 @@ class CommentController extends Controller
 
     public function myComments(Request $request)
     {
+        $this->authorize("panel_products_my_comments");
+
         $user = auth()->user();
 
         $query = Comment::where('user_id', $user->id)

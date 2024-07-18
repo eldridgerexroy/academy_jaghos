@@ -105,6 +105,15 @@
                             <option value="multiple" {{ (!empty($itemValue) and !empty($itemValue['course_live_stream_type']) and $itemValue['course_live_stream_type'] == 'multiple') ? 'selected="selected"' : '' }}>{{ trans('update.meeting_multiple') }}</option>
                         </select><label class="label"></label>
                     </div>
+
+
+                    @foreach(['agora_app_id', 'agora_app_certificate'] as $agoraConf)
+                        <div class="form-group">
+                            <label>{{ trans("update.{$agoraConf}") }}</label>
+                            <input type="text" name="value[{{ $agoraConf }}]" value="{{ (!empty($itemValue) and !empty($itemValue["{$agoraConf}"])) ? $itemValue["{$agoraConf}"] : old("{$agoraConf}") }}" class="form-control "/>
+                        </div>
+                    @endforeach
+
                 </div>
 
                 <div class="mb-5">
@@ -389,6 +398,16 @@
                         </label>
                         <p class="font-14">{{ trans('update.show_facebook_login_button_hint') }}</p>
                     </div>
+
+                    @foreach(['google','facebook'] as $socialConf)
+                        @foreach(['client_id','client_secret'] as $conf)
+                            <div class="form-group">
+                                <label>{{ trans("update.{$socialConf}_{$conf}") }}</label>
+                                <input type="text" name="value[{{ $socialConf }}_{{ $conf }}]" value="{{ (!empty($itemValue) and !empty($itemValue["{$socialConf}_{$conf}"])) ? $itemValue["{$socialConf}_{$conf}"] : old("{$socialConf}_{$conf}") }}" class="form-control "/>
+                            </div>
+                        @endforeach
+                    @endforeach
+
                 </div>
 
                 <div class="mb-5">
@@ -562,6 +581,109 @@
                                     <option value="{{ $formRow->id }}" @if((!empty($itemValue) and !empty($itemValue[$formSection]) and $itemValue[$formSection] == $formRow->id)) selected @endif>{{ $formRow->title }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                    @endforeach
+
+                </div>
+
+                <div class="mb-5">
+                    <h5>{{ trans('update.enable_frontend_coupons') }}</h5>
+
+                    <div class="form-group mt-3 custom-switches-stacked">
+                        <label class="custom-switch pl-0">
+                            <input type="hidden" name="value[frontend_coupons_status]" value="0">
+                            <input type="checkbox" name="value[frontend_coupons_status]" id="frontend_coupons_statusSwitch" value="1"
+                                   {{ (!empty($itemValue) and !empty($itemValue['frontend_coupons_status']) and $itemValue['frontend_coupons_status']) ? 'checked="checked"' : '' }} class="custom-switch-input"/>
+                            <span class="custom-switch-indicator"></span>
+                            <label class="custom-switch-description mb-0 cursor-pointer" for="frontend_coupons_statusSwitch">{{ trans('admin/main.active') }}</label>
+                        </label>
+                        <p class="font-12 text-gray mb-0">{{ trans('update.frontend_coupons_status_hint') }}</p>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="">{{ trans('update.coupons_display_type') }}</label>
+                        <select name="value[frontend_coupons_display_type]" class="form-control select2">
+                            <option value="">{{ trans('update.select_a_type') }}</option>
+                            @foreach(['before_content', 'after_content'] as $fcType)
+                                <option value="{{ $fcType }}" @if((!empty($itemValue) and !empty($itemValue['frontend_coupons_display_type']) and $itemValue['frontend_coupons_display_type'] == $fcType)) selected @endif>{{ trans("update.{$fcType}") }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <h5>{{ trans('update.course_notes') }}</h5>
+
+                    <div class="form-group mt-3 custom-switches-stacked">
+                        <label class="custom-switch pl-0">
+                            <input type="hidden" name="value[course_notes_status]" value="0">
+                            <input type="checkbox" name="value[course_notes_status]" id="course_notes_statusSwitch" value="1"
+                                   {{ (!empty($itemValue) and !empty($itemValue['course_notes_status']) and $itemValue['course_notes_status']) ? 'checked="checked"' : '' }} class="custom-switch-input"/>
+                            <span class="custom-switch-indicator"></span>
+                            <label class="custom-switch-description mb-0 cursor-pointer" for="course_notes_statusSwitch">{{ trans('admin/main.active') }}</label>
+                        </label>
+                        <p class="font-12 text-gray mb-0">{{ trans('update.course_notes_status_hint') }}</p>
+                    </div>
+
+                    <div class="form-group mt-3 custom-switches-stacked">
+                        <label class="custom-switch pl-0">
+                            <input type="hidden" name="value[course_notes_attachment]" value="0">
+                            <input type="checkbox" name="value[course_notes_attachment]" id="course_notes_attachmentSwitch" value="1"
+                                   {{ (!empty($itemValue) and !empty($itemValue['course_notes_attachment']) and $itemValue['course_notes_attachment']) ? 'checked="checked"' : '' }} class="custom-switch-input"/>
+                            <span class="custom-switch-indicator"></span>
+                            <label class="custom-switch-description mb-0 cursor-pointer" for="course_notes_attachmentSwitch">{{ trans('update.attachment') }}</label>
+                        </label>
+                        <p class="font-12 text-gray mb-0">{{ trans('update.course_notes_attachment_hint') }}</p>
+                    </div>
+                </div>
+
+
+                <div class="mb-5">
+                    <h5>{{ trans('update.zoom_api_settings') }}</h5>
+
+                    @foreach(['client_id', 'client_secret', 'account_id'] as $zoomConf)
+                        <div class="form-group">
+                            <label>{{ trans("update.zoom_{$zoomConf}") }}</label>
+                            <input type="text" name="value[zoom_{{ $zoomConf }}]" value="{{ (!empty($itemValue) and !empty($itemValue["zoom_{$zoomConf}"])) ? $itemValue["zoom_{$zoomConf}"] : old("zoom_{$zoomConf}") }}" class="form-control "/>
+                        </div>
+                    @endforeach
+
+                </div>
+
+                <div class="mb-5">
+                    <h5>{{ trans('update.bigbluebutton_api_settings') }}</h5>
+
+                    @foreach(['server_base_url', 'security_salt'] as $bbbConf)
+                        <div class="form-group">
+                            <label>{{ trans("update.bigbluebutton_{$bbbConf}") }}</label>
+                            <input type="text" name="value[bigbluebutton_{{ $bbbConf }}]" value="{{ (!empty($itemValue) and !empty($itemValue["bigbluebutton_{$bbbConf}"])) ? $itemValue["bigbluebutton_{$bbbConf}"] : old("bigbluebutton_{$bbbConf}") }}" class="form-control "/>
+                        </div>
+                    @endforeach
+
+                </div>
+
+
+                <div class="mb-5">
+                    <h5>{{ trans('update.jitsi_api_settings') }}</h5>
+
+                    @foreach(['jitsi_live_url'] as $jitsiConf)
+                        <div class="form-group">
+                            <label>{{ trans("update.{$jitsiConf}") }}</label>
+                            <input type="text" name="value[{{ $jitsiConf }}]" value="{{ (!empty($itemValue) and !empty($itemValue["{$jitsiConf}"])) ? $itemValue["{$jitsiConf}"] : old("{$jitsiConf}") }}" class="form-control "/>
+                        </div>
+                    @endforeach
+
+                </div>
+
+
+                <div class="mb-5">
+                    <h5>{{ trans('update.twilio_api_settings') }}</h5>
+
+                    @foreach(['twilio_sid', 'twilio_auth_token', 'twilio_number']  as $twilioConf)
+                        <div class="form-group">
+                            <label>{{ trans("update.{$twilioConf}") }}</label>
+                            <input type="text" name="value[{{ $twilioConf }}]" value="{{ (!empty($itemValue) and !empty($itemValue["{$twilioConf}"])) ? $itemValue["{$twilioConf}"] : old("{$twilioConf}") }}" class="form-control "/>
                         </div>
                     @endforeach
 

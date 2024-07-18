@@ -15,6 +15,10 @@ class Channel extends BasePaymentChannel implements IChannel
     protected $test_mode;
     protected $voguepay_merchant_id;
 
+    protected array $credentialItems = [
+        'voguepay_merchant_id',
+    ];
+
     /**
      * Channel constructor.
      * @param PaymentChannel $paymentChannel
@@ -23,9 +27,7 @@ class Channel extends BasePaymentChannel implements IChannel
     {
         $this->currency = currency();
         $this->order_session_key = 'voguepay.payments.order_id';
-
-        $this->test_mode = env('VOGUEPAY_TEST_MODE');
-        $this->voguepay_merchant_id = env('VOGUEPAY_MERCHANT_ID');
+        $this->setCredentialItems($paymentChannel);
     }
 
     public function paymentRequest(Order $order)

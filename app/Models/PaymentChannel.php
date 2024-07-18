@@ -12,17 +12,16 @@ class PaymentChannel extends Model
 
     static $classes = [
         'Alipay', 'Authorizenet', 'Bitpay', 'Braintree', 'Cashu', 'Flutterwave',
-        'Instamojo', 'Iyzipay', 'Izipay', 'KlarnaCheckout', 'MercadoPago', 'Midtrans',
+        'Instamojo', 'Iyzipay', 'Izipay', 'KlarnaCheckout', 'MercadoPago',
         'Mollie', 'Ngenius', 'Payfort', 'Payhere', 'Payku', 'Paylink', 'Paypal',
         'Paysera', 'Paystack', 'Paytm', 'Payu', 'Razorpay', 'Robokassa', 'Sslcommerz',
-        'Stripe', 'Toyyibpay', 'Voguepay', 'YandexCheckout', 'Zarinpal', 'JazzCash',
-        'Redsys'
+        'Stripe', 'Toyyibpay', 'Voguepay', 'Zarinpal', 'JazzCash', 'IPay88', 'Xendit', 'Paytabs', 'Paymob', 'Cintepay', 'TapPayment'
     ];
 
     static $gatewayIgnoreRedirect = [
         'Paytm', 'Payu', 'Zarinpal', 'Stripe', 'Paysera', 'Cashu',
-        'MercadoPago', 'Payhere', 'Authorizenet', 'Voguepay', 'Payku', 'KlarnaCheckout', 'Izipay', 'Iyzipay',
-        'JazzCash', 'Redsys'
+        'Payhere', 'Authorizenet', 'Voguepay', 'Payku', 'KlarnaCheckout', 'Izipay', 'Iyzipay',
+        'JazzCash', 'IPay88', 'Paytabs', 'Paymob', 'Cintepay'
     ];
 
     static $paypal = 'Paypal';
@@ -34,10 +33,8 @@ class PaymentChannel extends Model
     static $stripe = 'Stripe';
     static $paysera = 'Paysera';
     static $fastpay = 'Fastpay';
-    static $yandexcheckout = 'YandexCheckout';
     static $twoCheckout = '2checkout';
     static $bitpay = 'Bitpay';
-    static $midtrans = 'Midtrans';
     static $adyen = 'Adyen';
     static $flutterwave = 'Flutterwave';
     static $payfort = 'Payfort';
@@ -57,8 +54,23 @@ class PaymentChannel extends Model
     static $izipay = 'Izipay';
     static $paylink = 'Paylink';
     static $jazzCash = 'JazzCash';
-    static $redsys = 'Redsys';
+    static $ipay88 = 'Ipay88';
+    static $xendit = 'Xendit';
+    static $paytabs = 'Paytabs';
+    static $paymob = 'Paymob';
+    static $cintepay = 'Cintepay';
 
+
+    public function getCredentialsAttribute()
+    {
+        $credentials = $this->attributes['credentials'];
+
+        if (!empty($credentials)) {
+            $credentials = json_decode($credentials, true);
+        }
+
+        return $credentials;
+    }
 
     public function getCurrenciesAttribute()
     {

@@ -14,6 +14,8 @@ class RegistrationBonusController extends Controller
 {
     public function index()
     {
+        $this->authorize("panel_marketing_registration_bonus");
+
         $user = auth()->user();
         $registrationBonusSettings = getRegistrationBonusSettings();
 

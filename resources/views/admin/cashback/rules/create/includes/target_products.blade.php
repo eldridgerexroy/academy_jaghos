@@ -17,7 +17,7 @@
             @enderror
         </div>
 
-        <div class="form-group mt-15 js-select-target-field {{ empty($rule) ? 'd-none' : '' }}">
+        <div class="form-group mt-15 js-select-target-field {{ (empty($rule) or in_array($rule->target_type, ['all', 'recharge_wallet'])) ? 'd-none' : '' }}">
             <label class="input-label d-block">{{ trans('update.select_target') }}</label>
 
             @php

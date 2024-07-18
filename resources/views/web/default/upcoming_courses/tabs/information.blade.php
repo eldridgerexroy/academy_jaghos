@@ -100,6 +100,21 @@
 @endif
 {{-- ./ course FAQ --}}
 
+{{-- Related Course --}}
+@if(!empty($upcomingCourse->relatedCourses) and $upcomingCourse->relatedCourses->count() > 0)
+
+    <div class="mt-20">
+        <h2 class="section-title after-line">{{ trans('update.related_courses') }}</h2>
+
+        @foreach($upcomingCourse->relatedCourses as $relatedCourse)
+            @if($relatedCourse->course)
+                @include('web.default.includes.webinar.list-card',['webinar' => $relatedCourse->course])
+            @endif
+        @endforeach
+    </div>
+@endif
+{{-- ./ Related Course --}}
+
 {{-- course Comments --}}
 @include('web.default.includes.comments',[
         'comments' => $upcomingCourse->comments,

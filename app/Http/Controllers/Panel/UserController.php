@@ -15,6 +15,7 @@ use App\Models\Reward;
 use App\Models\RewardAccounting;
 use App\Models\Role;
 use App\Models\UserBank;
+use App\Models\UserLoginHistory;
 use App\Models\UserMeta;
 use App\Models\UserOccupation;
 use App\Models\UserSelectedBank;
@@ -32,6 +33,8 @@ class UserController extends Controller
 
     public function setting(Request $request, $step = 1)
     {
+        $this->authorize("panel_others_profile_setting");
+
         $user = auth()->user();
 
         if (!empty($user->location)) {
@@ -66,6 +69,7 @@ class UserController extends Controller
         $provinces = null;
         $cities = null;
         $districts = null;
+        $userLoginHistories = null;
 
         if ($step == 9) {
             $countries = Region::select(DB::raw('*, ST_AsText(geo_center) as geo_center'))
@@ -92,6 +96,11 @@ class UserController extends Controller
                     ->where('city_id', $user->city_id)
                     ->get();
             }
+
+            $userLoginHistories = UserLoginHistory::query()->where('user_id', $user->id)
+                ->whereNull('session_end_at')
+                ->orderBy('created_at', 'desc')
+                ->get();
         }
 
         $formFieldsHtml = null;
@@ -129,6 +138,7 @@ class UserController extends Controller
             'districts' => $districts,
             'userBanks' => $userBanks,
             'formFieldsHtml' => $formFieldsHtml,
+            'userLoginHistories' => $userLoginHistories,
         ];
 
         return view(getTemplate() . '.panel.setting.index', $data);
@@ -206,6 +216,18 @@ class UserController extends Controller
                     $profileImage = $this->createImage($user, $data['profile_image']);
                     $updateData['avatar'] = $profileImage;
                 }
+
+                UserMeta::query()->where('user_id', $user->id)
+                    ->where('name', 'signature')->delete();
+
+                if (!empty($data['signature_img'])) {
+                    UserMeta::query()->create([
+                        'user_id' => $user->id,
+                        'name' => 'signature',
+                        'value' => $data['signature_img']
+                    ]);
+                }
+
             } elseif ($step == 3) {
                 $updateData = [
                     'about' => $data['about'],
@@ -515,6 +537,8 @@ class UserController extends Controller
 
     public function manageUsers(Request $request, $user_type)
     {
+        $this->authorize("panel_organization_{$user_type}_lists");
+
         $valid_type = ['instructors', 'students'];
         $organization = auth()->user();
 
@@ -591,6 +615,8 @@ class UserController extends Controller
 
     public function createUser($user_type)
     {
+        $this->authorize("panel_organization_{$user_type}_create");
+
         $valid_type = ['instructors', 'students'];
         $organization = auth()->user();
 
@@ -636,6 +662,8 @@ class UserController extends Controller
 
     public function storeUser(Request $request, $user_type)
     {
+        $this->authorize("panel_organization_{$user_type}_create");
+
         $valid_type = ['instructors', 'students'];
         $organization = auth()->user();
 
@@ -688,6 +716,8 @@ class UserController extends Controller
 
     public function editUser($user_type, $user_id, $step = 1)
     {
+        $this->authorize("panel_organization_{$user_type}_edit");
+
         $valid_type = ['instructors', 'students'];
         $organization = auth()->user();
 
@@ -742,6 +772,8 @@ class UserController extends Controller
 
     public function deleteUser($user_type, $user_id)
     {
+        $this->authorize("panel_organization_{$user_type}_delete");
+
         $valid_type = ['instructors', 'students'];
         $organization = auth()->user();
 

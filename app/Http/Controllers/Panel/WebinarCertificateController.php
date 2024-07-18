@@ -16,6 +16,8 @@ class WebinarCertificateController extends Controller
 
     public function index(Request $request)
     {
+        $this->authorize("panel_certificates_course_certificates");
+
         $user = auth()->user();
 
         $webinars = Webinar::where('status', 'active')

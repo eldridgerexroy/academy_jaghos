@@ -215,6 +215,67 @@
         </div>
     @endif
 
+    <div class="mt-30">
+        <h2 class="section-title after-line ">{{ trans('update.login_history') }}</h2>
+
+        <div class="table-responsive mt-15">
+            <table class="table text-center custom-table">
+                <thead>
+                <th class="text-left">{{ trans('update.os') }}</th>
+                <th class="text-center">{{ trans('update.browser') }}</th>
+                <th class="text-center">{{ trans('update.device') }}</th>
+                <th class="text-center">{{ trans('update.ip_address') }}</th>
+                <th class="text-center">{{ trans('update.country') }}</th>
+                <th class="text-center">{{ trans('update.city') }}</th>
+                <th class="text-center">{{ trans('update.session_start') }}</th>
+                <th class="text-center">{{ trans('update.session_end') }}</th>
+                <th class="text-center">{{ trans('public.duration') }}</th>
+                <th class="text-right">{{ trans('admin/main.actions') }}</th>
+                </thead>
+
+                <tbody>
+                @if(!empty($userLoginHistories))
+                    @foreach($userLoginHistories as $session)
+
+                        <tr>
+                            <td class="text-left">{{ $session->os ?? '-' }}</td>
+
+                            <td class="text-center">{{ $session->browser ?? '-' }}</td>
+
+                            <td class="text-center">{{ $session->device ?? '-' }}</td>
+
+                            <td class="text-center">{{ $session->ip ?? '-' }}</td>
+
+                            <td class="text-center">{{ $session->country ?? '-' }}</td>
+
+                            <td class="text-center">{{ $session->city ?? '-' }}</td>
+
+                            <td class="text-center">{{ dateTimeFormat($session->session_start_at, 'j M Y H:i') }}</td>
+
+                            <td class="text-center">{{ !empty($session->session_end_at) ? dateTimeFormat($session->session_end_at, 'j M Y H:i') : '-' }}</td>
+
+                            <td class="text-center">{{ $session->getDuration() }}</td>
+
+                            <td class="text-right mb-2" width="120">
+                                <a
+                                    href="/panel/users/login-history/{{ $session->id }}/end-session"
+                                    data-title="{{ trans('update.this_device_will_be_logout_from_your_account') }}"
+                                    data-confirm="{{ trans('update.end_session') }}"
+                                    class="delete-action font-12 text-primary">
+                                    {{ trans('update.end_session') }}
+                                </a>
+
+                            </td>
+
+                        </tr>
+                    @endforeach
+                @endif
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
 </section>
 
 @push('scripts_bottom')

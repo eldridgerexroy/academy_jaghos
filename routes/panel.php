@@ -8,18 +8,22 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['check_mobile_app', 'impersonate', 'panel', 'share', 'check_maintenance']], function () {
+Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['impersonate', 'panel', 'share', 'check_maintenance', 'check_restriction']], function () {
 
     Route::get('/', 'DashboardController@dashboard');
+    Route::post('/content-delete-request', 'ContentDeleteRequestController@store');
 
     Route::group(['prefix' => 'users'], function () {
         Route::post('/search', 'UserController@search');
         Route::post('/contact-info', 'UserController@contactInfo');
         Route::post('/offlineToggle', 'UserController@offlineToggle');
         Route::get('/{id}/getInfo', 'UserController@getUserInfo');
+
+
+        Route::get('/login-history/{session_id}/end-session', 'UserLoginHistoryController@endSession');
     });
 
-    Route::group(['prefix' => 'webinars'], function () { 
+    Route::group(['prefix' => 'webinars'], function () {
         Route::group(['middleware' => 'user.not.access'], function () {
             Route::get('/', 'WebinarController@index');
             Route::get('/new', 'WebinarController@create');
@@ -37,14 +41,6 @@ Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['che
             Route::group(['prefix' => '{webinar_id}/statistics'], function () {
                 Route::get('/', 'WebinarStatisticController@index');
             });
-        });
-        
-        Route::group(['prefix' => 'request_recording'], function () {
-            Route::get('/', 'WebinarRecordingRequestController@index');
-            Route::post('/store', 'WebinarRecordingRequestController@store');
-            Route::get('/create', 'WebinarRecordingRequestController@create');
-            Route::get('/{id}/delete', 'WebinarRecordingRequestController@destroy');
-            Route::get('/{id}', 'WebinarRecordingRequestController@show');
         });
 
         Route::get('/organization_classes', 'WebinarController@organizationClasses');
@@ -72,6 +68,11 @@ Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['che
         Route::group(['prefix' => 'favorites'], function () {
             Route::get('/', 'FavoriteController@index');
             Route::get('/{id}/delete', 'FavoriteController@destroy');
+        });
+
+        Route::group(['prefix' => 'personal-notes'], function () {
+            Route::get('/', 'CoursePersonalNotesController@index');
+            Route::get('/{id}/delete', 'CoursePersonalNotesController@delete');
         });
     });
 
@@ -186,6 +187,12 @@ Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['che
         Route::post('/store', 'PrerequisiteController@store');
         Route::post('/{id}/update', 'PrerequisiteController@update');
         Route::get('/{id}/delete', 'PrerequisiteController@destroy');
+    });
+
+    Route::group(['prefix' => 'relatedCourses'], function () {
+        Route::post('/store', 'RelatedCoursesController@store');
+        Route::post('/{id}/update', 'RelatedCoursesController@update');
+        Route::get('/{id}/delete', 'RelatedCoursesController@destroy');
     });
 
     Route::group(['prefix' => 'faqs'], function () {
@@ -306,6 +313,17 @@ Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['che
 
         /* Registration Bonus */
         Route::get('/registration_bonus', 'RegistrationBonusController@index');
+
+        /* Discounts */
+        Route::group(['prefix' => 'discounts'], function () {
+            Route::get('/', 'DiscountController@index');
+            Route::get('/new', 'DiscountController@create');
+            Route::post('/store', 'DiscountController@store');
+            Route::get('/{id}/edit', 'DiscountController@edit');
+            Route::post('/{id}/update', 'DiscountController@update');
+            Route::get('/{id}/delete', 'DiscountController@delete');
+        });
+
     });
 
     Route::group(['prefix' => 'noticeboard'], function () {

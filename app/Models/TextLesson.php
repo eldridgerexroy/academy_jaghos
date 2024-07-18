@@ -54,6 +54,11 @@ class TextLesson extends Model implements TranslatableContract
         return $this->belongsTo('App\Models\WebinarChapter', 'chapter_id', 'id');
     }
 
+    public function personalNote()
+    {
+        return $this->morphOne('App\Models\CoursePersonalNote', 'targetable');
+    }
+
     public function checkPassedItem()
     {
         $result = false;

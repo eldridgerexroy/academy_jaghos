@@ -277,8 +277,9 @@ trait DashboardTrait
         $lastWeekStart = $beginOfWeek - 7 * 24 * 60 * 60;
         $lastWeekEnd = $endOfWeek - 7 * 24 * 60 * 60;
 
-        $lastMonthStart = $beginOfMonth - 30 * 24 * 60 * 60;
-        $lastMonthEnd = $endOfMonth - 30 * 24 * 60 * 60;
+        $time = time();
+        $lastMonthStart = strtotime(date('Y-m-01', strtotime('last month', $time))); // First day of the last month.
+        $lastMonthEnd = strtotime(date('Y-m-t', strtotime('last month', $time))); // Last day of the last month.
 
         $lastYearStart = $beginOfYear - 365 * 24 * 60 * 60;
         $lastYearEnd = $endOfYear - 365 * 24 * 60 * 60;
@@ -539,8 +540,10 @@ trait DashboardTrait
         $lastWeekStart = $beginOfWeek - 7 * 24 * 60 * 60;
         $lastWeekEnd = $endOfWeek - 7 * 24 * 60 * 60;
 
-        $lastMonthStart = $beginOfMonth - 30 * 24 * 60 * 60;
-        $lastMonthEnd = $endOfMonth - 30 * 24 * 60 * 60;
+
+        $time = time();
+        $lastMonthStart = strtotime(date('Y-m-01', strtotime('last month', $time))); // First day of the last month.
+        $lastMonthEnd = strtotime(date('Y-m-t', strtotime('last month', $time))); // Last day of the last month.
 
         $lastYearStart = $beginOfYear - 365 * 24 * 60 * 60;
         $lastYearEnd = $endOfYear - 365 * 24 * 60 * 60;

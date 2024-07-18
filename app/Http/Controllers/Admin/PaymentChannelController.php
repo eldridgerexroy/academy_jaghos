@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\PaymentChannel;
+use App\PaymentChannels\ChannelManager;
 use Illuminate\Http\Request;
 
 class PaymentChannelController extends Controller
@@ -27,10 +28,13 @@ class PaymentChannelController extends Controller
         $this->authorize('admin_payment_channel_edit');
 
         $paymentChannel = PaymentChannel::findOrFail($id);
+        $channelManager = ChannelManager::makeChannel($paymentChannel);
+        $credentialItems = $channelManager->getCredentialItems();
 
         $data = [
             'pageTitle' => trans('admin/pages/paymentChannels.payment_channel_edit'),
-            'paymentChannel' => $paymentChannel
+            'paymentChannel' => $paymentChannel,
+            'credentialItems' => $credentialItems,
         ];
 
         return view('admin.settings.financial.payment_channel.create', $data);
@@ -47,14 +51,16 @@ class PaymentChannelController extends Controller
         $data = $request->all();
         $paymentChannel = PaymentChannel::findOrFail($id);
 
+
         $paymentChannel->update([
             'title' => $data['title'],
             'image' => $data['image'],
             'status' => $data['status'],
+            'credentials' => !empty($data['credentials']) ? json_encode($data['credentials']) : null,
             'currencies' => !empty($data['currencies']) ? json_encode($data['currencies']) : null,
         ]);
 
-        return redirect(getAdminPanelUrl() . '/settings/financial?page=payment_channels');
+        return redirect(getAdminPanelUrl("/settings/payment_channels/{$paymentChannel->id}/edit"));
     }
 
     public function toggleStatus($id)

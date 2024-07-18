@@ -3,20 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Exports\WebinarsExport;
+use App\Http\Controllers\Admin\traits\ProductBadgeTrait;
 use App\Http\Controllers\Admin\traits\WebinarChangeCreator;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Panel\WebinarStatisticController;
 use App\Mail\SendNotifications;
 use App\Models\BundleWebinar;
 use App\Models\Category;
-use App\Models\Faq;
 use App\Models\File;
 use App\Models\Gift;
 use App\Models\Group;
 use App\Models\GroupUser;
 use App\Models\InstallmentOrder;
 use App\Models\Notification;
-use App\Models\Prerequisite;
 use App\Models\Quiz;
 use App\Models\Reward;
 use App\Models\RewardAccounting;
@@ -30,7 +29,6 @@ use App\Models\Ticket;
 use App\Models\Translation\WebinarTranslation;
 use App\Models\WebinarChapter;
 use App\Models\WebinarChapterItem;
-use App\Models\WebinarExtraDescription;
 use App\Models\WebinarFilterOption;
 use App\Models\WebinarPartnerTeacher;
 use App\User;
@@ -42,7 +40,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class WebinarController extends Controller
 {
-    use WebinarChangeCreator;
+    use WebinarChangeCreator, ProductBadgeTrait;
 
 
     public function index(Request $request)
@@ -349,6 +347,19 @@ class WebinarController extends Controller
 
         $data = $request->all();
 
+
+        if (!empty($data['capacity']) and !empty($data['sales_count_number']) and $data['sales_count_number'] > $data['capacity']) {
+            return back()->withErrors([
+                'sales_count_number' => [
+                    trans('validation.digits_between', [
+                        'attribute' => trans('update.sales_count_number'),
+                        'min' => 0,
+                        'max' => $data['capacity']
+                    ])
+                ]
+            ]);
+        }
+
         if ($data['type'] != Webinar::$webinar) {
             $data['start_date'] = null;
         }
@@ -387,6 +398,7 @@ class WebinarController extends Controller
             'image_cover' => $data['image_cover'],
             'video_demo' => $data['video_demo'],
             'video_demo_source' => $data['video_demo'] ? $data['video_demo_source'] : null,
+            'sales_count_number' => $data['sales_count_number'] ?? null,
             'capacity' => $data['capacity'] ?? null,
             'start_date' => (!empty($data['start_date'])) ? $data['start_date'] : null,
             'timezone' => $data['timezone'] ?? null,
@@ -516,7 +528,7 @@ class WebinarController extends Controller
             abort(404);
         }
 
-        $locale = $request->get('locale', app()->getLocale());
+        $locale = $request->get('locale', getDefaultLocale());
         storeContentLocale($locale, $webinar->getTable(), $webinar->id);
 
         $categories = Category::where('parent_id', null)
@@ -581,6 +593,18 @@ class WebinarController extends Controller
         }
 
         $this->validate($request, $rules);
+
+        if (!empty($data['capacity']) and !empty($data['sales_count_number']) and $data['sales_count_number'] > $data['capacity']) {
+            return back()->withErrors([
+                'sales_count_number' => [
+                    trans('validation.digits_between', [
+                        'attribute' => trans('update.sales_count_number'),
+                        'min' => 0,
+                        'max' => $data['capacity']
+                    ])
+                ]
+            ]);
+        }
 
         if (!empty($data['teacher_id'])) {
             $teacher = User::find($data['teacher_id']);
@@ -668,6 +692,10 @@ class WebinarController extends Controller
                 ]);
             }
         }
+
+        // Product Badge
+        $this->handleProductBadges($webinar, $data);
+
         unset($data['_token'],
             $data['current_step'],
             $data['draft'],
@@ -675,7 +703,8 @@ class WebinarController extends Controller
             $data['partners'],
             $data['tags'],
             $data['filters'],
-            $data['ajax']
+            $data['ajax'],
+            $data['product_badges'],
         );
 
         if (empty($data['video_demo'])) {
@@ -702,6 +731,7 @@ class WebinarController extends Controller
             'video_demo' => $data['video_demo'],
             'video_demo_source' => $data['video_demo'] ? $data['video_demo_source'] : null,
             'capacity' => $data['capacity'] ?? null,
+            'sales_count_number' => $data['sales_count_number'] ?? null,
             'start_date' => $data['start_date'],
             'timezone' => $data['timezone'] ?? null,
             'duration' => $data['duration'] ?? null,

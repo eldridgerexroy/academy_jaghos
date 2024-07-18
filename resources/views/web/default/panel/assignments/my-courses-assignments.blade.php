@@ -107,11 +107,11 @@
                                         <td class="align-middle">
                                             @switch($assignment->status)
                                                 @case('active')
-                                                <span class="text-dark-blue font-weight-500">{{ trans('public.active') }}</span>
-                                                @break
+                                                    <span class="text-dark-blue font-weight-500">{{ trans('public.active') }}</span>
+                                                    @break
                                                 @case('inactive')
-                                                <span class="text-danger font-weight-500">{{ trans('public.inactive') }}</span>
-                                                @break
+                                                    <span class="text-danger font-weight-500">{{ trans('public.inactive') }}</span>
+                                                    @break
                                             @endswitch
                                         </td>
 
@@ -126,11 +126,14 @@
                                                 </button>
 
                                                 <div class="dropdown-menu menu-lg">
-                                                    <a href="/panel/assignments/{{ $assignment->id }}/students?status=pending" target="_blank"
-                                                       class="webinar-actions d-block mt-10 font-weight-normal">{{ trans('update.pending_review') }}</a>
 
-                                                    <a href="/panel/assignments/{{ $assignment->id }}/students" target="_blank"
-                                                       class="webinar-actions d-block mt-10 font-weight-normal">{{ trans('update.all_assignments') }}</a>
+                                                    @can('panel_assignments_students')
+                                                        <a href="/panel/assignments/{{ $assignment->id }}/students?status=pending" target="_blank"
+                                                           class="webinar-actions d-block mt-10 font-weight-normal">{{ trans('update.pending_review') }}</a>
+
+                                                        <a href="/panel/assignments/{{ $assignment->id }}/students" target="_blank"
+                                                           class="webinar-actions d-block mt-10 font-weight-normal">{{ trans('update.all_assignments') }}</a>
+                                                    @endcan
                                                 </div>
                                             </div>
 

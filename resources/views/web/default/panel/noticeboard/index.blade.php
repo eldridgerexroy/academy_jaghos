@@ -180,8 +180,13 @@
                                                     <i data-feather="more-vertical" height="20"></i>
                                                 </button>
                                                 <div class="dropdown-menu">
-                                                    <a href="/panel/{{ (!empty($isCourseNotice) and $isCourseNotice) ? 'course-noticeboard' : 'noticeboard' }}/{{ $noticeboard->id }}/edit" class="webinar-actions d-block mt-10 text-hover-primary">{{ trans('public.edit') }}</a>
-                                                    <a href="/panel/{{ (!empty($isCourseNotice) and $isCourseNotice) ? 'course-noticeboard' : 'noticeboard' }}/{{ $noticeboard->id }}/delete" class="delete-action webinar-actions d-block mt-10 text-hover-primary">{{ trans('public.delete') }}</a>
+                                                    @can('panel_noticeboard_create')
+                                                        <a href="/panel/{{ (!empty($isCourseNotice) and $isCourseNotice) ? 'course-noticeboard' : 'noticeboard' }}/{{ $noticeboard->id }}/edit" class="webinar-actions d-block mt-10 text-hover-primary">{{ trans('public.edit') }}</a>
+                                                    @endcan
+
+                                                    @can('panel_noticeboard_delete')
+                                                        <a href="/panel/{{ (!empty($isCourseNotice) and $isCourseNotice) ? 'course-noticeboard' : 'noticeboard' }}/{{ $noticeboard->id }}/delete" class="delete-action webinar-actions d-block mt-10 text-hover-primary">{{ trans('public.delete') }}</a>
+                                                    @endcan
                                                 </div>
                                             </div>
                                         </td>

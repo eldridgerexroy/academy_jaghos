@@ -314,10 +314,10 @@
                                                     @case(\App\Models\Webinar::$active)
                                                         <div class="text-success font-600-bold">{{ trans('admin/main.published') }}</div>
                                                         @if($webinar->isWebinar())
-                                                            @if($webinar->isProgressing())
-                                                                <div class="text-warning text-small">({{  trans('webinars.in_progress') }})</div>
-                                                            @elseif($webinar->start_date > time())
+                                                            @if($webinar->start_date > time())
                                                                 <div class="text-danger text-small">({{  trans('admin/main.not_conducted') }})</div>
+                                                            @elseif($webinar->isProgressing())
+                                                                <div class="text-warning text-small">({{  trans('webinars.in_progress') }})</div>
                                                             @else
                                                                 <div class="text-success text-small">({{ trans('public.finished') }})</div>
                                                             @endif
@@ -336,25 +336,29 @@
                                             </td>
                                             <td width="200" class="">
                                                 <div class="btn-group dropdown table-actions">
-                                                    <button type="button" class="btn-transparent dropdown-toggle" data-toggle="dropdown" >
+                                                    <button type="button" class="btn-transparent dropdown-toggle" data-toggle="dropdown">
                                                         <i class="fa fa-ellipsis-v"></i>
                                                     </button>
                                                     <div class="dropdown-menu dropdown-menu-left text-left webinars-lists-dropdown">
 
                                                         @can('admin_webinars_edit')
-                                                            @if($webinar->status == \App\Models\Webinar::$pending)
+                                                            @if(in_array($webinar->status, [\App\Models\Webinar::$pending, \App\Models\Webinar::$inactive]))
                                                                 @include('admin.includes.delete_button',[
                                                                     'url' => getAdminPanelUrl().'/webinars/'.$webinar->id.'/approve',
                                                                     'btnClass' => 'd-flex align-items-center text-success text-decoration-none btn-transparent btn-sm mt-1',
                                                                     'btnText' => '<i class="fa fa-check"></i><span class="ml-2">'. trans("admin/main.approve") .'</span>'
                                                                     ])
+                                                            @endif
 
+                                                            @if($webinar->status == \App\Models\Webinar::$pending)
                                                                 @include('admin.includes.delete_button',[
                                                                     'url' => getAdminPanelUrl().'/webinars/'.$webinar->id.'/reject',
                                                                     'btnClass' => 'd-flex align-items-center text-danger text-decoration-none btn-transparent btn-sm mt-1',
                                                                     'btnText' => '<i class="fa fa-times"></i><span class="ml-2">'. trans("admin/main.reject") .'</span>'
                                                                     ])
-                                                            @elseif($webinar->status == \App\Models\Webinar::$active)
+                                                            @endif
+
+                                                            @if($webinar->status == \App\Models\Webinar::$active)
                                                                 @include('admin.includes.delete_button',[
                                                                     'url' => getAdminPanelUrl().'/webinars/'.$webinar->id.'/unpublish',
                                                                     'btnClass' => 'd-flex align-items-center text-danger text-decoration-none btn-transparent btn-sm mt-1',

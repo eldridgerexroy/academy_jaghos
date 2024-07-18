@@ -11,9 +11,19 @@ use Paylink\Client as PaylinkClient;
 
 class Channel extends BasePaymentChannel implements IChannel
 {
+
+    protected $order_session_key;
     protected $currency;
     protected $client;
-    protected $publicKey;
+    protected $test_mode;
+    protected $api_key;
+    protected $api_secret;
+
+
+    protected array $credentialItems = [
+        'api_key',
+        'api_secret',
+    ];
 
     /**
      * Channel constructor.
@@ -21,17 +31,21 @@ class Channel extends BasePaymentChannel implements IChannel
      */
     public function __construct(PaymentChannel $paymentChannel)
     {
+        $this->order_session_key = 'paylink.payments.order_id';
         $this->currency = currency();
+        $this->setCredentialItems($paymentChannel);
+    }
 
-        $testMode = env('PAYLINK_TEST_MODE');
-        $vendorId = env('PAYLINK_VENDOR_ID');
-        $vendorSecret = env('PAYLINK_VENDOR_SECRET');
+    private function handleClient()
+    {
+        // https://paylinksa.readme.io/docs/authentication
 
-        $client = new PaylinkClient();
-        $client->setVendorId($vendorId);
-        $client->setVendorSecret($vendorSecret);
-        $client->setPersistToken(true);
-        $client->setEnvironment($testMode ? 'testing' : 'prod');
+        $client = new PaylinkClient([
+            'vendorId'  =>  $this->api_key,
+            'vendorSecret'  =>  $this->api_secret,
+            'persistToken'  =>  true, // false by default if not given
+            'environment'  =>  $this->test_mode ? 'testing' : 'prod',
+        ]);
 
         $this->client = $client;
     }
@@ -41,6 +55,8 @@ class Channel extends BasePaymentChannel implements IChannel
      */
     public function paymentRequest(Order $order)
     {
+        $this->handleClient();
+
         // Send purchase request
         try {
             $user = $order->user;
@@ -58,7 +74,7 @@ class Channel extends BasePaymentChannel implements IChannel
 
             $data = [
                 'amount' => $this->makeAmountByCurrency($order->total_amount, $this->currency),
-                'callBackUrl' => $this->makeCallbackUrl($order, 'back'),
+                'callBackUrl' => $this->makeCallbackUrl(),
                 'clientEmail' => $user->email,
                 'clientMobile' => $user->mobile,
                 'clientName' => $user->full_name,
@@ -69,50 +85,65 @@ class Channel extends BasePaymentChannel implements IChannel
 
             $response = $this->client->createInvoice($data);
 
+            if ($response) {
+                $transactionNo = $response['transactionNo'];
+                session()->put($this->order_session_key, $transactionNo);
+
+                return $response['url'];
+            }
         } catch (\Exception $exception) {
-            dd($exception);
+            //dd($exception);
             throw new \Exception($exception->getMessage(), $exception->getCode());
         }
 
-        return $response['url'];
+        return null;
     }
 
-    private function makeCallbackUrl($order, $status)
+    private function makeCallbackUrl()
     {
-        return url("/payments/verify/Paylink?status=$status&order_id=$order->id");
+        return url("/payments/verify/Paylink");
     }
 
     public function verify(Request $request)
     {
+        $this->handleClient();
+
         try {
+            $user = auth()->user();
+
+            $transactionNo = session()->get($this->order_session_key, null);
+            session()->forget($this->order_session_key);
 
             $response = $this->client->getInvoice($transactionNo);
 
-            // TODO:: Check the invoice status from the response => $response['orderStatus']
+            if (!empty($response) and !empty($response['gatewayOrderRequest'])) {
+                $orderId = $response['gatewayOrderRequest']["orderNumber"];
+                $paymentStatus = $response['orderStatus'];
 
-            $user = auth()->user();
+                $order = Order::where('id', $orderId)
+                    ->where('user_id', $user->id)
+                    ->first();
 
-            $order = Order::where('id', $orderId)
-                ->where('user_id', $user->id)
-                ->first();
+                if (!empty($order)) {
+                    $status = Order::$fail;
 
-            if (!empty($order)) {
-                $orderStatus = Order::$fail;
+                    if ($paymentStatus == 'success') {
+                        $status = Order::$paying;
+                    }
 
-                if ($orderStatus == 'success') {
-                    $orderStatus = Order::$paying;
+                    $order->update([
+                        'status' => $status
+                    ]);
                 }
 
-                $order->update([
-                    'status' => $orderStatus
-                ]);
+                return $order;
             }
-
-            return $order;
 
         } catch (\Exception $exception) {
             //dd($exception);
             throw new \Exception($exception->getMessage(), $exception->getCode());
         }
+
+        return null;
     }
 }

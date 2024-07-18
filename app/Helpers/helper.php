@@ -873,7 +873,7 @@ function currencySign($currency = null)
             break;
         case 'SGD':
             return '$';
-            break;    
+            break;
         case 'CHF':
             return 'CHF';
             break;
@@ -912,19 +912,19 @@ function currencySign($currency = null)
             break;
         case 'KWD':
             return 'KD';
-            break; 
+            break;
         case 'EGP':
             return 'ج.م';
             break;
         case 'NAD':
             return 'NAD';
-            break;    
-         case 'CDF':
+            break;
+        case 'CDF':
             return 'CDF';
-            break;    
+            break;
         case 'BIF':
             return 'BIF';
-            break;    
+            break;
         default:
             return '$';
     }
@@ -1151,6 +1151,267 @@ function getCountriesMobileCode()
         'Zambia (+260)' => '+260',
         'Zimbabwe (+263)' => '+263',
     ];
+}
+
+function getCountriesLists($code = null)
+{
+    $countries = [
+        'AF' => 'Afghanistan',
+        'AX' => 'Aland Islands',
+        'AL' => 'Albania',
+        'DZ' => 'Algeria',
+        'AS' => 'American Samoa',
+        'AD' => 'Andorra',
+        'AO' => 'Angola',
+        'AI' => 'Anguilla',
+        'AQ' => 'Antarctica',
+        'AG' => 'Antigua and Barbuda',
+        'AR' => 'Argentina',
+        'AM' => 'Armenia',
+        'AW' => 'Aruba',
+        'AU' => 'Australia',
+        'AT' => 'Austria',
+        'AZ' => 'Azerbaijan',
+        'BS' => 'Bahamas',
+        'BH' => 'Bahrain',
+        'BD' => 'Bangladesh',
+        'BB' => 'Barbados',
+        'BY' => 'Belarus',
+        'BE' => 'Belgium',
+        'BZ' => 'Belize',
+        'BJ' => 'Benin',
+        'BM' => 'Bermuda',
+        'BT' => 'Bhutan',
+        'BO' => 'Bolivia',
+        'BQ' => 'Bonaire, Sint Eustatius and Saba',
+        'BA' => 'Bosnia and Herzegovina',
+        'BW' => 'Botswana',
+        'BV' => 'Bouvet Island',
+        'BR' => 'Brazil',
+        'IO' => 'British Indian Ocean Territory',
+        'BN' => 'Brunei Darussalam',
+        'BG' => 'Bulgaria',
+        'BF' => 'Burkina Faso',
+        'BI' => 'Burundi',
+        'KH' => 'Cambodia',
+        'CM' => 'Cameroon',
+        'CA' => 'Canada',
+        'CV' => 'Cape Verde',
+        'KY' => 'Cayman Islands',
+        'CF' => 'Central African Republic',
+        'TD' => 'Chad',
+        'CL' => 'Chile',
+        'CN' => 'China',
+        'CX' => 'Christmas Island',
+        'CC' => 'Cocos (Keeling) Islands',
+        'CO' => 'Colombia',
+        'KM' => 'Comoros',
+        'CG' => 'Congo',
+        'CD' => 'Congo, Democratic Republic',
+        'CK' => 'Cook Islands',
+        'CR' => 'Costa Rica',
+        'CI' => 'Cote d Ivoire',
+        'HR' => 'Croatia',
+        'CU' => 'Cuba',
+        'CW' => 'Curacao',
+        'CY' => 'Cyprus',
+        'CZ' => 'Czech Republic',
+        'DK' => 'Denmark',
+        'DJ' => 'Djibouti',
+        'DM' => 'Dominica',
+        'DO' => 'Dominican Republic',
+        'EC' => 'Ecuador',
+        'EG' => 'Egypt',
+        'SV' => 'El Salvador',
+        'GQ' => 'Equatorial Guinea',
+        'ER' => 'Eritrea',
+        'EE' => 'Estonia',
+        'ET' => 'Ethiopia',
+        'FK' => 'Falkland Islands',
+        'FO' => 'Faroe Islands',
+        'FJ' => 'Fiji',
+        'FI' => 'Finland',
+        'FR' => 'France',
+        'GF' => 'French Guiana',
+        'PF' => 'French Polynesia',
+        'TF' => 'French Southern Territories',
+        'GA' => 'Gabon',
+        'GM' => 'Gambia',
+        'GE' => 'Georgia',
+        'DE' => 'Germany',
+        'GH' => 'Ghana',
+        'GI' => 'Gibraltar',
+        'GR' => 'Greece',
+        'GL' => 'Greenland',
+        'GD' => 'Grenada',
+        'GP' => 'Guadeloupe',
+        'GU' => 'Guam',
+        'GT' => 'Guatemala',
+        'GG' => 'Guernsey',
+        'GN' => 'Guinea',
+        'GW' => 'Guinea-Bissau',
+        'GY' => 'Guyana',
+        'HT' => 'Haiti',
+        'HM' => 'Heard Island and McDonald Islands',
+        'VA' => 'Holy See (Vatican City State)',
+        'HN' => 'Honduras',
+        'HK' => 'Hong Kong',
+        'HU' => 'Hungary',
+        'IS' => 'Iceland',
+        'IN' => 'India',
+        'ID' => 'Indonesia',
+        'IR' => 'Iran, Islamic Republic of',
+        'IQ' => 'Iraq',
+        'IE' => 'Ireland',
+        'IM' => 'Isle of Man',
+        'IL' => 'Israel',
+        'IT' => 'Italy',
+        'JM' => 'Jamaica',
+        'JP' => 'Japan',
+        'JE' => 'Jersey',
+        'JO' => 'Jordan',
+        'KZ' => 'Kazakhstan',
+        'KE' => 'Kenya',
+        'KI' => 'Kiribati',
+        'KP' => 'Korea, Democratic Peoples Republic of',
+        'KR' => 'Korea, Republic of',
+        'KW' => 'Kuwait',
+        'KG' => 'Kyrgyzstan',
+        'LA' => 'Lao Peoples Democratic Republic',
+        'LV' => 'Latvia',
+        'LB' => 'Lebanon',
+        'LS' => 'Lesotho',
+        'LR' => 'Liberia',
+        'LY' => 'Libya',
+        'LI' => 'Liechtenstein',
+        'LT' => 'Lithuania',
+        'LU' => 'Luxembourg',
+        'MO' => 'Macao',
+        'MK' => 'Macedonia, the former Yugoslav Republic of',
+        'MG' => 'Madagascar',
+        'MW' => 'Malawi',
+        'MY' => 'Malaysia',
+        'MV' => 'Maldives',
+        'ML' => 'Mali',
+        'MT' => 'Malta',
+        'MH' => 'Marshall Islands',
+        'MQ' => 'Martinique',
+        'MR' => 'Mauritania',
+        'MU' => 'Mauritius',
+        'YT' => 'Mayotte',
+        'MX' => 'Mexico',
+        'FM' => 'Micronesia, Federated States of',
+        'MD' => 'Moldova, Republic of',
+        'MC' => 'Monaco',
+        'MN' => 'Mongolia',
+        'ME' => 'Montenegro',
+        'MS' => 'Montserrat',
+        'MA' => 'Morocco',
+        'MZ' => 'Mozambique',
+        'MM' => 'Myanmar',
+        'NA' => 'Namibia',
+        'NR' => 'Nauru',
+        'NP' => 'Nepal',
+        'NL' => 'Netherlands',
+        'NC' => 'New Caledonia',
+        'NZ' => 'New Zealand',
+        'NI' => 'Nicaragua',
+        'NE' => 'Niger',
+        'NG' => 'Nigeria',
+        'NU' => 'Niue',
+        'NF' => 'Norfolk Island',
+        'MP' => 'Northern Mariana Islands',
+        'NO' => 'Norway',
+        'OM' => 'Oman',
+        'PK' => 'Pakistan',
+        'PW' => 'Palau',
+        'PS' => 'Palestinian Territory, Occupied',
+        'PA' => 'Panama',
+        'PG' => 'Papua New Guinea',
+        'PY' => 'Paraguay',
+        'PE' => 'Peru',
+        'PH' => 'Philippines',
+        'PN' => 'Pitcairn',
+        'PL' => 'Poland',
+        'PT' => 'Portugal',
+        'PR' => 'Puerto Rico',
+        'QA' => 'Qatar',
+        'RE' => 'Reunion',
+        'RO' => 'Romania',
+        'RU' => 'Russian Federation',
+        'RW' => 'Rwanda',
+        'BL' => 'Saint Barthelemy',
+        'SH' => 'Saint Helena, Ascension and Tristan da Cunha',
+        'KN' => 'Saint Kitts and Nevis',
+        'LC' => 'Saint Lucia',
+        'MF' => 'Saint Martin (French part)',
+        'PM' => 'Saint Pierre and Miquelon',
+        'VC' => 'Saint Vincent and the Grenadines',
+        'WS' => 'Samoa',
+        'SM' => 'San Marino',
+        'ST' => 'Sao Tome and Principe',
+        'SA' => 'Saudi Arabia',
+        'SN' => 'Senegal',
+        'RS' => 'Serbia',
+        'SC' => 'Seychelles',
+        'SL' => 'Sierra Leone',
+        'SG' => 'Singapore',
+        'SX' => 'Sint Maarten (Dutch part)',
+        'SK' => 'Slovakia',
+        'SI' => 'Slovenia',
+        'SB' => 'Solomon Islands',
+        'SO' => 'Somalia',
+        'ZA' => 'South Africa',
+        'GS' => 'South Georgia and the South Sandwich Islands',
+        'SS' => 'South Sudan',
+        'ES' => 'Spain',
+        'LK' => 'Sri Lanka',
+        'SD' => 'Sudan',
+        'SR' => 'Suriname',
+        'SJ' => 'Svalbard and Jan Mayen',
+        'SZ' => 'Swaziland',
+        'SE' => 'Sweden',
+        'CH' => 'Switzerland',
+        'SY' => 'Syrian Arab Republic',
+        'TW' => 'Taiwan, Province of China',
+        'TJ' => 'Tajikistan',
+        'TZ' => 'Tanzania, United Republic of',
+        'TH' => 'Thailand',
+        'TL' => 'Timor-Leste',
+        'TG' => 'Togo',
+        'TK' => 'Tokelau',
+        'TO' => 'Tonga',
+        'TT' => 'Trinidad and Tobago',
+        'TN' => 'Tunisia',
+        'TR' => 'Turkey',
+        'TM' => 'Turkmenistan',
+        'TC' => 'Turks and Caicos Islands',
+        'TV' => 'Tuvalu',
+        'UG' => 'Uganda',
+        'UA' => 'Ukraine',
+        'AE' => 'United Arab Emirates',
+        'GB' => 'United Kingdom',
+        'US' => 'United States',
+        'UM' => 'United States Minor Outlying Islands',
+        'UY' => 'Uruguay',
+        'UZ' => 'Uzbekistan',
+        'VU' => 'Vanuatu',
+        'VE' => 'Venezuela, Bolivarian Republic of',
+        'VN' => 'Viet Nam',
+        'VG' => 'Virgin Islands, British',
+        'VI' => 'Virgin Islands, U.S.',
+        'WF' => 'Wallis and Futuna',
+        'EH' => 'Western Sahara',
+        'YE' => 'Yemen',
+        'ZM' => 'Zambia',
+        'ZW' => 'Zimbabwe',
+    ];
+
+    if (!empty($code) and !empty($countries[$code])) {
+        return $countries[$code];
+    }
+
+    return $countries;
 }
 
 // Truncate a string only at a whitespace
@@ -1397,9 +1658,6 @@ function getNavbarLinks()
         usort($links, function ($item1, $item2) {
             return $item1['order'] <=> $item2['order'];
         });
-
-        // remove store and forums
-        $links = array_slice($links, 0, 3);
     }
 
     return $links;
@@ -1484,6 +1742,11 @@ function getMaintenanceSettings($key = null)
     return App\Models\Setting::getMaintenanceSettings($key);
 }
 
+function getRestrictionSettings($key = null)
+{
+    return App\Models\Setting::getRestrictionSettings($key);
+}
+
 function getGeneralOptionsSettings($key = null)
 {
     return App\Models\Setting::getGeneralOptionsSettings($key);
@@ -1499,6 +1762,11 @@ function getAiContentsSettingsName($key = null)
     return App\Models\Setting::getAiContentsSettingsName($key);
 }
 
+function getCertificateMainSettings($key = null)
+{
+    return App\Models\Setting::getCertificateMainSettings($key);
+}
+
 function getRemindersSettings($key = null)
 {
     return App\Models\Setting::getRemindersSettings($key);
@@ -1507,6 +1775,11 @@ function getRemindersSettings($key = null)
 function getGeneralSecuritySettings($key = null)
 {
     return App\Models\Setting::getGeneralSecuritySettings($key);
+}
+
+function getAbandonedCartSettings($key = null)
+{
+    return App\Models\Setting::getAbandonedCartSettings($key);
 }
 
 
@@ -1594,6 +1867,10 @@ function getThemeColorsSettings($admin = false)
                 if (!empty($settings[$color])) {
                     $result .= "--$color:" . $settings[$color] . ';' . PHP_EOL;
                 }
+            }
+
+            if (!empty($settings['front_body_background'])) {
+                $result .= "--body_bg:" . $settings['front_body_background'] . ';' . PHP_EOL;
             }
         }
 
@@ -1717,9 +1994,19 @@ function deepClone($object)
     return $cloned;
 }
 
-function sendNotification($template, $options, $user_id = null, $group_id = null, $sender = 'system', $type = 'single')
+function sendNotification($template, $options, $user_id = null, $group_id = null, $sender = 'system', $type = 'single', $templateId = null)
 {
-    $templateId = getNotificationTemplates($template);
+    if ($user_id == 1) {
+        $mainAdminId = \App\User::getMainAdminId();
+
+        if (!empty($mainAdminId)) {
+            $user_id = $mainAdminId;
+        }
+    }
+
+    if (empty($templateId)) {
+        $templateId = getNotificationTemplates($template);
+    }
     $notificationTemplate = \App\Models\NotificationTemplate::where('id', $templateId)->first();
 
     if (!empty($notificationTemplate)) {
@@ -2318,13 +2605,15 @@ function checkMobileNumber($phoneNumber)
     return false;
 }
 
-
-// custom
-function maskName($name)
+function canDeleteContentDirectly()
 {
-    $parts = explode(' ', $name);
-    $maskedParts = array_map(function($part) {
-        return substr($part, 0, 1) . str_repeat('*', strlen($part) - 1);
-    }, $parts);
-    return implode(' ', $maskedParts);
+    $result = false;
+
+    $allowInstructorDeleteContent = !!(!empty(getGeneralOptionsSettings('allow_instructor_delete_content')));
+
+    if ($allowInstructorDeleteContent) {
+        $result = (!empty(getGeneralOptionsSettings('content_delete_method')) and getGeneralOptionsSettings('content_delete_method') == "delete_directly");
+    }
+
+    return $result;
 }

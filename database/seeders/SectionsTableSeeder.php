@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -82,6 +83,7 @@ class SectionsTableSeeder extends Seeder
         Section::updateOrCreate(['id' => 164], ['name' => 'admin_agora_history_export', 'section_group_id' => 150, 'caption' => 'Agora history export']);
         Section::updateOrCreate(['id' => 165], ['name' => 'admin_course_question_forum_list', 'section_group_id' => 150, 'caption' => 'Forum Question Lists']);
         Section::updateOrCreate(['id' => 166], ['name' => 'admin_course_question_forum_answers', 'section_group_id' => 150, 'caption' => 'Forum Answers Lists']);
+        Section::updateOrCreate(['id' => 167], ['name' => 'admin_course_personal_notes', 'section_group_id' => 150, 'caption' => 'Course Personal Notes']);
 
 
         // Categories 200 - 149
@@ -139,6 +141,7 @@ class SectionsTableSeeder extends Seeder
         Section::updateOrCreate(['id' => 458], ['name' => 'admin_certificate_template_delete', 'section_group_id' => 450, 'caption' => 'Certificate template delete']);
         Section::updateOrCreate(['id' => 459], ['name' => 'admin_certificate_export_excel', 'section_group_id' => 450, 'caption' => 'Certificates export excel']);
         Section::updateOrCreate(['id' => 460], ['name' => 'admin_course_certificate_list', 'section_group_id' => 450, 'caption' => 'Course Competition Certificates']);
+        Section::updateOrCreate(['id' => 461], ['name' => 'admin_certificate_settings', 'section_group_id' => 450, 'caption' => 'Settings']);
 
         // Discounts 500 - 549
         Section::updateOrCreate(['id' => 500], ['name' => 'admin_discount_codes', 'caption' => 'Discount codes']);
@@ -564,7 +567,7 @@ class SectionsTableSeeder extends Seeder
         Section::updateOrCreate(['id' => 3045], ['name' => 'admin_forms_export', 'section_group_id' => 3040, 'caption' => 'Export']);
         Section::updateOrCreate(['id' => 3046], ['name' => 'admin_forms_submissions', 'section_group_id' => 3040, 'caption' => 'Submissions']);
 
-        // Forms 3050 - 3059
+        // AI Content 3050 - 3059
         Section::updateOrCreate(['id' => 3050], ['name' => 'admin_ai_contents', 'caption' => 'AI Contents']);
         Section::updateOrCreate(['id' => 3051], ['name' => 'admin_ai_contents_lists', 'section_group_id' => 3050, 'caption' => 'Generated Contents Lists']);
         Section::updateOrCreate(['id' => 3052], ['name' => 'admin_ai_contents_templates_lists', 'section_group_id' => 3050, 'caption' => 'Template Lists']);
@@ -572,6 +575,228 @@ class SectionsTableSeeder extends Seeder
         Section::updateOrCreate(['id' => 3054], ['name' => 'admin_ai_contents_templates_edit', 'section_group_id' => 3050, 'caption' => 'Template Edit']);
         Section::updateOrCreate(['id' => 3055], ['name' => 'admin_ai_contents_templates_delete', 'section_group_id' => 3050, 'caption' => 'Template Delete']);
         Section::updateOrCreate(['id' => 3056], ['name' => 'admin_ai_contents_settings', 'section_group_id' => 3050, 'caption' => 'Settings']);
+
+        // Purchase Notifications 3060 - 3069
+        Section::updateOrCreate(['id' => 3060], ['name' => 'admin_purchase_notifications', 'caption' => 'Purchase Notifications']);
+        Section::updateOrCreate(['id' => 3061], ['name' => 'admin_purchase_notifications_lists', 'section_group_id' => 3060, 'caption' => 'Lists']);
+        Section::updateOrCreate(['id' => 3062], ['name' => 'admin_purchase_notifications_create', 'section_group_id' => 3060, 'caption' => 'Create']);
+        Section::updateOrCreate(['id' => 3063], ['name' => 'admin_purchase_notifications_edit', 'section_group_id' => 3060, 'caption' => 'Edit']);
+        Section::updateOrCreate(['id' => 3064], ['name' => 'admin_purchase_notifications_delete', 'section_group_id' => 3060, 'caption' => 'Delete']);
+
+        // Content Delete Requests 3070 - 3079
+        Section::updateOrCreate(['id' => 3070], ['name' => 'admin_content_delete_requests', 'caption' => 'Content Delete Requests']);
+        Section::updateOrCreate(['id' => 3071], ['name' => 'admin_content_delete_requests_lists', 'section_group_id' => 3070, 'caption' => 'Lists']);
+        Section::updateOrCreate(['id' => 3072], ['name' => 'admin_content_delete_requests_actions', 'section_group_id' => 3070, 'caption' => 'Approve/Reject']);
+
+        // 3080 - 3089 Delete Account Requests
+        Section::updateOrCreate(['id' => 3080], ['name' => 'admin_user_login_history', 'caption' => 'User Login History']);
+        Section::updateOrCreate(['id' => 3081], ['name' => 'admin_user_login_history_lists', 'section_group_id' => 3080, 'caption' => 'Lists']);
+        Section::updateOrCreate(['id' => 3082], ['name' => 'admin_user_login_history_delete', 'section_group_id' => 3080, 'caption' => 'Delete']);
+        Section::updateOrCreate(['id' => 3083], ['name' => 'admin_user_login_history_end_session', 'section_group_id' => 3080, 'caption' => 'End Session']);
+        Section::updateOrCreate(['id' => 3084], ['name' => 'admin_user_login_history_export', 'section_group_id' => 3080, 'caption' => 'Export Excel']);
+
+        // 3090 - 3099 IP Restriction
+        Section::updateOrCreate(['id' => 3090], ['name' => 'admin_user_ip_restriction', 'caption' => 'User IP Restriction']);
+        Section::updateOrCreate(['id' => 3091], ['name' => 'admin_user_ip_restriction_lists', 'section_group_id' => 3090, 'caption' => 'Lists']);
+        Section::updateOrCreate(['id' => 3092], ['name' => 'admin_user_ip_restriction_create', 'section_group_id' => 3090, 'caption' => 'Create/Edit Restriction']);
+        Section::updateOrCreate(['id' => 3093], ['name' => 'admin_user_ip_restriction_delete', 'section_group_id' => 3090, 'caption' => 'Delete']);
+
+        // Purchase Notifications 3100 - 3109
+        Section::updateOrCreate(['id' => 3100], ['name' => 'admin_product_badges', 'caption' => 'Product Badges']);
+        Section::updateOrCreate(['id' => 3101], ['name' => 'admin_product_badges_lists', 'section_group_id' => 3100, 'caption' => 'Lists']);
+        Section::updateOrCreate(['id' => 3102], ['name' => 'admin_product_badges_create', 'section_group_id' => 3100, 'caption' => 'Create']);
+        Section::updateOrCreate(['id' => 3103], ['name' => 'admin_product_badges_edit', 'section_group_id' => 3100, 'caption' => 'Edit']);
+        Section::updateOrCreate(['id' => 3104], ['name' => 'admin_product_badges_delete', 'section_group_id' => 3100, 'caption' => 'Delete']);
+
+        // Cart Discount 3110 - 3119
+        Section::updateOrCreate(['id' => 3110], ['name' => 'admin_cart_discount', 'caption' => 'Cart Discount']);
+        Section::updateOrCreate(['id' => 3111], ['name' => 'admin_cart_discount_controls', 'section_group_id' => 3110, 'caption' => 'Controls']);
+
+        // Abandoned Cart 3120 - 3129
+        Section::updateOrCreate(['id' => 3120], ['name' => 'admin_abandoned_cart', 'caption' => 'Abandoned Cart']);
+        Section::updateOrCreate(['id' => 3121], ['name' => 'admin_abandoned_cart_rules', 'section_group_id' => 3120, 'caption' => 'Rules (Create/Edit/Delete)']);
+        Section::updateOrCreate(['id' => 3122], ['name' => 'admin_abandoned_cart_users', 'section_group_id' => 3120, 'caption' => 'Users Cart']);
+        Section::updateOrCreate(['id' => 3123], ['name' => 'admin_abandoned_cart_settings', 'section_group_id' => 3120, 'caption' => 'Settings']);
+
+
+        /* Run Panel Sections */
+        $this->runPanelSections();
+    }
+
+    private function runPanelSections()
+    {
+
+        // Organization Instructors 1 - 9
+        $this->createPanelSection(['id' => 1], ['name' => 'panel_organization_instructors', 'caption' => 'Organization Instructors']);
+        $this->createPanelSection(['id' => 2], ['name' => 'panel_organization_instructors_lists', 'section_group_id' => 1, 'caption' => 'Lists']);
+        $this->createPanelSection(['id' => 3], ['name' => 'panel_organization_instructors_create', 'section_group_id' => 1, 'caption' => 'Create']);
+        $this->createPanelSection(['id' => 4], ['name' => 'panel_organization_instructors_edit', 'section_group_id' => 1, 'caption' => 'Edit']);
+        $this->createPanelSection(['id' => 5], ['name' => 'panel_organization_instructors_delete', 'section_group_id' => 1, 'caption' => 'Delete']);
+
+        // Organization Students 10 - 19
+        $this->createPanelSection(['id' => 10], ['name' => 'panel_organization_students', 'caption' => 'Organization Students']);
+        $this->createPanelSection(['id' => 11], ['name' => 'panel_organization_students_lists', 'section_group_id' => 10, 'caption' => 'Lists']);
+        $this->createPanelSection(['id' => 12], ['name' => 'panel_organization_students_create', 'section_group_id' => 10, 'caption' => 'Create']);
+        $this->createPanelSection(['id' => 13], ['name' => 'panel_organization_students_edit', 'section_group_id' => 10, 'caption' => 'Edit']);
+        $this->createPanelSection(['id' => 14], ['name' => 'panel_organization_students_delete', 'section_group_id' => 10, 'caption' => 'Delete']);
+
+        // Webinars 20 - 39
+        $this->createPanelSection(['id' => 20], ['name' => 'panel_webinars', 'caption' => 'Webinars (Courses)']);
+        $this->createPanelSection(['id' => 21], ['name' => 'panel_webinars_lists', 'section_group_id' => 20, 'caption' => 'Lists']);
+        $this->createPanelSection(['id' => 22], ['name' => 'panel_webinars_create', 'section_group_id' => 20, 'caption' => 'Create/Edit']);
+        $this->createPanelSection(['id' => 23], ['name' => 'panel_webinars_delete', 'section_group_id' => 20, 'caption' => 'Delete']);
+        $this->createPanelSection(['id' => 24], ['name' => 'panel_webinars_learning_page', 'section_group_id' => 20, 'caption' => 'Learning Page']);
+        $this->createPanelSection(['id' => 25], ['name' => 'panel_webinars_invited_lists', 'section_group_id' => 20, 'caption' => 'Invited Class Lists']);
+        $this->createPanelSection(['id' => 26], ['name' => 'panel_webinars_organization_classes', 'section_group_id' => 20, 'caption' => 'My Organization classes']);
+        $this->createPanelSection(['id' => 27], ['name' => 'panel_webinars_my_purchases', 'section_group_id' => 20, 'caption' => 'My Purchases']);
+        $this->createPanelSection(['id' => 28], ['name' => 'panel_webinars_my_class_comments', 'section_group_id' => 20, 'caption' => 'My Class Comments']);
+        $this->createPanelSection(['id' => 29], ['name' => 'panel_webinars_comments', 'section_group_id' => 20, 'caption' => 'My Comments']);
+        $this->createPanelSection(['id' => 30], ['name' => 'panel_webinars_favorites', 'section_group_id' => 20, 'caption' => 'Favorites']);
+        $this->createPanelSection(['id' => 31], ['name' => 'panel_webinars_personal_course_notes', 'section_group_id' => 20, 'caption' => 'Personal Course Notes']);
+        $this->createPanelSection(['id' => 32], ['name' => 'panel_webinars_duplicate', 'section_group_id' => 20, 'caption' => 'Duplicate']);
+        $this->createPanelSection(['id' => 33], ['name' => 'panel_webinars_export_students_list', 'section_group_id' => 20, 'caption' => 'Export Students List']);
+        $this->createPanelSection(['id' => 34], ['name' => 'panel_webinars_invoice', 'section_group_id' => 20, 'caption' => 'Invoice']);
+        $this->createPanelSection(['id' => 35], ['name' => 'panel_webinars_statistics', 'section_group_id' => 20, 'caption' => 'Statistics']);
+
+        // Upcoming Courses 40 - 49
+        $this->createPanelSection(['id' => 40], ['name' => 'panel_upcoming_courses', 'caption' => 'Upcoming Courses']);
+        $this->createPanelSection(['id' => 41], ['name' => 'panel_upcoming_courses_lists', 'section_group_id' => 40, 'caption' => 'Lists']);
+        $this->createPanelSection(['id' => 42], ['name' => 'panel_upcoming_courses_create', 'section_group_id' => 40, 'caption' => 'Create/Edit']);
+        $this->createPanelSection(['id' => 43], ['name' => 'panel_upcoming_courses_delete', 'section_group_id' => 40, 'caption' => 'Delete']);
+        $this->createPanelSection(['id' => 44], ['name' => 'panel_upcoming_courses_followings', 'section_group_id' => 40, 'caption' => 'Followings']);
+        $this->createPanelSection(['id' => 45], ['name' => 'panel_upcoming_courses_followers', 'section_group_id' => 40, 'caption' => 'Followers']);
+
+        // Bundles 50 - 59
+        $this->createPanelSection(['id' => 50], ['name' => 'panel_bundles', 'caption' => 'Bundles']);
+        $this->createPanelSection(['id' => 51], ['name' => 'panel_bundles_lists', 'section_group_id' => 50, 'caption' => 'Lists']);
+        $this->createPanelSection(['id' => 52], ['name' => 'panel_bundles_create', 'section_group_id' => 50, 'caption' => 'Create/Edit']);
+        $this->createPanelSection(['id' => 53], ['name' => 'panel_bundles_delete', 'section_group_id' => 50, 'caption' => 'Delete']);
+        $this->createPanelSection(['id' => 54], ['name' => 'panel_bundles_export_students_list', 'section_group_id' => 50, 'caption' => 'Export Students List']);
+        $this->createPanelSection(['id' => 55], ['name' => 'panel_bundles_courses', 'section_group_id' => 50, 'caption' => 'Courses']);
+
+        // Assignments 60 - 69
+        $this->createPanelSection(['id' => 60], ['name' => 'panel_assignments', 'caption' => 'Assignments']);
+        $this->createPanelSection(['id' => 61], ['name' => 'panel_assignments_lists', 'section_group_id' => 60, 'caption' => 'My Assignments Lists']);
+        $this->createPanelSection(['id' => 62], ['name' => 'panel_assignments_my_courses_assignments', 'section_group_id' => 60, 'caption' => 'My Courses Assignments']);
+        $this->createPanelSection(['id' => 63], ['name' => 'panel_assignments_students', 'section_group_id' => 60, 'caption' => 'Students Assignments']);
+
+
+        // Meetings 70 - 79
+        $this->createPanelSection(['id' => 70], ['name' => 'panel_meetings', 'caption' => 'Meetings']);
+        $this->createPanelSection(['id' => 71], ['name' => 'panel_meetings_my_reservation', 'section_group_id' => 70, 'caption' => 'My Reservation']);
+        $this->createPanelSection(['id' => 72], ['name' => 'panel_meetings_requests', 'section_group_id' => 70, 'caption' => 'Requests']);
+        $this->createPanelSection(['id' => 73], ['name' => 'panel_meetings_settings', 'section_group_id' => 70, 'caption' => 'Settings']);
+
+        // Quizzes 80 - 89
+        $this->createPanelSection(['id' => 80], ['name' => 'panel_quizzes', 'caption' => 'Quizzes']);
+        $this->createPanelSection(['id' => 81], ['name' => 'panel_quizzes_lists', 'section_group_id' => 80, 'caption' => 'Lists']);
+        $this->createPanelSection(['id' => 82], ['name' => 'panel_quizzes_create', 'section_group_id' => 80, 'caption' => 'Create/Edit']);
+        $this->createPanelSection(['id' => 83], ['name' => 'panel_quizzes_delete', 'section_group_id' => 80, 'caption' => 'Delete']);
+        $this->createPanelSection(['id' => 84], ['name' => 'panel_quizzes_results', 'section_group_id' => 80, 'caption' => 'Results']);
+        $this->createPanelSection(['id' => 85], ['name' => 'panel_quizzes_my_results', 'section_group_id' => 80, 'caption' => 'My Results']);
+        $this->createPanelSection(['id' => 86], ['name' => 'panel_quizzes_not_participated', 'section_group_id' => 80, 'caption' => 'Not Participated Lists']);
+
+        // Certificates 90 - 99
+        $this->createPanelSection(['id' => 90], ['name' => 'panel_certificates', 'caption' => 'Certificates']);
+        $this->createPanelSection(['id' => 91], ['name' => 'panel_certificates_lists', 'section_group_id' => 90, 'caption' => 'Lists']);
+        $this->createPanelSection(['id' => 92], ['name' => 'panel_certificates_achievements', 'section_group_id' => 90, 'caption' => 'Achievements']);
+        $this->createPanelSection(['id' => 93], ['name' => 'panel_certificates_course_certificates', 'section_group_id' => 90, 'caption' => 'Course Certificates']);
+
+
+        // Products (Store) 100 - 119
+        $this->createPanelSection(['id' => 100], ['name' => 'panel_products', 'caption' => 'Products (Store)']);
+        $this->createPanelSection(['id' => 101], ['name' => 'panel_products_lists', 'section_group_id' => 100, 'caption' => 'Lists']);
+        $this->createPanelSection(['id' => 102], ['name' => 'panel_products_create', 'section_group_id' => 100, 'caption' => 'Create/Edit']);
+        $this->createPanelSection(['id' => 103], ['name' => 'panel_products_delete', 'section_group_id' => 100, 'caption' => 'Delete']);
+        $this->createPanelSection(['id' => 104], ['name' => 'panel_products_sales', 'section_group_id' => 100, 'caption' => 'Sales']);
+        $this->createPanelSection(['id' => 105], ['name' => 'panel_products_purchases', 'section_group_id' => 100, 'caption' => 'Purchases']);
+        $this->createPanelSection(['id' => 106], ['name' => 'panel_products_comments', 'section_group_id' => 100, 'caption' => 'Comments']);
+        $this->createPanelSection(['id' => 107], ['name' => 'panel_products_my_comments', 'section_group_id' => 100, 'caption' => 'My Comments']);
+
+
+        // Financial 120 - 139
+        $this->createPanelSection(['id' => 120], ['name' => 'panel_financial', 'caption' => 'Financial']);
+        $this->createPanelSection(['id' => 121], ['name' => 'panel_financial_sales_reports', 'section_group_id' => 120, 'caption' => 'Sales Reports']);
+        $this->createPanelSection(['id' => 122], ['name' => 'panel_financial_summary', 'section_group_id' => 120, 'caption' => 'Summary']);
+        $this->createPanelSection(['id' => 123], ['name' => 'panel_financial_payout', 'section_group_id' => 120, 'caption' => 'Payout']);
+        $this->createPanelSection(['id' => 124], ['name' => 'panel_financial_charge_account', 'section_group_id' => 120, 'caption' => 'Charge Account']);
+        $this->createPanelSection(['id' => 125], ['name' => 'panel_financial_subscribes', 'section_group_id' => 120, 'caption' => 'Subscribes']);
+        $this->createPanelSection(['id' => 126], ['name' => 'panel_financial_registration_packages', 'section_group_id' => 120, 'caption' => 'Registration Packages']);
+        $this->createPanelSection(['id' => 127], ['name' => 'panel_financial_installments', 'section_group_id' => 120, 'caption' => 'Installments']);
+
+        // Support 140 - 159
+        $this->createPanelSection(['id' => 140], ['name' => 'panel_support', 'caption' => 'Support']);
+        $this->createPanelSection(['id' => 141], ['name' => 'panel_support_lists', 'section_group_id' => 140, 'caption' => 'Lists']);
+        $this->createPanelSection(['id' => 142], ['name' => 'panel_support_create', 'section_group_id' => 140, 'caption' => 'Create']);
+        $this->createPanelSection(['id' => 143], ['name' => 'panel_support_tickets', 'section_group_id' => 140, 'caption' => 'Tickets']);
+
+        // Marketing 160 - 179
+        $this->createPanelSection(['id' => 160], ['name' => 'panel_marketing', 'caption' => 'Marketing']);
+        $this->createPanelSection(['id' => 161], ['name' => 'panel_marketing_special_offers', 'section_group_id' => 160, 'caption' => 'Special Offers']);
+        $this->createPanelSection(['id' => 162], ['name' => 'panel_marketing_promotions', 'section_group_id' => 160, 'caption' => 'Promotions']);
+        $this->createPanelSection(['id' => 163], ['name' => 'panel_marketing_affiliates', 'section_group_id' => 160, 'caption' => 'Affiliates']);
+        $this->createPanelSection(['id' => 164], ['name' => 'panel_marketing_registration_bonus', 'section_group_id' => 160, 'caption' => 'Registration Bonus']);
+        $this->createPanelSection(['id' => 165], ['name' => 'panel_marketing_coupons', 'section_group_id' => 160, 'caption' => 'Coupons']);
+        $this->createPanelSection(['id' => 166], ['name' => 'panel_marketing_new_coupon', 'section_group_id' => 160, 'caption' => 'Create Coupons']);
+        $this->createPanelSection(['id' => 167], ['name' => 'panel_marketing_delete_coupon', 'section_group_id' => 160, 'caption' => 'Delete Coupons']);
+
+
+        // Forums 180 - 199
+        $this->createPanelSection(['id' => 180], ['name' => 'panel_forums', 'caption' => 'Forums']);
+        $this->createPanelSection(['id' => 181], ['name' => 'panel_forums_new_topic', 'section_group_id' => 180, 'caption' => 'New Topic']);
+        $this->createPanelSection(['id' => 182], ['name' => 'panel_forums_my_topics', 'section_group_id' => 180, 'caption' => 'My Topics']);
+        $this->createPanelSection(['id' => 183], ['name' => 'panel_forums_my_posts', 'section_group_id' => 180, 'caption' => 'My Posts']);
+        $this->createPanelSection(['id' => 184], ['name' => 'panel_forums_bookmarks', 'section_group_id' => 180, 'caption' => 'Bookmarks']);
+
+        // Blog 200 - 219
+        $this->createPanelSection(['id' => 200], ['name' => 'panel_blog', 'caption' => 'Blog']);
+        $this->createPanelSection(['id' => 201], ['name' => 'panel_blog_new_article', 'section_group_id' => 200, 'caption' => 'New/Edit Article']);
+        $this->createPanelSection(['id' => 202], ['name' => 'panel_blog_my_articles', 'section_group_id' => 200, 'caption' => 'My Article']);
+        $this->createPanelSection(['id' => 203], ['name' => 'panel_blog_delete_article', 'section_group_id' => 200, 'caption' => 'Delete Article']);
+        $this->createPanelSection(['id' => 204], ['name' => 'panel_blog_comments', 'section_group_id' => 200, 'caption' => 'Comments']);
+
+        // Noticeboard 220 - 239
+        $this->createPanelSection(['id' => 220], ['name' => 'panel_noticeboard', 'caption' => 'Noticeboard']);
+        $this->createPanelSection(['id' => 221], ['name' => 'panel_noticeboard_history', 'section_group_id' => 220, 'caption' => 'Noticeboard History']);
+        $this->createPanelSection(['id' => 222], ['name' => 'panel_noticeboard_create', 'section_group_id' => 220, 'caption' => 'Create/Edit Noticeboard']);
+        $this->createPanelSection(['id' => 223], ['name' => 'panel_noticeboard_delete', 'section_group_id' => 220, 'caption' => 'Delete Noticeboard']);
+        $this->createPanelSection(['id' => 224], ['name' => 'panel_noticeboard_course_notices', 'section_group_id' => 220, 'caption' => 'Course Notices']);
+        $this->createPanelSection(['id' => 225], ['name' => 'panel_noticeboard_course_notices_create', 'section_group_id' => 220, 'caption' => 'Create/Edit Course Notices']);
+
+        // Rewards 240 - 259
+        $this->createPanelSection(['id' => 240], ['name' => 'panel_rewards', 'caption' => 'Rewards']);
+        $this->createPanelSection(['id' => 241], ['name' => 'panel_rewards_lists', 'section_group_id' => 240, 'caption' => 'Lists']);
+
+        // AI Contents 260 - 279
+        $this->createPanelSection(['id' => 260], ['name' => 'panel_ai_contents', 'caption' => 'AI Contents']);
+        $this->createPanelSection(['id' => 261], ['name' => 'panel_ai_contents_lists', 'section_group_id' => 260, 'caption' => 'Lists']);
+
+        // Notifications 280 - 299
+        $this->createPanelSection(['id' => 280], ['name' => 'panel_notifications', 'caption' => 'Notifications']);
+        $this->createPanelSection(['id' => 281], ['name' => 'panel_notifications_lists', 'section_group_id' => 280, 'caption' => 'Lists']);
+
+        // Others 300 - 319
+        $this->createPanelSection(['id' => 300], ['name' => 'panel_others', 'caption' => 'Others']);
+        $this->createPanelSection(['id' => 301], ['name' => 'panel_others_profile_setting', 'section_group_id' => 300, 'caption' => 'Profile Settings']);
+        $this->createPanelSection(['id' => 302], ['name' => 'panel_others_profile_url', 'section_group_id' => 300, 'caption' => 'Profile Url']);
+        $this->createPanelSection(['id' => 303], ['name' => 'panel_others_logout', 'section_group_id' => 300, 'caption' => 'Logout']);
+
+
+    }
+
+    private function createPanelSection($arr1, $arr2)
+    {
+        $prefixId = 100000;
+        $arr2['type'] = "panel";
+
+        if (!empty($arr2['section_group_id'])) {
+            $arr2['section_group_id'] = $prefixId + $arr2['section_group_id'];
+        }
+
+        Section::updateOrCreate([
+            'id' => $prefixId + $arr1['id'],
+        ], $arr2);
+
 
     }
 }

@@ -78,30 +78,36 @@
                             <div class="image-box">
                                 <img src="{{ $webinar->getImage() }}" class="img-cover" alt="">
 
-                                @switch($webinar->status)
-                                    @case(\App\Models\Webinar::$active)
-                                        @if($webinar->isWebinar())
-                                            @if($webinar->start_date > time())
-                                                <span class="badge badge-primary">{{  trans('panel.not_conducted') }}</span>
-                                            @elseif($webinar->isProgressing())
-                                                <span class="badge badge-secondary">{{ trans('webinars.in_progress') }}</span>
-                                            @else
-                                                <span class="badge badge-secondary">{{ trans('public.finished') }}</span>
-                                            @endif
-                                        @else
-                                            <span class="badge badge-secondary">{{ trans('webinars.'.$webinar->type) }}</span>
-                                        @endif
-                                        @break
-                                    @case(\App\Models\Webinar::$isDraft)
-                                        <span class="badge badge-danger">{{ trans('public.draft') }}</span>
-                                        @break
-                                    @case(\App\Models\Webinar::$pending)
-                                        <span class="badge badge-warning">{{ trans('public.waiting') }}</span>
-                                        @break
-                                    @case(\App\Models\Webinar::$inactive)
-                                        <span class="badge badge-danger">{{ trans('public.rejected') }}</span>
-                                        @break
-                                @endswitch
+                                <div class="badges-lists">
+                                    @if(!empty($webinar->deleteRequest) and $webinar->deleteRequest->status == "pending")
+                                        <span class="badge badge-danger">{{ trans('update.removal_request_sent') }}</span>
+                                    @else
+                                        @switch($webinar->status)
+                                            @case(\App\Models\Webinar::$active)
+                                                @if($webinar->isWebinar())
+                                                    @if($webinar->start_date > time())
+                                                        <span class="badge badge-primary">{{  trans('panel.not_conducted') }}</span>
+                                                    @elseif($webinar->isProgressing())
+                                                        <span class="badge badge-secondary">{{ trans('webinars.in_progress') }}</span>
+                                                    @else
+                                                        <span class="badge badge-secondary">{{ trans('public.finished') }}</span>
+                                                    @endif
+                                                @else
+                                                    <span class="badge badge-secondary">{{ trans('webinars.'.$webinar->type) }}</span>
+                                                @endif
+                                                @break
+                                            @case(\App\Models\Webinar::$isDraft)
+                                                <span class="badge badge-danger">{{ trans('public.draft') }}</span>
+                                                @break
+                                            @case(\App\Models\Webinar::$pending)
+                                                <span class="badge badge-warning">{{ trans('public.waiting') }}</span>
+                                                @break
+                                            @case(\App\Models\Webinar::$inactive)
+                                                <span class="badge badge-danger">{{ trans('public.rejected') }}</span>
+                                                @break
+                                        @endswitch
+                                    @endif
+                                </div>
 
                                 @if($webinar->isWebinar())
                                     <div class="progress">
@@ -128,29 +134,47 @@
                                                     <button type="button" data-webinar-id="{{ $webinar->id }}" class="js-webinar-next-session webinar-actions btn-transparent d-block">{{ trans('public.create_join_link') }}</button>
                                                 @endif
 
-                                                @if($webinar->status == \App\Models\Webinar::$active)
-                                                    <a href="{{ $webinar->getLearningPageUrl() }}" target="_blank" class="webinar-actions d-block mt-10">{{ trans('update.learning_page') }}</a>
-                                                @endif
 
-                                                <a href="/panel/webinars/{{ $webinar->id }}/edit" class="webinar-actions d-block mt-10">{{ trans('public.edit') }}</a>
+                                                @can('panel_webinars_learning_page')
+                                                    <a href="{{ $webinar->getLearningPageUrl() }}" target="_blank" class="webinar-actions d-block mt-10">{{ trans('update.learning_page') }}</a>
+                                                @endcan
+
+                                                @can('panel_webinars_create')
+                                                    <a href="/panel/webinars/{{ $webinar->id }}/edit" class="webinar-actions d-block mt-10">{{ trans('public.edit') }}</a>
+                                                @endcan
 
                                                 @if($webinar->isWebinar())
-                                                    <a href="/panel/webinars/{{ $webinar->id }}/step/4" class="webinar-actions d-block mt-10">{{ trans('public.sessions') }}</a>
+                                                    @can('panel_webinars_create')
+                                                        <a href="/panel/webinars/{{ $webinar->id }}/step/4" class="webinar-actions d-block mt-10">{{ trans('public.sessions') }}</a>
+                                                    @endcan
                                                 @endif
 
-                                                <a href="/panel/webinars/{{ $webinar->id }}/step/4" class="webinar-actions d-block mt-10">{{ trans('public.files') }}</a>
+                                                @can('panel_webinars_create')
+                                                    <a href="/panel/webinars/{{ $webinar->id }}/step/4" class="webinar-actions d-block mt-10">{{ trans('public.files') }}</a>
+                                                @endcan
 
-                                                <a href="/panel/webinars/{{ $webinar->id }}/export-students-list" class="webinar-actions d-block mt-10">{{ trans('public.export_list') }}</a>
+                                                @can('panel_webinars_export_students_list')
+                                                    <a href="/panel/webinars/{{ $webinar->id }}/export-students-list" class="webinar-actions d-block mt-10">{{ trans('public.export_list') }}</a>
+                                                @endcan
 
                                                 @if($authUser->id == $webinar->creator_id)
-                                                    <a href="/panel/webinars/{{ $webinar->id }}/duplicate" class="webinar-actions d-block mt-10">{{ trans('public.duplicate') }}</a>
+                                                    @can('panel_webinars_duplicate')
+                                                        <a href="/panel/webinars/{{ $webinar->id }}/duplicate" class="webinar-actions d-block mt-10">{{ trans('public.duplicate') }}</a>
+                                                    @endcan
                                                 @endif
 
-
-                                                <a href="/panel/webinars/{{ $webinar->id }}/statistics" class="webinar-actions d-block mt-10">{{ trans('update.statistics') }}</a>
+                                                @can('panel_webinars_statistics')
+                                                    <a href="/panel/webinars/{{ $webinar->id }}/statistics" class="webinar-actions d-block mt-10">{{ trans('update.statistics') }}</a>
+                                                @endcan
 
                                                 @if($webinar->creator_id == $authUser->id)
-                                                    <a href="/panel/webinars/{{ $webinar->id }}/delete" class="webinar-actions d-block mt-10 text-danger delete-action">{{ trans('public.delete') }}</a>
+                                                    @can('panel_webinars_delete')
+                                                        @include('web.default.panel.includes.content_delete_btn', [
+                                                            'deleteContentUrl' => "/panel/webinars/{$webinar->id}/delete",
+                                                            'deleteContentClassName' => 'webinar-actions d-block mt-10 text-danger',
+                                                            'deleteContentItem' => $webinar,
+                                                        ])
+                                                    @endcan
                                                 @endif
                                             </div>
                                         </div>

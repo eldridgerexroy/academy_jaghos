@@ -22,6 +22,10 @@
             </div>
         @endif
 
+        @if(!empty($cartDiscount))
+            @include('web.default.cart.includes.cart_discount', ['cartDiscountClassName' => 'is-cart-page'])
+        @endif
+
         <section class="mt-45">
             <h2 class="section-title">{{ trans('cart.cart_items') }}</h2>
 

@@ -110,6 +110,8 @@
     </script>
 @endif
 
+@include('web.default.includes.purchase_notifications')
+
 @stack('styles_bottom')
 @stack('scripts_bottom')
 

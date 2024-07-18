@@ -286,8 +286,18 @@ class SessionController extends Controller
         ], 422);
     }
 
+    private function handleBigBlueButtonConfigs()
+    {
+        $settings = getFeaturesSettings();
+
+        \Config::set("bigbluebutton.BBB_SECURITY_SALT", !empty($settings['bigbluebutton_security_salt']) ? $settings['bigbluebutton_security_salt'] : '');
+        \Config::set("bigbluebutton.BBB_SERVER_BASE_URL", !empty($settings['bigbluebutton_server_base_url']) ? $settings['bigbluebutton_server_base_url'] : '');
+    }
+
     private function handleBigBlueButtonApi($session, $user)
     {
+        $this->handleBigBlueButtonConfigs();
+
         $createMeeting = \Bigbluebutton::initCreateMeeting([
             'meetingID' => $session->id,
             'meetingName' => $session->title,
@@ -309,6 +319,8 @@ class SessionController extends Controller
             ->first();
 
         if (!empty($session)) {
+            $this->handleBigBlueButtonConfigs();
+
             $user = auth()->user();
 
             if ($user->id == $session->creator_id) {

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Mixins\Cashback\CashbackRules;
+use App\Models\Observers\AccountingNumberObserver;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,6 +26,15 @@ class Accounting extends Model
     public $timestamps = false;
 
     protected $guarded = ['id'];
+
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        Accounting::observe(AccountingNumberObserver::class);
+    }
+
 
     public function webinar()
     {
@@ -135,6 +145,8 @@ class Accounting extends Model
             $deductionDescription = trans('public.paid_form_credit');
         }
 
+        $accountingType = Accounting::$deduction;
+
         Accounting::create([
             'user_id' => $orderItem->user_id,
             'order_item_id' => $orderItem->id,
@@ -148,14 +160,14 @@ class Accounting extends Model
             'installment_payment_id' => $orderItem->installment_payment_id ?? null,
             'product_id' => $orderItem->product_id ?? null,
             'gift_id' => $orderItem->gift_id ?? null,
-            'type' => Accounting::$deduction,
+            'type' => $accountingType,
             'type_account' => Accounting::$asset,
             'description' => $deductionDescription,
             'created_at' => time()
         ]);
 
         $notifyOptions = [
-            '[f.d.type]' => Accounting::$deduction,
+            '[f.d.type]' => trans("update.{$accountingType}"),
             '[amount]' => handlePrice($orderItem->total_amount, true, true, false, $orderItem->user),
         ];
 
@@ -607,7 +619,7 @@ class Accounting extends Model
 
     public static function createAccountingForSaleWithSubscribe($item, $subscribe, $itemName)
     {
-        $admin = User::getAdmin();
+        $admin = User::getMainAdmin();
 
         $commission = $item->creator->getCommission();
 
@@ -640,7 +652,7 @@ class Accounting extends Model
 
     public static function refundAccountingForSaleWithSubscribe($webinar, $subscribe)
     {
-        $admin = User::getAdmin();
+        $admin = User::getMainAdmin();
 
         $financialSettings = getFinancialSettings();
         $commission = $financialSettings['commission'] ?? 0;

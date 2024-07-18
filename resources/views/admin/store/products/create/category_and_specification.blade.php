@@ -67,6 +67,16 @@
             </div>
         </div>
 
+        {{-- Related Course --}}
+        <div class="col-12 mt-20">
+            @include('admin.webinars.relatedCourse.add_related_course', [
+                    'relatedCourseItemId' => $product->id,
+                     'relatedCourseItemType' => 'product',
+                     'relatedCourses' => $product->relatedCourses
+                ])
+        </div>
+
+
         <div class="col-12 mt-20">
             <div class="d-flex justify-content-between align-items-center">
                 <h2 class="section-title after-line">{{ trans('update.specifications') }}</h2>

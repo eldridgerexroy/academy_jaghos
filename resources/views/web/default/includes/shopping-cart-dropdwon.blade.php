@@ -1,12 +1,19 @@
 <div class="dropdown">
-    <button type="button" {{ (empty($userCarts) or count($userCarts) < 1) ? 'disabled' : '' }} class="btn btn-transparent dropdown-toggle" id="navbarShopingCart" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-        <i data-feather="shopping-cart" width="20" height="20" class="mr-10"></i>
 
-        @if(!empty($userCarts) and count($userCarts))
-            <span class="badge badge-circle-primary d-flex align-items-center justify-content-center">{{ count($userCarts) }}</span>
-        @endif
-    </button>
+    @if((empty($userCarts) or count($userCarts) < 1) and !empty($userCartDiscount))
+        <a href="/cart" class="btn btn-transparent">
+            <i data-feather="shopping-cart" width="20" height="20" class="mr-10"></i>
+        </a>
+    @else
+        <button type="button" {{ (empty($userCarts) or count($userCarts) < 1) ? 'disabled' : '' }} class="btn btn-transparent dropdown-toggle" id="navbarShopingCart" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+            <i data-feather="shopping-cart" width="20" height="20" class="mr-10"></i>
+
+            @if(!empty($userCarts) and count($userCarts))
+                <span class="badge badge-circle-primary d-flex align-items-center justify-content-center">{{ count($userCarts) }}</span>
+            @endif
+        </button>
+    @endif
 
     <div class="dropdown-menu" aria-labelledby="navbarShopingCart">
         <div class="d-md-none border-bottom mb-20 pb-10 text-right">

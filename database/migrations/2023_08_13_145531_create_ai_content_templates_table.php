@@ -13,6 +13,8 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('ai_content_templates', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
+
             $table->increments('id');
             $table->enum('type', ['text', 'image']);
             $table->boolean('enable_length')->default(false);
@@ -23,6 +25,8 @@ return new class extends Migration {
         });
 
         Schema::create('ai_content_template_translations', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
+
             $table->increments('id');
             $table->integer('ai_content_template_id')->unsigned();
             $table->string('locale', 191)->index();

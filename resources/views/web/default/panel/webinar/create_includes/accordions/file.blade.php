@@ -111,6 +111,36 @@
                                 <div class="invalid-feedback"></div>
                             </div>
 
+                            <div class="js-secure-host-upload-type-field form-group {{ (!empty($file) and $file->storage == "secure_host") ? '' : 'd-none' }}">
+                                <label class="input-label">{{ trans('update.upload_type') }}</label>
+
+                                <div class="d-flex align-items-center js-ajax-secure_host_upload_type">
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" name="ajax[{{ !empty($file) ? $file->id : 'new' }}][secure_host_upload_type]" value="direct" id="uploadTypeRadio1_{{ !empty($file) ? $file->id : 'record' }}" class="custom-control-input" {{ (empty($file) or $file->secure_host_upload_type == 'direct') ? 'checked' : '' }}>
+                                        <label class="custom-control-label font-14 cursor-pointer" for="uploadTypeRadio1_{{ !empty($file) ? $file->id : 'record' }}">{{ trans('update.direct') }}</label>
+                                    </div>
+
+                                    <div class="custom-control custom-radio ml-15">
+                                        <input type="radio" name="ajax[{{ !empty($file) ? $file->id : 'new' }}][secure_host_upload_type]" value="manual" id="uploadTypeRadio2_{{ !empty($file) ? $file->id : 'record' }}" class="custom-control-input" {{ (!empty($file) and $file->secure_host_upload_type == 'manual') ? 'checked' : '' }}>
+                                        <label class="custom-control-label font-14 cursor-pointer" for="uploadTypeRadio2_{{ !empty($file) ? $file->id : 'record' }}">{{ trans('public.manual') }}</label>
+                                    </div>
+                                </div>
+
+                                <div class="invalid-feedback"></div>
+                            </div>
+
+                            <div class="form-group js-secure-host-path-input {{ (!empty($file) and $file->storage == 'secure_host' and $file->secure_host_upload_type == 'manual') ? '' : 'd-none' }}">
+                                <div class="local-input input-group">
+                                    <div class="input-group-prepend">
+                                        <button type="button" class="input-group-text text-white cursor-default">
+                                            <i data-feather="link" width="18" height="18" class="text-white"></i>
+                                        </button>
+                                    </div>
+                                    <input type="text" name="ajax[{{ !empty($file) ? $file->id : 'new' }}][secure_host_file_path]" value="{{ (!empty($file)) ? $file->file : '' }}" class="js-ajax-secure_host_file_path form-control" placeholder="{{ trans('update.enter_file_url') }}"/>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                            </div>
+
 
                             <div class="form-group js-file-path-input {{ (!empty($file) and $file->storage == 's3') ? 'd-none' : '' }}">
                                 <div class="local-input input-group">
@@ -131,15 +161,17 @@
                                             <i data-feather="upload" width="18" height="18" class="text-white"></i>
                                         </button>
                                     </div>
-                                    <div class="custom-file">
+                                    <div class="custom-file js-ajax-s3_file">
                                         <input type="file" name="ajax[{{ !empty($file) ? $file->id : 'new' }}][s3_file]" class="js-s3-file-input custom-file-input cursor-pointer" id="s3File{{ !empty($file) ? $file->id : 'record' }}">
                                         <label class="custom-file-label cursor-pointer" for="s3File{{ !empty($file) ? $file->id : 'record' }}">{{ trans('update.choose_file') }}</label>
                                     </div>
+
+                                    <div class="invalid-feedback"></div>
                                 </div>
                             </div>
 
                             <div class="row form-group js-file-type-volume d-none">
-                                <div class="col-6">
+                                <div class="col-6 js-file-type-field">
                                     <label class="input-label">{{ trans('webinars.file_type') }}</label>
                                     <select name="ajax[{{ !empty($file) ? $file->id : 'new' }}][file_type]" class="js-ajax-file_type form-control">
                                         <option value="">{{ trans('webinars.select_file_type') }}</option>

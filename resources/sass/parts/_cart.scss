@@ -94,3 +94,20 @@
     opacity: 0;
     visibility: hidden;
 }
+
+.empty-cart-container {
+    padding: 110px 32px;
+    border-radius: 15px;
+    border: solid 1px #ececec;
+    background-color: #fff;
+    margin-top: 74px;
+
+    .empty-cart-icon {
+        width: 256px;
+        height: 250px;
+    }
+
+    @media (max-width: $screen-xs-max) {
+        padding: 50px 20px;
+    }
+}

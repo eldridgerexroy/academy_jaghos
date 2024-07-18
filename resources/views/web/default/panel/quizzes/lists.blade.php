@@ -193,8 +193,13 @@
                                                     <i data-feather="more-vertical" height="20"></i>
                                                 </button>
                                                 <div class="dropdown-menu font-weight-normal">
-                                                    <a href="/panel/quizzes/{{ $quiz->id }}/edit" class="webinar-actions d-block mt-10">{{ trans('public.edit') }}</a>
-                                                    <a href="/panel/quizzes/{{ $quiz->id }}/delete" data-item-id="1" class="webinar-actions d-block mt-10 delete-action">{{ trans('public.delete') }}</a>
+                                                    @can('panel_quizzes_create')
+                                                        <a href="/panel/quizzes/{{ $quiz->id }}/edit" class="webinar-actions d-block mt-10">{{ trans('public.edit') }}</a>
+                                                    @endcan
+
+                                                    @can('panel_quizzes_delete')
+                                                        <a href="/panel/quizzes/{{ $quiz->id }}/delete" data-item-id="1" class="webinar-actions d-block mt-10 delete-action">{{ trans('public.delete') }}</a>
+                                                    @endcan
                                                 </div>
                                             </div>
                                         </td>

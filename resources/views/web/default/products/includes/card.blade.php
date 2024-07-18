@@ -6,15 +6,19 @@
                     $hasDiscount = $product->getActiveDiscount();
                 @endphp
 
-                @if($product->getAvailability() < 1)
-                    <span class="out-of-stock-badge">
-                    <span>{{ trans('update.out_of_stock') }}</span>
-                </span>
-                @elseif($hasDiscount)
-                <span class="badge badge-danger">{{ trans('public.offer',['off' => $hasDiscount->percent]) }}</span>
-                @elseif($product->isPhysical() and empty($product->delivery_fee))
-                    <span class="badge badge-warning">{{ trans('update.free_shipping') }}</span>
-                @endif
+                <div class="badges-lists">
+                    @if($product->getAvailability() < 1)
+                        <span class="out-of-stock-badge">
+                            <span>{{ trans('update.out_of_stock') }}</span>
+                        </span>
+                    @elseif($hasDiscount)
+                        <span class="badge badge-danger">{{ trans('public.offer',['off' => $hasDiscount->percent]) }}</span>
+                    @elseif($product->isPhysical() and empty($product->delivery_fee))
+                        <span class="badge badge-warning">{{ trans('update.free_shipping') }}</span>
+                    @endif
+
+                        @include('web.default.includes.product_custom_badge', ['itemTarget' => $product])
+                </div>
 
                 <img src="{{ $product->thumbnail }}" class="img-cover" alt="{{ $product->title }}">
             </a>
@@ -48,7 +52,7 @@
 
 
             <div class="product-price-box mt-25">
-            @if(!empty($isRewardProducts) and !empty($product->point))
+                @if(!empty($isRewardProducts) and !empty($product->point))
                     <span class="text-warning real font-14">{{ $product->point }} {{ trans('update.points') }}</span>
                 @elseif($product->price > 0)
                     @if($product->getPriceWithActiveDiscountPrice() < $product->price)

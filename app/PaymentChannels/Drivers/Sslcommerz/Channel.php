@@ -13,10 +13,20 @@ use Illuminate\Support\Facades\Auth;
 class Channel extends BasePaymentChannel implements IChannel
 {
     protected $currency;
+    protected $test_mode;
+    protected $store_id;
+    protected $store_pass;
+
+    protected array $credentialItems = [
+        'store_id',
+        'store_pass',
+    ];
+
 
     public function __construct(PaymentChannel $paymentChannel)
     {
         $this->currency = currency(); // "BDT"
+        $this->setCredentialItems($paymentChannel);
     }
 
     public function paymentRequest(Order $order)
@@ -47,7 +57,7 @@ class Channel extends BasePaymentChannel implements IChannel
         $postData['cancel_url'] = url("/payments/verify/Sslcommerz");
 
 
-        $sslc = new SSLCommerz();
+        $sslc = new SSLCommerz($this->store_id, $this->store_pass, $this->test_mode);
 
         # initiate(Transaction Data , false: Redirect to SSLCOMMERZ gateway/ true: Show all the Payement gateway here )
         $payment_options = $sslc->initiate($postData, false);
