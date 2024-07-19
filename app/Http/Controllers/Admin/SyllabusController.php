@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Syllabus;
 use App\Models\University;
 use App\Models\Major;
+use App\Models\SyllabusTopic;
+use App\Models\UniversityMajor;
 
 
 class SyllabusController extends Controller
@@ -28,20 +30,49 @@ class SyllabusController extends Controller
         return view('admin.syllabus.lists', $data);
     }
 
+    public function show($id)
+    {
+        $syllabus = Syllabus::find($id);
+        $syllabus_topic = SyllabusTopic::where("syllabus_id", $id)->get();
+        
+        $university_major = UniversityMajor::find($syllabus->university_major_id);
+
+        $university = $university_major->university;
+        $major = $university_major->major;
+        $department = $university_major->department;
+
+        $data = [
+            'pageTitle' => trans('admin/pages/syllabus.page_show_title'),
+            'syllabus' => $syllabus,
+            'syllabusTopics' => $syllabus_topic,
+            'major' => $major,
+            'university' => $university,
+            'department' => $department,
+            'university_major_id' => $syllabus->university_major_id,
+        ];
+
+        return view('admin.syllabus.show', $data);
+    }
+
     /**
      * Show the form for creating a new syllabus.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        $universities = University::all();
-        $majors =  Major::all();
+        $university_major = UniversityMajor::find($id);
+
+        $university = $university_major->university;
+        $major = $university_major->major;
+        $department = $university_major->department;
 
         $data = [
             'pageTitle' => trans('admin/pages/syllabus.page_lists_title'),
-            'majors' => $majors,
-            'universities' => $universities,
+            'major' => $major,
+            'university' => $university,
+            'department' => $department,
+            'university_major_id' => $id
         ];
 
         return view('admin.syllabus.create', $data);
@@ -56,16 +87,29 @@ class SyllabusController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'major_id' => 'required',
-            'university_id' => 'required',
             'title' => 'required',
-            'description' => 'nullable',
             'year' => 'required|numeric|max:2100',
+            'course_overview' => 'nullable',
+            'course_objectives' => 'nullable',
+            'grading_policy' => 'nullable',
+            'assignments' => 'nullable',
+            'required_readings' => 'nullable',
         ]);
 
-        Syllabus::create($request->all());
+        Syllabus::create([
+            'title' => $request->title,
+            'year' => $request->year,
+            'course_overview' => $request->course_overview,
+            'course_objectives' => $request->course_objectives,
+            'grading_policy' => $request->grading_policy,
+            'assignments' => $request->assignments,
+            'required_readings' => $request->required_readings,
+            'university_major_id' => $request->university_major_id,
+        ]);
 
-        return back()->with('success', 'Syllabus created successfully.');
+        $universityMajorId = $request->university_major_id;
+    
+        return redirect()->route('admin.syllabus.index', ['university_major_id' => $universityMajorId])->with('success', 'Syllabus created successfully.');
     }
 
     /**
@@ -134,20 +178,23 @@ class SyllabusController extends Controller
      * @param  int  $major_id
      * @return \Illuminate\Http\Response
      */
-    public function getSyllabus($university_id, $major_id)
+    public function getSyllabus($university_major_id)
     {
-        $syllabus = Syllabus::where('university_id', $university_id)
-            ->where('major_id', $major_id)
-            ->get();
+        $university_major = UniversityMajor::find($university_major_id);
 
-        $university = University::findOrFail($university_id);
-        $major = Major::findOrFail($major_id);
+        $university = $university_major->university;
+        $major = $university_major->major;
+        $department = $university_major->department;
+
+        $syllabi = Syllabus::where("university_major_id",$university_major_id)->get();
 
         $data = [
             'pageTitle' => trans('admin/pages/syllabus.page_lists_title'),
             'major' => $major,
             'university' => $university,
-            'syllabi' => $syllabus,
+            'department' => $department,
+            'syllabi' => $syllabi,
+            'university_major_id' => $university_major_id
         ];
 
         return view('admin.syllabus.get', $data);

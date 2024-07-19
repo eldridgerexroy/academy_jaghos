@@ -583,7 +583,6 @@ return [
 'admin_roles_edit' => 'Roles Edit',
 'admin_roles_delete' => 'Roles Delete',
 
-<<<<<<< HEAD
 // University
 
 'university' => 'University',
@@ -607,6 +606,7 @@ return [
 
 // Syllabus
 'syllabus' => "Syllabus",
+'syllabus_detail' => 'Syllabus Detail',
 'admin_syllabus' => 'Syllabus',
 'admin_syllabus_list' => 'Syllabus List',
 'admin_syllabus_create' => 'Syllabus Create',
@@ -642,8 +642,6 @@ return [
 'admin_major_edit' => 'Majors Edit',
 'admin_major_delete' => 'Majors Delete',
 
-=======
->>>>>>> 1.9.0
 // Pages Title
 
 'webinar_new_page_title' => 'New Course',

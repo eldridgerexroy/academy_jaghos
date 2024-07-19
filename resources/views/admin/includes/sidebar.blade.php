@@ -335,10 +335,6 @@
             @endcan
 
 
-
-
-
-
             @if($authUser->can('admin_consultants_lists') or
             $authUser->can('admin_appointments_lists')
             )
@@ -363,16 +359,19 @@
             </li>
             @endcan
 
-            @if($authUser->can('admin_users') or
-                $authUser->can('admin_roles') or
+
+            @if($authUser->can("admin_users") or 
+                $authUser->can('admin_roles') or 
                 $authUser->can('admin_users_not_access_content') or
                 $authUser->can('admin_group') or
                 $authUser->can('admin_users_badges') or
                 $authUser->can('admin_become_instructors_list') or
-                $authUser->can('admin_delete_account_requests')
+                $authUser->can('admin_delete_account_requests') or
                 $authUser->can('admin_user_login_history') or
                 $authUser->can('admin_user_ip_restriction')
             )
+            
+            
             <li class="menu-header">{{ trans('panel.users') }}</li>
             @endif
 
@@ -559,7 +558,6 @@
                     </li>
                 </ul>
             </li>
-            @endif
 
             {{-- DEPARTMENTS CUSTOM --}}
             <li class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/departments', false)) ? 'active' : '' }}">

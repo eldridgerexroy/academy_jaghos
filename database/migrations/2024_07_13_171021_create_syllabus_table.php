@@ -23,13 +23,8 @@ return new class extends Migration
             $table->text('assignments')->nullable(); 
             $table->text('required_readings')->nullable();
 
-            
-            $table->unsignedBigInteger('major_id');
-            $table->foreign('major_id')->references('id')->on('majors')->onDelete('cascade');
-            $table->unsignedBigInteger('university_id');
-            $table->foreign('university_id')->references('id')->on('universities')->onDelete('cascade');
-            $table->unsignedBigInteger('teacher_id')->nullable();
-            $table->foreign('teacher_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('university_major_id');
+            $table->foreign('university_major_id')->references('id')->on('university_major')->onDelete('cascade');
 
             $table->timestamps();
         });

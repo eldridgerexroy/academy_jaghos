@@ -163,15 +163,24 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
         });
 
         Route::group(['prefix' => 'syllabus'], function () {
-            Route::get('/', 'SyllabusController@index')->name('admin.syllabus.index');
-            Route::get('/create', 'SyllabusController@create');
+            // Route::get('/', 'SyllabusController@index')->name('admin.syllabus.index');
+            Route::get('/create/{id}', 'SyllabusController@create');
             Route::post('/store', 'SyllabusController@store');
+            Route::get('/detail/{id}', 'SyllabusController@show');
             Route::get('/{id}/edit', 'SyllabusController@edit');
             Route::post('/{id}/update', 'SyllabusController@update');
             Route::get('/{id}/delete', 'SyllabusController@destroy');
             
-            Route::get('/{university_id}/{major_id}', 'SyllabusController@getSyllabus');
+            Route::get('/{university_major_id}', 'SyllabusController@getSyllabus')->name('admin.syllabus.index');
+        
+            Route::group(['prefix' => 'topic'], function () {
+                Route::get('/{syllabus_id}', 'SyllabusTopicController@show');
+                Route::post('/store', 'SyllabusTopicController@store');
+                Route::post('/{id}/update', 'SyllabusTopicController@update');
+                Route::get('/{id}/delete', 'SyllabusTopicController@destroy');
+            });
         });
+        
 
         Route::group(['prefix' => 'departments'], function () {
             Route::get('/', 'DepartmentController@index')->name('admin.departments.index');

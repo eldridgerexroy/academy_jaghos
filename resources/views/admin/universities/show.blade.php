@@ -79,7 +79,7 @@
                                         <td>{{ $university_major->major->name }}</td>
                                         <td>{{ $university_major->major->description }}</td>
                                         <td>
-                                            <a href="{{ getAdminPanelUrl() }}/syllabus/{{ $university->id }}/{{ $university_major->major->id }}" class="btn-transparent text-primary">
+                                            <a href="{{ getAdminPanelUrl() }}/syllabus/{{ $university_major->id }}" class="btn-transparent text-primary">
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                             <!-- @include('admin.includes.delete_button', ['url' => getAdminPanelUrl() . '/universities/' . $university->id . '/delete']) -->
@@ -162,7 +162,7 @@
     var universityId = {{$university -> id}};
 </script>
 <script src="/assets/default/vendors/sweetalert2/dist/sweetalert2.min.js"></script>
-<script src="/assets/default/js/admin/users.min.js"></script>
+<script src="/assets/default/js/admin/main.min.js"></script>
 @endpush
 
 <style>
@@ -177,5 +177,8 @@
         align-items: center;
         justify-content: center;
         min-height: calc(100% - 1rem);
+    }
+    .swal2-container {
+        z-index: 20000 !important;
     }
 </style>

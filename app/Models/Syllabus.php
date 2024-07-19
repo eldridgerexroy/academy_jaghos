@@ -11,15 +11,19 @@ class Syllabus extends Model
 
     protected $table = 'syllabus';
 
-    protected $fillable = ['major_id','university_id','title','description','year',];
+    protected $fillable = [
+        'title',
+        'year',
+        'course_overview',
+        'course_objectives',
+        'grading_policy',
+        'assignments',
+        'required_readings',
+        'university_major_id'
+    ];
 
-    public function major()
+    public function university_major()
     {
-        return $this->belongsTo(Major::class, 'major_id');
-    }
-
-    public function university()
-    {
-        return $this->belongsTo(University::class, 'university_id');
+        return $this->belongsTo(UniversityMajor::class, 'university_major_id');
     }
 }
