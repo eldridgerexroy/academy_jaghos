@@ -16,14 +16,15 @@ return [
     'actions' => 'Actions',
     'page_lists_title' => 'Universities',
 
-    'majors' => "Majors",
-    'no_majors' => "No Majors",
+    // 'sections' => 'Sections',
+    // 'new_page_lead' => 'You can create a new university.',
+    // 'select_type' => 'Select a type',
+    // 'create_field_name_placeholder' => 'example : admin',
+    // 'is_admin' => 'Admin Panel Access',
 
-    // University Major Detail
-    "major_name" => " Major",
-    "major_description" => "Description",
-    "add_major" => "Add Major",
-    "university_name" => "University Name",
-    "add" => "Add Major",
-    "department_name" => " Department"
+    // 'admin_universities' => 'Universities',
+    // 'admin_universities_list' => 'Universities List',
+    // 'admin_universities_create' => 'Universities Create',
+    // 'admin_universities_edit' => 'Universities Edit',
+    // 'admin_universities_delete' => 'Universities Delete',
 ];

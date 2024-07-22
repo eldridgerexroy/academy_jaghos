@@ -4,9 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\University;
-use App\Models\Major;
-use App\Models\Department;
-use App\Models\UniversityMajor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
@@ -29,18 +26,11 @@ class UniversityController extends Controller
 
     public function show($id)
     {
-        $university = University::with(['majors.departments'])->findOrFail($id);
-        $allMajors = Major::all();
-        $allDepartments = Department::all();
-        // $universityMajors = $university->majors;
-        $universityMajors = UniversityMajor::with('department')->with('major')->where('university_id', $id)->get();
+        $university = University::findOrFail($id);
 
         $data = [
             'pageTitle' => trans('admin/main.university_detail'),
             'university' => $university,
-            'allMajors' => $allMajors,
-            'allDepartments' => $allDepartments,
-            'universityMajors' => $universityMajors,
         ];
 
         return view('admin.universities.show', $data);
@@ -137,21 +127,4 @@ class UniversityController extends Controller
 
         return back()->with('success', 'University deleted successfully.');
     }
-
-    public function storeMajor(Request $request, $universityId)
-    {
-        $majorId = $request->input('major_id');
-        $departmentId = $request->input('department_id');
-
-        $university = University::findOrFail($universityId);
-
-        if ($university->majors()->where('major_id', $majorId)->wherePivot('department_id', $departmentId)->exists()) {
-            return response()->json(['success' => false, 'message' => 'Major and department already exist for this university.']);
-        }
-
-        $university->majors()->attach($majorId, ['department_id' => $departmentId]);
-
-        return response()->json(['success' => true, 'message' => 'Major added successfully!']);
-    }
-
 }

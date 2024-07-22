@@ -146,7 +146,6 @@ return [
 'promotion_sales' => 'Promotion Sales',
 'content_promotion' => 'Content Promotion',
 'newsletters' => 'Email Newsletter',
-'back' => 'Back',
 
 //Meetings
 
@@ -606,23 +605,6 @@ return [
 'admin_universities_edit' => 'Universities Edit',
 'admin_universities_delete' => 'Universities Delete',
 
-// Syllabus
-'syllabus' => "Syllabus",
-'admin_syllabus' => 'Syllabus',
-'admin_syllabus_list' => 'Syllabus List',
-'admin_syllabus_create' => 'Syllabus Create',
-'admin_syllabus_edit' => 'Syllabus Edit',
-'admin_syllabus_delete' => 'Syllabus Delete',
-
-// departments
-'department' => 'Department',
-'departments' => 'Departments',
-'admin_departments' => 'Department',
-'admin_departments_list' => 'Department List',
-'admin_departments_create' => 'Department Create',
-'admin_departments_edit' => 'Department Edit',
-'admin_departments_delete' => 'Department Delete',
-'departments_new_page_title' => 'New Departments',
 // Majors
 
 'major' => 'Major',

@@ -9,7 +9,7 @@ use App\Models\Accounting;
 use App\Models\Affiliate;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-use Carbon\Carbon; 
+use Carbon\Carbon;  
 
 class ReferralController extends Controller
 {
