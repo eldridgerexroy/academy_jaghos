@@ -338,6 +338,22 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
 
             Route::get('/{id}/statistics', 'WebinarStatisticController@index');
 
+            Route::group(['prefix' => 'request_recording'], function () {
+                Route::get('/', 'WebinarRecordingRequestController@index');
+                Route::post('/store', 'WebinarRecordingRequestController@store');
+                Route::get('/create', 'WebinarRecordingRequestController@create');
+                Route::get('/{id}/delete', 'WebinarRecordingRequestController@destroy');
+                Route::get('/{id}', 'WebinarRecordingRequestController@show');
+            });
+
+            Route::group(['prefix' => 'webinar_recording'], function () {
+                Route::get('/', 'WebinarRecordingController@index');
+                Route::post('/store', 'WebinarRecordingController@store');
+                Route::get('/create', 'WebinarRecordingController@create');
+                Route::get('/{id}/delete', 'WebinarRecordingController@destroy');
+                Route::get('/{id}', 'WebinarRecordingController@show');
+            });
+
             Route::group(['prefix' => 'features'], function () {
                 Route::get('/', 'FeatureWebinarsControllers@index');
                 Route::get('/create', 'FeatureWebinarsControllers@create');
@@ -687,6 +703,8 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
             Route::get('/history', 'ReferralController@history');
             Route::get('/users', 'ReferralController@users');
             Route::get('/excel', 'ReferralController@exportExcel');
+            Route::post('/update-paid-status', 'ReferralController@updatePaidStatus')->name('admin.referrals.updatePaidStatus');
+            Route::post('/users/detail', 'ReferralController@getAffiliateDetail')->name('admin.referrals.getAffiliateDetail');
         });
 
         Route::group(['prefix' => 'additional_page'], function () {
