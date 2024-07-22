@@ -10,6 +10,7 @@ use App\Models\DiscountCourse;
 use App\Models\DiscountGroup;
 use App\Models\DiscountUser;
 use App\Models\Group;
+use App\Models\Role;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,16 +21,37 @@ class DiscountController extends Controller
     {
         $this->authorize('admin_discount_codes_list');
 
+        $isInstructorCoupons = !empty($request->get('instructor_coupons'));
+
         $query = Discount::query();
+
+        if ($isInstructorCoupons) {
+            $query->whereNotNull('creator_id');
+
+            $roles = [Role::getTeacherRoleId(), Role::getOrganizationRoleId()];
+
+            $query->whereHas('creator', function ($query) use ($roles) {
+                $query->whereIn('role_id', $roles);
+            });
+        } else {
+            $query->whereHas('creator', function ($query) {
+                $query->whereHas('role', function ($query) {
+                    $query->where('is_admin', true);
+                });
+            });
+        }
 
         $query = $this->filters($query, $request);
 
-        $discounts = $query->orderBy('created_at', 'desc')
+        $discounts = $query->with([
+            'creator'
+        ])->orderBy('created_at', 'desc')
             ->paginate(10);
 
         $data = [
             'pageTitle' => trans('admin/main.discount_codes_title'),
             'discounts' => $discounts,
+            'isInstructorCoupons' => $isInstructorCoupons,
         ];
 
         return view('admin.financial.discount.lists', $data);
@@ -165,9 +187,9 @@ class DiscountController extends Controller
             'source' => $data['source'],
             'code' => $data['code'],
             'percent' => (!empty($data['percent']) and $data['percent'] > 0) ? $data['percent'] : 0,
-            'amount' => $data['amount'],
-            'max_amount' => $data['max_amount'],
-            'minimum_order' => $data['minimum_order'],
+            'amount' => !empty($data['amount']) ? convertPriceToDefaultCurrency($data['amount']) : null,
+            'max_amount' => !empty($data['max_amount']) ? convertPriceToDefaultCurrency($data['max_amount']) : null,
+            'minimum_order' => !empty($data['minimum_order']) ? convertPriceToDefaultCurrency($data['minimum_order']) : null,
             'count' => (!empty($data['count']) and $data['count'] > 0) ? $data['count'] : 1,
             'user_type' => $discountType,
             'product_type' => $data['product_type'] ?? null,
@@ -298,9 +320,9 @@ class DiscountController extends Controller
             'source' => $data['source'],
             'code' => $data['code'],
             'percent' => (!empty($data['percent']) and $data['percent'] > 0) ? $data['percent'] : 0,
-            'amount' => $data['amount'],
-            'max_amount' => $data['max_amount'],
-            'minimum_order' => $data['minimum_order'],
+            'amount' => !empty($data['amount']) ? convertPriceToDefaultCurrency($data['amount']) : null,
+            'max_amount' => !empty($data['max_amount']) ? convertPriceToDefaultCurrency($data['max_amount']) : null,
+            'minimum_order' => !empty($data['minimum_order']) ? convertPriceToDefaultCurrency($data['minimum_order']) : null,
             'count' => (!empty($data['count']) and $data['count'] > 0) ? $data['count'] : 1,
             'user_type' => $discountType,
             'product_type' => $data['product_type'] ?? null,

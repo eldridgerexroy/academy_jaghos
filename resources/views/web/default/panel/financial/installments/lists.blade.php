@@ -88,19 +88,21 @@
                                         </div>
                                     @endif
 
-                                    @if($order->isCompleted())
-                                        <span class="badge badge-secondary">{{ trans('update.completed') }}</span>
-                                    @elseif($order->status == "open")
-                                        <span class="badge badge-primary">{{  trans('public.open') }}</span>
-                                    @elseif($order->status == "rejected")
-                                        <span class="badge badge-danger">{{  trans('public.rejected') }}</span>
-                                    @elseif($order->status == "canceled")
-                                        <span class="badge badge-danger">{{  trans('public.canceled') }}</span>
-                                    @elseif($order->status == "pending_verification")
-                                        <span class="badge badge-warning">{{  trans('update.pending_verification') }}</span>
-                                    @elseif($order->status == "refunded")
-                                        <span class="badge badge-secondary">{{  trans('update.refunded') }}</span>
-                                    @endif
+                                    <div class="badges-lists">
+                                        @if($order->isCompleted())
+                                            <span class="badge badge-secondary">{{ trans('update.completed') }}</span>
+                                        @elseif($order->status == "open")
+                                            <span class="badge badge-primary">{{  trans('public.open') }}</span>
+                                        @elseif($order->status == "rejected")
+                                            <span class="badge badge-danger">{{  trans('public.rejected') }}</span>
+                                        @elseif($order->status == "canceled")
+                                            <span class="badge badge-danger">{{  trans('public.canceled') }}</span>
+                                        @elseif($order->status == "pending_verification")
+                                            <span class="badge badge-warning">{{  trans('update.pending_verification') }}</span>
+                                        @elseif($order->status == "refunded")
+                                            <span class="badge badge-secondary">{{  trans('update.refunded') }}</span>
+                                        @endif
+                                    </div>
                                 </div>
 
                                 <div class="webinar-card-body w-100 d-flex flex-column">

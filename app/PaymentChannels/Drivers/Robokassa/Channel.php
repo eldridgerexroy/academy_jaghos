@@ -16,6 +16,11 @@ class Channel extends BasePaymentChannel implements IChannel
     protected $secret_key_1;
     protected $secret_key_2;
 
+    protected array $credentialItems = [
+        'secret_key_1',
+        'secret_key_2',
+    ];
+
     /**
      * Channel constructor.
      * @param PaymentChannel $paymentChannel
@@ -23,9 +28,7 @@ class Channel extends BasePaymentChannel implements IChannel
     public function __construct(PaymentChannel $paymentChannel)
     {
         $this->currency = currency();
-        $this->test_mode = env('ROBOKASSA_TEST_MODE');
-        $this->secret_key_1 = env('ROBOKASSA_SECRET_KEY_1');
-        $this->secret_key_2 = env('ROBOKASSA_SECRET_KEY_2');
+        $this->setCredentialItems($paymentChannel);
     }
 
     public function paymentRequest(Order $order)

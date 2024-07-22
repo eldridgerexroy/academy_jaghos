@@ -9,6 +9,7 @@ use App\Mixins\Cashback\CashbackRules;
 use App\Mixins\Installment\InstallmentPlans;
 use App\Models\AdvertisingBanner;
 use App\Models\Cart;
+use App\Models\Discount;
 use App\Models\Favorite;
 use App\Models\File;
 use App\Models\QuizzesResult;
@@ -19,6 +20,7 @@ use App\Models\CourseLearning;
 use App\Models\WebinarChapter;
 use App\Models\WebinarReport;
 use App\Models\Webinar;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -59,6 +61,11 @@ class WebinarController extends Controller
                     }]);
                     $query->orderBy('order', 'asc');
                 },
+                'relatedCourses' => function ($query) {
+                    $query->whereHas('course', function ($query) {
+                        $query->where('status', 'active');
+                    });
+                },
                 'faqs' => function ($query) {
                     $query->orderBy('order', 'asc');
                 },
@@ -73,7 +80,7 @@ class WebinarController extends Controller
                         'chapterItems' => function ($query) {
                             $query->orderBy('order', 'asc');
                         }
-                    ]); 
+                    ]);
                 },
                 'files' => function ($query) use ($user) {
                     $query->join('webinar_chapters', 'webinar_chapters.id', '=', 'files.chapter_id')
@@ -151,7 +158,7 @@ class WebinarController extends Controller
                 },
                 'noticeboards'
             ])
-            ->where('status', 'active')
+            //->where('status', 'active')
             ->first();
 
         if (empty($course)) {
@@ -159,6 +166,17 @@ class WebinarController extends Controller
         }
 
         if (!$justReturnData) {
+
+            /* Check Not Active */
+            if ($course->status != "active" and (empty($user) or (!$user->isAdmin() and !$course->canAccess($user)))) {
+                $data = [
+                    'pageTitle' => trans('update.access_denied'),
+                    'pageRobot' => getPageRobotNoIndex(),
+                ];
+                return view('web.default.course.not_access', $data);
+            }
+
+            /* Installment Check */
             $installmentLimitation = $this->installmentContentLimitation($user, $course->id, 'webinar_id');
 
             if ($installmentLimitation != "ok") {
@@ -260,6 +278,33 @@ class WebinarController extends Controller
             $cashbackRules = $cashbackRulesMixin->getRules('courses', $course->id, $course->type, $course->category_id, $course->teacher_id);
         }
 
+        $instructorDiscounts = null;
+
+        if (!empty(getFeaturesSettings('frontend_coupons_status'))) {
+            $instructorDiscounts = Discount::query()
+                ->where(function (Builder $query) use ($course) {
+                    $query->where('creator_id', $course->creator_id);
+                    $query->orWhere('creator_id', $course->teacher_id);
+                })
+                ->where(function (Builder $query) use ($course) {
+                    $query->where('source', 'all');
+                    $query->orWhere(function (Builder $query) use ($course) {
+                        $query->where('source', Discount::$discountSourceCourse);
+
+                        $query->where(function (Builder $query) use ($course) {
+                            $query->whereHas('discountCourses', function ($query) use ($course) {
+                                $query->where('course_id', $course->id);
+                            });
+
+                            $query->whereDoesntHave('discountCourses');
+                        });
+                    });
+                })
+                ->where('status', 'active')
+                ->where('expired_at', '>', time())
+                ->get();
+        }
+
         $data = [
             'pageTitle' => $course->title,
             'pageDescription' => $course->seo_description,
@@ -279,6 +324,7 @@ class WebinarController extends Controller
             'quizzes' => $quizzes,
             'installments' => $installments ?? null,
             'cashbackRules' => $cashbackRules ?? null,
+            'instructorDiscounts' => $instructorDiscounts,
         ];
 
         // check for certificate
@@ -289,8 +335,6 @@ class WebinarController extends Controller
         if ($justReturnData) {
             return $data;
         }
-
-        // dd($course->chapters[0]->title);
 
         return view('web.default.course.index', $data);
     }

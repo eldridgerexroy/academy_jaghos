@@ -13,6 +13,11 @@ class Channel extends BasePaymentChannel implements IChannel
 {
     protected $currency;
     protected $api_key;
+    protected $test_mode;
+
+    protected array $credentialItems = [
+        'api_key',
+    ];
 
     /**
      * Channel constructor.
@@ -21,8 +26,10 @@ class Channel extends BasePaymentChannel implements IChannel
     public function __construct(PaymentChannel $paymentChannel)
     {
         $this->currency = currency();
+        $this->setCredentialItems($paymentChannel);
+        $this->order_session_key = 'mollie.payments.order_id';
 
-        $this->api_key = env('MOLLIE_API_KEY');
+        // $this->api_key = "test_guGAKGxPk8yr28dWMEM23RFvAB4h6M";
     }
 
     protected function makeGateway()
@@ -41,18 +48,20 @@ class Channel extends BasePaymentChannel implements IChannel
     {
         // Send purchase request
         try {
+            session()->put($this->order_session_key, $order->id);
+
             $gateway = $this->makeGateway();
             $response = $gateway->purchase($this->createPaymentData($order))->send();
+            dd($response);
+            if ($response->isRedirect()) {
+                return $response->redirect();
+            }
 
         } catch (\Exception $exception) {
-//            dd($exception);
+            dd($exception);
             throw new \Exception($exception->getMessage(), $exception->getCode());
         }
-
-        if ($response->isRedirect()) {
-            return $response->redirect();
-        }
-
+        dd(1);
         $toastData = [
             'title' => trans('cart.fail_purchase'),
             'msg' => '',
@@ -78,14 +87,34 @@ class Channel extends BasePaymentChannel implements IChannel
             'billingCountry' => '',
         ];
 
+        $lines = [];
+
+        foreach ($order->orderItems as $orderItem) {
+            $lines[] = [
+                'type' => 'physical',
+                'sku' => "order-{$orderItem->id}",
+                'name' => "item {$orderItem->id}",
+                'productUrl' => '',
+                'imageUrl' => '',
+                'quantity' => 1,
+                'vatRate' => $orderItem->tax ?? 1,
+                'unitPrice' => $orderItem->amount,
+                'totalAmount' => $orderItem->total_amount,
+                'discountAmount' => $orderItem->discount,
+                'vatAmount' => $orderItem->tax_price,
+            ];
+        }
+
         return [
             "amount" => $this->makeAmountByCurrency($order->total_amount, $this->currency),
             "currency" => $this->currency,
-            'orderNumber'  => $order->id,
+            'orderNumber' => $order->id,
             "description" => "Pay Cart Items",
             'paymentMethod' => 'klarnapaylater',
             "returnUrl" => $this->makeCallbackUrl($order, 'return'),
-            'card' => $card
+            'card' => $card,
+            'locale' => 'nl_NL',
+            'lines' => $lines,
         ];
     }
 

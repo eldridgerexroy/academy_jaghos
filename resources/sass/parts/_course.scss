@@ -85,6 +85,16 @@
     top: -250px;
     margin-bottom: -250px;
 
+    .instructor-discount-card {
+        margin-top: 35px;
+    }
+
+    &:not(.has-progress-bar) {
+        .instructor-discount-card {
+            margin-top: 75px !important;
+        }
+    }
+
     @media (max-width: $screen-sm-max) {
         &:not(.has-progress-bar) {
             &.course, &.text_lesson {
@@ -159,6 +169,10 @@
 
     img {
         max-width: 100% !important;
+    }
+
+    li {
+        list-style: inherit;
     }
 }
 

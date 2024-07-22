@@ -26,11 +26,13 @@ class AdminAuthenticate
             \Session::forget('impersonated');
 
             if (auth()->user()->hasPermission('admin_notifications_list')) {
-                $adminUser = User::find(1);
+                $adminUser = User::getMainAdmin();
 
-                $unreadNotifications = $adminUser->getUnReadNotifications();
+                if (!empty($adminUser)) {
+                    $unreadNotifications = $adminUser->getUnReadNotifications();
 
-                view()->share('unreadNotifications', $unreadNotifications);
+                    view()->share('unreadNotifications', $unreadNotifications);
+                }
             }
 
             $generalSettings = getGeneralSettings();

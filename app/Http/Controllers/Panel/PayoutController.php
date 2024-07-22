@@ -10,6 +10,8 @@ class PayoutController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize("panel_financial_payout");
+
         $user = auth()->user();
         $payouts = Payout::where('user_id', $user->id)
             ->orderBy('status', 'asc')
@@ -29,6 +31,8 @@ class PayoutController extends Controller
 
     public function requestPayout()
     {
+        $this->authorize("panel_financial_payout");
+
         $user = auth()->user();
         $getUserPayout = $user->getPayout();
         $getFinancialSettings = getFinancialSettings();

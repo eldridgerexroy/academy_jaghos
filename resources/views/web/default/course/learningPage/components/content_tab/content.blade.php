@@ -16,6 +16,9 @@
 
     $checkSequenceContent = $item->checkSequenceContent();
     $sequenceContentHasError = (!empty($checkSequenceContent) and (!empty($checkSequenceContent['all_passed_items_error']) or !empty($checkSequenceContent['access_after_day_error'])));
+
+    $itemPersonalNote = $item->personalNote()->where('user_id', $authUser->id)->first();
+    $hasPersonalNote = (!empty($itemPersonalNote) and !empty($itemPersonalNote->note));
 @endphp
 
 <div class=" d-flex align-items-start p-10 cursor-pointer {{ (!empty($checkSequenceContent) and $sequenceContentHasError) ? 'js-sequence-content-error-modal' : 'tab-item' }}"
@@ -29,10 +32,18 @@
             <i data-feather="{{ $icon }}" class="text-gray" width="16" height="16"></i>
         </span>
 
-    <div>
-        <div class="">
-            <span class="font-weight-500 font-14 text-dark-blue d-block">{{ $item->title }}</span>
-            <span class="font-12 text-gray d-block">{{ $hintText }}</span>
+    <div class="flex-grow-1">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="">
+                <span class="font-weight-500 font-14 text-dark-blue d-block">{{ $item->title }}</span>
+                <span class="font-12 text-gray d-block">{{ $hintText }}</span>
+            </div>
+
+            @if($hasPersonalNote)
+                <span class="item-personal-note-icon d-flex-center bg-gray200">
+                    <i data-feather="edit-2" class="text-gray" width="14" height="14"></i>
+                </span>
+            @endif
         </div>
 
 

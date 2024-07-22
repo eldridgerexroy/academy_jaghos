@@ -34,6 +34,8 @@ class RegistrationPackagesController extends Controller
 
     public function index()
     {
+        $this->authorize("panel_financial_registration_packages");
+
         $user = auth()->user();
 
         $this->checkAccess($user);
@@ -59,7 +61,7 @@ class RegistrationPackagesController extends Controller
 
         $userPackage = new UserPackage($user);
         $activePackage = $userPackage->getPackage();
-
+dd($activePackage);
         $data = [
             'pageTitle' => trans('update.registration_packages'),
             'packages' => $packages,

@@ -65,19 +65,21 @@
                                     <img src="{{ $item->getImage() }}" class="img-cover" alt="">
 
                                     @if(!empty($sale->webinar))
-                                        @if($item->type == 'webinar')
-                                            @if($item->start_date > time())
-                                                <span class="badge badge-primary">{{  trans('panel.not_conducted') }}</span>
-                                            @elseif($item->isProgressing())
-                                                <span class="badge badge-secondary">{{ trans('webinars.in_progress') }}</span>
+                                        <div class="badges-lists">
+                                            @if($item->type == 'webinar')
+                                                @if($item->start_date > time())
+                                                    <span class="badge badge-primary">{{  trans('panel.not_conducted') }}</span>
+                                                @elseif($item->isProgressing())
+                                                    <span class="badge badge-secondary">{{ trans('webinars.in_progress') }}</span>
+                                                @else
+                                                    <span class="badge badge-secondary">{{ trans('public.finished') }}</span>
+                                                @endif
+                                            @elseif(!empty($item->downloadable))
+                                                <span class="badge badge-secondary">{{ trans('home.downloadable') }}</span>
                                             @else
-                                                <span class="badge badge-secondary">{{ trans('public.finished') }}</span>
+                                                <span class="badge badge-secondary">{{ trans('webinars.'.$item->type) }}</span>
                                             @endif
-                                        @elseif(!empty($item->downloadable))
-                                            <span class="badge badge-secondary">{{ trans('home.downloadable') }}</span>
-                                        @else
-                                            <span class="badge badge-secondary">{{ trans('webinars.'.$item->type) }}</span>
-                                        @endif
+                                        </div>
 
                                         @php
                                             $percent = $item->getProgress();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\traits\ProductBadgeTrait;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Panel\WebinarStatisticController;
 use App\Mail\SendNotifications;
@@ -26,6 +27,8 @@ use Illuminate\Support\Facades\DB;
 
 class BundleController extends Controller
 {
+    use ProductBadgeTrait;
+
     public function index(Request $request)
     {
         $this->authorize('admin_bundles_list');
@@ -455,6 +458,9 @@ class BundleController extends Controller
             }
         }
 
+        // Product Badge
+        $this->handleProductBadges($bundle, $data);
+
         unset($data['_token'],
             $data['current_step'],
             $data['draft'],
@@ -462,7 +468,8 @@ class BundleController extends Controller
             $data['partners'],
             $data['tags'],
             $data['filters'],
-            $data['ajax']
+            $data['ajax'],
+            $data['product_badges']
         );
 
         if (empty($data['video_demo'])) {
@@ -811,4 +818,63 @@ class BundleController extends Controller
 
         return response()->json($bundles, 200);
     }
+
+
+    public function approve(Request $request, $id)
+    {
+        $this->authorize('admin_bundles_edit');
+
+        $bundle = Bundle::query()->findOrFail($id);
+
+        $bundle->update([
+            'status' => Bundle::$active
+        ]);
+
+        $toastData = [
+            'title' => trans('public.request_success'),
+            'msg' => trans('update.bundle_status_changes_to_approved'),
+            'status' => 'success'
+        ];
+
+        return redirect(getAdminPanelUrl("/bundles"))->with(['toast' => $toastData]);
+    }
+
+    public function reject(Request $request, $id)
+    {
+        $this->authorize('admin_bundles_edit');
+
+        $bundle = Bundle::query()->findOrFail($id);
+
+        $bundle->update([
+            'status' => Bundle::$inactive
+        ]);
+
+        $toastData = [
+            'title' => trans('public.request_success'),
+            'msg' => trans('update.bundle_status_changes_to_rejected'),
+            'status' => 'success'
+        ];
+
+        return redirect(getAdminPanelUrl("/bundles"))->with(['toast' => $toastData]);
+    }
+
+    public function unpublish(Request $request, $id)
+    {
+        $this->authorize('admin_bundles_edit');
+
+        $bundle = Bundle::query()->findOrFail($id);
+
+        $bundle->update([
+            'status' => Bundle::$pending
+        ]);
+
+        $toastData = [
+            'title' => trans('public.request_success'),
+            'msg' => trans('update.bundle_status_changes_to_unpublished'),
+            'status' => 'success'
+        ];
+
+        return redirect(getAdminPanelUrl("/bundles"))->with(['toast' => $toastData]);
+    }
+
 }

@@ -1,7 +1,9 @@
 <?php
+
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use \App\Models\PaymentChannel;
 
 class PaymentChannelsTableSeeder extends Seeder
 {
@@ -14,17 +16,19 @@ class PaymentChannelsTableSeeder extends Seeder
     {
         foreach (\App\Models\PaymentChannel::$classes as $index => $class) {
 
-            \App\Models\PaymentChannel::updateOrCreate(
-                ['id' => $index + 1],
-                [
+            $check = PaymentChannel::query()->where('class_name', $class)->first();
+
+            if (empty($check)) {
+                PaymentChannel::query()->create([
                     'title' => $class,
                     'class_name' => $class,
                     'status' => 'active',
                     'image' => null,
-                    'settings' => '',
+                    'credentials' => null,
+                    'currencies' => null,
                     'created_at' => time()
-                ]
-            );
+                ]);
+            }
         }
     }
 }

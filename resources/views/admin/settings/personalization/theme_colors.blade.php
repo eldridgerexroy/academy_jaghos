@@ -5,7 +5,7 @@
 <div class=" mt-3">
     <div class="row">
         <div class="col-12 col-md-6">
-        <h5 class="d-block mt-1 mb-3 text-dark">{{ trans("update.front_template") }}</h5>
+            <h5 class="d-block mt-1 mb-3 text-dark">{{ trans("update.front_template") }}</h5>
             <form action="{{ getAdminPanelUrl() }}/settings/main" method="post">
                 {{ csrf_field() }}
                 <input type="hidden" name="name" value="theme_colors">
@@ -34,6 +34,18 @@
                         </div>
                     @endif
                 @endforeach
+
+                <div class="form-group">
+                    <label>{{ trans('update.front_body_background') }}</label>
+                    <div class="input-group colorpickerinput">
+                        <input type="text" name="value[front_body_background]" class="form-control" value="{{ (!empty($itemValue) and !empty($itemValue['front_body_background'])) ? $itemValue['front_body_background'] : '' }}">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <i class="fas fa-fill-drip"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <h5 class="d-block mt-4 text-dark">{{ trans("update.admin_template") }}</h5>
 

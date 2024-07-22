@@ -12,10 +12,16 @@ use Illuminate\Support\Facades\Http;
 class Channel extends BasePaymentChannel implements IChannel
 {
     protected $currency;
-
+    protected $test_mode;
     protected $publicKey;
     protected $secretKey;
     protected $secretHash;
+
+    protected array $credentialItems = [
+        'publicKey',
+        'secretKey',
+        'secretHash',
+    ];
 
     /**
      * Channel constructor.
@@ -24,10 +30,7 @@ class Channel extends BasePaymentChannel implements IChannel
     public function __construct(PaymentChannel $paymentChannel)
     {
         $this->currency = currency(); // This Gateway just Support => NGN, GBP or EUR
-
-        $this->publicKey = env('FLW_PUBLIC_KEY');
-        $this->secretKey = env('FLW_SECRET_KEY');
-        $this->secretHash = env('FLW_SECRET_HASH', '');
+        $this->setCredentialItems($paymentChannel);
     }
 
     public function paymentRequest(Order $order)

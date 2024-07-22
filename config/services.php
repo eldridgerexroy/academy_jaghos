@@ -42,8 +42,6 @@ return [
         'redirect' => env('FACEBOOK_REDIRECT'),
     ],
 
-    'bank_callback_token' => env('BANK_CALLBACK_TOKEN'),
-
     'paytm-wallet' => [
         'env' => env('PAYTM_ENVIRONMENT'), // values : (local | production)
         'merchant_id' => env('PAYTM_MERCHANT_ID'),

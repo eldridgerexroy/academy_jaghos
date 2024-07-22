@@ -35,6 +35,8 @@ class WebinarController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize("panel_webinars_lists");
+
         $user = auth()->user();
 
         if ($user->isUser()) {
@@ -58,6 +60,8 @@ class WebinarController extends Controller
 
     public function invitations(Request $request)
     {
+        $this->authorize("panel_webinars_invited_lists");
+
         $user = auth()->user();
 
         $invitedWebinarIds = WebinarPartnerTeacher::where('teacher_id', $user->id)->pluck('webinar_id')->toArray();
@@ -78,6 +82,8 @@ class WebinarController extends Controller
 
     public function organizationClasses(Request $request)
     {
+        $this->authorize("panel_webinars_organization_classes");
+
         $user = auth()->user();
 
         if (!empty($user->organ_id)) {
@@ -245,6 +251,8 @@ class WebinarController extends Controller
 
     public function create(Request $request)
     {
+        $this->authorize("panel_webinars_create");
+
         $user = auth()->user();
 
         if (!$user->isTeacher() and !$user->isOrganization()) {
@@ -289,6 +297,8 @@ class WebinarController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize("panel_webinars_create");
+
         $user = auth()->user();
 
         if (!$user->isTeacher() and !$user->isOrganization()) {
@@ -369,6 +379,8 @@ class WebinarController extends Controller
 
     public function edit(Request $request, $id, $step = 1)
     {
+        $this->authorize("panel_webinars_create");
+
         $user = auth()->user();
         $isOrganization = $user->isOrganization();
 
@@ -531,6 +543,8 @@ class WebinarController extends Controller
 
     public function update(Request $request, $id)
     {
+        $this->authorize("panel_webinars_create");
+
         $user = auth()->user();
 
         if (!$user->isTeacher() and !$user->isOrganization()) {
@@ -753,7 +767,23 @@ class WebinarController extends Controller
 
     public function destroy(Request $request, $id)
     {
+        $this->authorize("panel_webinars_delete");
+
         $user = auth()->user();
+
+        if (!canDeleteContentDirectly()) {
+            if ($request->ajax()) {
+                return response()->json([], 422);
+            } else {
+                $toastData = [
+                    'title' => trans('public.request_failed'),
+                    'msg' => trans('update.it_is_not_possible_to_delete_the_content_directly'),
+                    'status' => 'error'
+                ];
+                return redirect()->back()->with(['toast' => $toastData]);
+            }
+        }
+
 
         if (!$user->isTeacher() and !$user->isOrganization()) {
             abort(404);
@@ -777,6 +807,8 @@ class WebinarController extends Controller
 
     public function duplicate($id)
     {
+        $this->authorize("panel_webinars_duplicate");
+
         $user = auth()->user();
         if (!$user->isTeacher() and !$user->isOrganization()) {
             abort(404);
@@ -835,6 +867,8 @@ class WebinarController extends Controller
 
     public function exportStudentsList($id)
     {
+        $this->authorize("panel_webinars_export_students_list");
+
         $user = auth()->user();
 
         if (!$user->isTeacher() and !$user->isOrganization()) {
@@ -926,14 +960,16 @@ class WebinarController extends Controller
         $option = $request->get('option', null);
 
         if (!empty($term)) {
-            $webinars = Webinar::select('id', 'teacher_id')
+            $query = Webinar::query()->select('id', 'teacher_id')
                 ->whereTranslationLike('title', '%' . $term . '%')
                 ->where('id', '<>', $webinarId)
                 ->with(['teacher' => function ($query) {
                     $query->select('id', 'full_name');
-                }])
-                //->where('creator_id', $user->id)
-                ->get();
+                }]);
+            //->where('creator_id', $user->id)
+            //->get();
+
+            $webinars = $query->get();
 
             foreach ($webinars as $webinar) {
                 $webinar->title .= ' - ' . $webinar->teacher->full_name;
@@ -961,6 +997,8 @@ class WebinarController extends Controller
 
     public function invoice($webinarId, $saleId)
     {
+        $this->authorize("panel_webinars_invoice");
+
         $user = auth()->user();
 
         $giftIds = Gift::query()
@@ -1041,6 +1079,8 @@ class WebinarController extends Controller
 
     public function purchases(Request $request)
     {
+        $this->authorize("panel_webinars_my_purchases");
+
         $user = auth()->user();
 
         $giftsIds = Gift::query()->where('email', $user->email)

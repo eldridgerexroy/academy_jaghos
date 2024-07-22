@@ -659,7 +659,7 @@ $custom-control-indicator-bg:$primary;*/
 }
 
 body {
-  background-color: var(--panel-bg);
+  background-color: var(--body_bg, #fbfbfd) !important;
 }
 
 #panel_app .nav-icons-or-start-live {

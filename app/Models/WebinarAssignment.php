@@ -50,6 +50,11 @@ class WebinarAssignment extends Model implements TranslatableContract
         return $this->hasOne('App\Models\WebinarAssignmentHistory', 'assignment_id', 'id');
     }
 
+    public function personalNote()
+    {
+        return $this->morphOne('App\Models\CoursePersonalNote', 'targetable');
+    }
+
     public function instructorAssignmentHistories()
     {
         return $this->hasMany('App\Models\WebinarAssignmentHistory', 'assignment_id', 'id');

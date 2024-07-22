@@ -2,7 +2,7 @@
 
 @push('styles_top')
     <link rel="stylesheet" href="/assets/default/vendors/sweetalert2/dist/sweetalert2.min.css">
-    <link rel="stylesheet" href="/assets/default/vendors/select2/select2.min.css">
+
     <style>
         .select2-container {
             z-index: 1212 !important;
@@ -326,7 +326,7 @@
 
 @push('scripts_bottom')
     <script src="/assets/default/vendors/sweetalert2/dist/sweetalert2.min.js"></script>
-    <script src="/assets/default/vendors/select2/select2.min.js"></script>
+
 
     <script>
         var saveSuccessLang = '{{ trans('webinars.success_store') }}';

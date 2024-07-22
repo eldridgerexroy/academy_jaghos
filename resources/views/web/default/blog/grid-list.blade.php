@@ -1,5 +1,11 @@
 <div class="blog-grid-card">
     <div class="blog-grid-image">
+
+        <div class="badges-lists">
+            @include('web.default.includes.product_custom_badge', ['itemTarget' => $post])
+        </div>
+
+
         <img src="{{ $post->image }}" class="img-cover" alt="{{ $post->title }}">
 
         <span class="badge created-at d-flex align-items-center">

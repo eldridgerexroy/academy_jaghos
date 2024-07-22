@@ -6,6 +6,7 @@ use App\Http\Middleware\AdminAuthenticate;
 use App\Http\Middleware\AdminLocale;
 use App\Http\Middleware\CheckMaintenance;
 use App\Http\Middleware\CheckMobileApp;
+use App\Http\Middleware\CheckRestriction;
 use App\Http\Middleware\Impersonate;
 use App\Http\Middleware\PanelAuthenticate;
 use App\Http\Middleware\Share;
@@ -85,6 +86,7 @@ class Kernel extends HttpKernel
         'admin_locale' => AdminLocale::class,
         'check_mobile_app' => CheckMobileApp::class,
         'check_maintenance' => CheckMaintenance::class,
+        'check_restriction' => CheckRestriction::class,
         // api
         'api.auth' => \App\Http\Middleware\Api\Authenticate::class,
         'api.guest' => \App\Http\Middleware\Api\RedirectIfAuthenticated::class,

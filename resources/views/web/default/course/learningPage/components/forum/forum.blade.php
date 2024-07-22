@@ -128,7 +128,7 @@
                         </div>
 
                         <div class="py-15 border-top position-relative">
-                            <span class="d-block font-12 text-gray">{{ trans('update.last_answer') }}</span>
+                            <span class="d-block font-12 text-gray text-left">{{ trans('update.last_answer') }}</span>
 
                             <div class="d-flex align-items-start mt-20">
                                 <div class="last-answer-user-avatar">
@@ -142,9 +142,9 @@
 
                             @if(!empty($forum->resolved))
                                 <div class="resolved-answer-badge d-flex align-items-center font-12 text-primary">
-                            <span class="badge-icon d-flex align-items-center justify-content-center">
-                                <i data-feather="check" width="20" height="20"></i>
-                            </span>
+                                    <span class="badge-icon d-flex align-items-center justify-content-center">
+                                        <i data-feather="check" width="20" height="20"></i>
+                                    </span>
                                     {{ trans('update.resolved') }}
                                 </div>
                             @endif

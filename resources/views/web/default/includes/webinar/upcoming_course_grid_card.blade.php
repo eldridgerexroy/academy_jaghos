@@ -1,9 +1,13 @@
 <div class="webinar-card">
     <figure>
         <div class="image-box">
-            @if(!empty($upcomingCourse->webinar_id))
-                <span class="badge badge-secondary">{{ trans('update.released') }}</span>
-            @endif
+            <div class="badges-lists">
+                @if(!empty($upcomingCourse->webinar_id))
+                    <span class="badge badge-secondary">{{ trans('update.released') }}</span>
+                @endif
+
+                @include('web.default.includes.product_custom_badge', ['itemTarget' => $upcomingCourse])
+            </div>
 
             <a href="{{ $upcomingCourse->getUrl() }}">
                 <img src="{{ $upcomingCourse->getImage() }}" class="img-cover" alt="{{ $upcomingCourse->title }}">

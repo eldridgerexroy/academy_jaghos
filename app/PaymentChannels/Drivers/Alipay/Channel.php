@@ -17,6 +17,12 @@ class Channel extends BasePaymentChannel implements IChannel
     protected $key;
     protected $privateKey;
 
+    protected array $credentialItems = [
+        'partner',
+        'key',
+        'privateKey',
+    ];
+
     /**
      * Channel constructor.
      * @param PaymentChannel $paymentChannel
@@ -24,11 +30,7 @@ class Channel extends BasePaymentChannel implements IChannel
     public function __construct(PaymentChannel $paymentChannel)
     {
         $this->currency = currency();
-
-        $this->test_mode = env('ALIPAY_TEST_MODE');
-        $this->partner = env('ALIPAY_PARTNER');
-        $this->key = env('ALIPAY_KEY');
-        $this->privateKey = env('ALIPAY_PRIVATE_KEY');
+        $this->setCredentialItems($paymentChannel);
     }
 
     protected function makeGateway($order)

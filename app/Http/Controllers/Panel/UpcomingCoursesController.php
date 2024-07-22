@@ -26,6 +26,8 @@ class UpcomingCoursesController extends Controller
 
     public function index(Request $request)
     {
+        $this->authorize("panel_upcoming_courses_lists");
+
         $user = auth()->user();
 
         $query = UpcomingCourse::query()
@@ -65,6 +67,8 @@ class UpcomingCoursesController extends Controller
 
     public function create()
     {
+        $this->authorize("panel_upcoming_courses_create");
+
         $user = auth()->user();
         $teachers = null;
         $isOrganization = $user->isOrganization();
@@ -86,6 +90,8 @@ class UpcomingCoursesController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize("panel_upcoming_courses_create");
+
         $user = auth()->user();
 
         $rules = [
@@ -144,6 +150,8 @@ class UpcomingCoursesController extends Controller
 
     public function edit(Request $request, $id, $step = 1)
     {
+        $this->authorize("panel_upcoming_courses_create");
+
         $user = auth()->user();
 
         $isOrganization = $user->isOrganization();
@@ -228,6 +236,8 @@ class UpcomingCoursesController extends Controller
 
     public function update(Request $request, $id)
     {
+        $this->authorize("panel_upcoming_courses_create");
+
         $user = auth()->user();
 
         $rules = [];
@@ -364,6 +374,8 @@ class UpcomingCoursesController extends Controller
 
     public function destroy(Request $request, $id)
     {
+        $this->authorize("panel_upcoming_courses_delete");
+
         $user = auth()->user();
 
         $upcomingCourse = UpcomingCourse::where('id', $id)
@@ -453,6 +465,8 @@ class UpcomingCoursesController extends Controller
 
     public function followers($id)
     {
+        $this->authorize("panel_upcoming_courses_followers");
+
         $user = auth()->user();
 
         $upcomingCourse = UpcomingCourse::query()

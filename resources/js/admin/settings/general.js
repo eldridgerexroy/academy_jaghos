@@ -31,4 +31,15 @@
             $input.addClass('d-none');
         }
     });
+
+    $('body').on('change', '#allow_instructor_delete_contentSwitch', function (e) {
+        e.preventDefault();
+        const $input = $('.js-content-delete-method-field');
+
+        if (this.checked) {
+            $input.removeClass('d-none');
+        } else {
+            $input.addClass('d-none');
+        }
+    });
 })(jQuery);

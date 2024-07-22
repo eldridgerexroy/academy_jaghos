@@ -4,7 +4,9 @@ namespace App\Http\Middleware;
 
 use App\Http\Controllers\Web\CartManagerController;
 use App\Mixins\Financial\MultiCurrency;
+use App\Mixins\PurchaseNotifications\PurchaseNotificationsHelper;
 use App\Models\Cart;
+use App\Models\CartDiscount;
 use App\Models\Currency;
 use App\Models\FloatingBar;
 use Closure;
@@ -22,6 +24,11 @@ class Share
      */
     public function handle($request, Closure $next)
     {
+
+        $purchaseNotificationsHelper = new PurchaseNotificationsHelper();
+        $purchaseNotifications = $purchaseNotificationsHelper->getDisplayableNotifications();
+        view()->share('purchaseNotifications', $purchaseNotifications);
+
 
         if (auth()->check()) {
             $user = auth()->user();
@@ -41,6 +48,9 @@ class Share
 
         view()->share('userCarts', $carts);
         view()->share('totalCartsPrice', $totalCartsPrice);
+
+        $cartDiscount = CartDiscount::query()->where('enable', true)->count();
+        view()->share('userCartDiscount', $cartDiscount);
 
         $generalSettings = getGeneralSettings();
         view()->share('generalSettings', $generalSettings);

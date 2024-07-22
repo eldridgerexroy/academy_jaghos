@@ -63,28 +63,30 @@
                             <div class="image-box">
                                 <img src="{{ $product->thumbnail }}" class="img-cover" alt="">
 
-                                @if($product->ordering and !empty($product->inventory) and $product->getAvailability() < 1)
-                                    <span class="badge badge-danger">{{ trans('update.out_of_stock') }}</span>
-                                @elseif(!$product->ordering and $product->getActiveDiscount())
-                                    <span class="badge badge-info">{{ trans('update.ordering_off') }}</span>
-                                @elseif($hasDiscount)
-                                <span class="badge badge-danger">{{ trans('public.offer',['off' => $hasDiscount->percent]) }}</span>
-                                @else
-                                    @switch($product->status)
-                                        @case(\App\Models\Product::$active)
-                                        <span class="badge badge-primary">{{ trans('public.active') }}</span>
-                                        @break
-                                        @case(\App\Models\Product::$draft)
-                                        <span class="badge badge-danger">{{ trans('public.draft') }}</span>
-                                        @break
-                                        @case(\App\Models\Product::$pending)
-                                        <span class="badge badge-warning">{{ trans('public.waiting') }}</span>
-                                        @break
-                                        @case(\App\Models\Product::$inactive)
-                                        <span class="badge badge-danger">{{ trans('public.rejected') }}</span>
-                                        @break
-                                    @endswitch
-                                @endif
+                                <div class="badges-lists">
+                                    @if($product->ordering and !empty($product->inventory) and $product->getAvailability() < 1)
+                                        <span class="badge badge-danger">{{ trans('update.out_of_stock') }}</span>
+                                    @elseif(!$product->ordering and $product->getActiveDiscount())
+                                        <span class="badge badge-info">{{ trans('update.ordering_off') }}</span>
+                                    @elseif($hasDiscount)
+                                        <span class="badge badge-danger">{{ trans('public.offer',['off' => $hasDiscount->percent]) }}</span>
+                                    @else
+                                        @switch($product->status)
+                                            @case(\App\Models\Product::$active)
+                                                <span class="badge badge-primary">{{ trans('public.active') }}</span>
+                                                @break
+                                            @case(\App\Models\Product::$draft)
+                                                <span class="badge badge-danger">{{ trans('public.draft') }}</span>
+                                                @break
+                                            @case(\App\Models\Product::$pending)
+                                                <span class="badge badge-warning">{{ trans('public.waiting') }}</span>
+                                                @break
+                                            @case(\App\Models\Product::$inactive)
+                                                <span class="badge badge-danger">{{ trans('public.rejected') }}</span>
+                                                @break
+                                        @endswitch
+                                    @endif
+                                </div>
                             </div>
 
                             <div class="webinar-card-body w-100 d-flex flex-column">
@@ -102,7 +104,11 @@
                                                 <a href="/panel/store/products/{{ $product->id }}/edit" class="webinar-actions d-block mt-10">{{ trans('public.edit') }}</a>
 
                                                 @if($product->creator_id == $authUser->id)
-                                                    <a href="/panel/store/products/{{ $product->id }}/delete" class="webinar-actions d-block mt-10 text-danger delete-action">{{ trans('public.delete') }}</a>
+                                                    @include('web.default.panel.includes.content_delete_btn', [
+                                                        'deleteContentUrl' => "/panel/store/products/{$product->id}/delete",
+                                                        'deleteContentClassName' => 'webinar-actions d-block mt-10 text-danger',
+                                                        'deleteContentItem' => $product,
+                                                    ])
                                                 @endif
                                             </div>
                                         </div>

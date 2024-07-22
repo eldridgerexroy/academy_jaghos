@@ -162,6 +162,55 @@
     }
 
 
+    function handlePersonalNoteHtml(item) {
+        if (courseNotesStatus === '1') {
+            return `<div class="js-personal-notes-form learning-page-personal-note bg-white mt-15 p-10 rounded-sm" data-item-id="${item.id}" data-item-type="${item.modelName}" data-course-id="${item.webinar_id}">
+                <h4 class="font-14 font-weight-bold text-secondary">${personalNoteLang}</h4>
+                <p class="mt-5 font-12 text-gray">${personalNoteHintLang}</p>
+
+                <textarea name="notes" rows="5" class="form-control mt-5">${(item.personalNote && item.personalNote.note) ? item.personalNote.note : ''}</textarea>
+
+                ${
+                    (courseNotesShowAttachment) ?
+                        `<div class="form-group mt-15">
+                            <label class="input-label">${attachmentLang}</label>
+
+                            <div class="input-group mr-10">
+                                <div class="input-group-prepend">
+                                    <button type="button" class="input-group-text panel-file-manager" data-input="personalNotesAttachment" data-preview="holder">
+                                        <i data-feather="upload" width="18" height="18" class="text-white"></i>
+                                    </button>
+                                </div>
+                                <input type="text" name="attach" id="personalNotesAttachment" value="${(item.personalNote && item.personalNote.attachment) ? item.personalNote.attachment : ''}" class="form-control" placeholder=""/>
+
+                                ${
+                                    (item.personalNote && item.personalNote.attachment) ?
+                                        `<div class="input-group-append">
+                                            <a href="/course/personal-notes/${item.personalNote.id}/download-attachment" target="_blank" class="input-group-text">
+                                                <i data-feather="download" width="18" height="18" class="text-white"></i>
+                                            </a>
+                                        </div>` : ''
+                                }
+
+                            </div>
+                        </div>`
+                        : ''
+                }
+
+                <div class="d-flex align-items-center mt-15">
+                    <button type="button" class="js-save-personal-note btn btn-sm btn-primary">${saveNoteLang}</button>
+                    ${
+                (item.personalNote && item.personalNote.note) ?
+                    '<button type="button" class="js-clear-personal-note btn btn-sm btn-danger ml-2">' + clearNoteLang + '</button>'
+                    : ''
+            }
+                </div>
+            </div>`;
+        }
+
+        return '';
+    }
+
     function handleDownloadCertificateHtml(result) {
 
         const title = downloadCertificateLang;
@@ -235,9 +284,13 @@
             }
         }
 
-        const html = handleContentBoxHtml(title, hint, img, otherHtml);
+        let html = handleContentBoxHtml(title, hint, img, otherHtml);
+
+        html += handlePersonalNoteHtml(quiz);
 
         learningPageContent.html(html);
+
+        feather.replace();
     }
 
     function handleLiveSessionFinishedHtml(session) {
@@ -249,9 +302,13 @@
                 <a href="${courseUrl}" class="btn btn-white btn-sm mt-15">${coursePageLang}</a>
         `;
 
-        const html = handleContentBoxHtml(title, hint, img, otherHtml, 'mt-10');
+        let html = handleContentBoxHtml(title, hint, img, otherHtml, 'mt-10');
+
+        html += handlePersonalNoteHtml(session);
 
         learningPageContent.html(html);
+
+        feather.replace();
     }
 
     function handleLiveSessionNotStartedHtml(session) {
@@ -266,9 +323,13 @@
             </div>
         `;
 
-        const html = handleContentBoxHtml(title, hint, img, otherHtml, 'mt-10');
+        let html = handleContentBoxHtml(title, hint, img, otherHtml, 'mt-10');
+
+        html += handlePersonalNoteHtml(session);
 
         learningPageContent.html(html);
+
+        feather.replace();
     }
 
     function handleLiveSessionHtml(session) {
@@ -291,9 +352,13 @@
             </div>
         `;
 
-        const html = handleContentBoxHtml(title, hint, img, otherHtml, 'mt-10');
+        let html = handleContentBoxHtml(title, hint, img, otherHtml, 'mt-10');
+
+        html += handlePersonalNoteHtml(session);
 
         learningPageContent.html(html);
+
+        feather.replace();
     }
 
     function handleFileHtml(file) {
@@ -314,6 +379,8 @@
 
                 html += `</div>`;
 
+                html += handlePersonalNoteHtml(file);
+
                 learningPageContent.html(html);
             } else if ((file.downloadable && file.downloadable !== '0')) {
                 if (file.is_video) {
@@ -330,6 +397,8 @@
 
                     $html += `</div>`;
 
+                    $html += handlePersonalNoteHtml(file);
+
                     learningPageContent.html($html);
 
                     const $videoCard = $('.js-video-and-download .learning-content-video-player');
@@ -345,6 +414,8 @@
 
                     let html = handleContentBoxHtml(title, hint, img, otherHtml);
 
+                    html += handlePersonalNoteHtml(file);
+
                     learningPageContent.html(html);
                 }
             }
@@ -356,7 +427,9 @@
                 case 'external_link':
                 case 's3':
 
-                    const $html = $('<div class="learning-content-video-player w-100"></div>');
+                    let $html = $('<div class="learning-content-video-player w-100"></div>');
+
+                    $html += handlePersonalNoteHtml(file);
 
                     learningPageContent.html($html);
 
@@ -368,7 +441,9 @@
 
                 case 'secure_host':
 
-                    const $secureHosthtml = $('<div class="learning-content-video-player w-100"></div>');
+                    let $secureHosthtml = $('<div class="learning-content-video-player w-100"></div>');
+
+                    $secureHosthtml += handlePersonalNoteHtml(file);
 
                     learningPageContent.html($secureHosthtml);
 
@@ -380,7 +455,7 @@
 
                 case 'google_drive':
                 case 'iframe':
-                    handleFileIframe(file.id);
+                    handleFileIframe(file);
                     break;
                 case 'upload_archive':
                     const title = showHtmlFileLang;
@@ -388,13 +463,17 @@
                     const img = 'download.svg';
                     const otherHtml = `<a href="${courseUrl}/file/${file.id}/showHtml" target="_blank" class="btn btn-primary btn-sm mt-15">${showLang}</a>`;
 
-                    const html = handleContentBoxHtml(title, hint, img, otherHtml);
+                    let html = handleContentBoxHtml(title, hint, img, otherHtml);
+
+                    html += handlePersonalNoteHtml(file);
 
                     learningPageContent.html(html);
                     break;
             }
 
         }
+
+        feather.replace();
     }
 
     function handleTextLessonHtml(textLesson) {
@@ -402,12 +481,12 @@
                     <h4 class="font-16 font-weight-bold text-dark">${textLesson.title}</h4>
 
                     ${
-                        (textLesson.image) ?
-                            `<div class="pb-5 mt-15 main-image rounded-lg w-100">
+            (textLesson.image) ?
+                `<div class="pb-5 mt-15 main-image rounded-lg w-100">
                                 <img src="${textLesson.image}" class="bg-gray200" alt="${textLesson.title}"/>
                             </div>`
-                        : ''
-                    }
+                : ''
+        }
 
                     ${textLesson.content}
                 </div>`;
@@ -440,6 +519,8 @@
                 </div>`;
 
         }
+
+        html += handlePersonalNoteHtml(textLesson);
 
         learningPageContent.html(html);
 
@@ -487,17 +568,21 @@
         learningPageContent.html(html);
     }
 
-    function handleFileIframe(fileId) {
-        $.post('/course/getFilePath', {file_id: fileId}, function (result) {
+    function handleFileIframe(file) {
+        $.post('/course/getFilePath', {file_id: file.id}, function (result) {
 
             if (result && result.code === 200) {
                 const {storage, path} = result;
 
-                const $iframeHtml = `<div class="learning-content-iframe">
+                let $iframeHtml = `<div class="learning-content-iframe">
                             ${path}
                         </div>`;
 
+                $iframeHtml += handlePersonalNoteHtml(file);
+
                 learningPageContent.html($iframeHtml);
+
+                feather.replace();
             } else {
                 $.toast({
                     heading: notAccessToastTitleLang,
@@ -719,4 +804,65 @@
             errorToast(cantStartQuizToastTitleLang, cantStartQuizToastMsgLang);
         }
     });
+
+    $('body').on('click', '.js-save-personal-note', function (e) {
+        e.preventDefault();
+
+        const $this = $(this);
+        const $form = $this.closest('.js-personal-notes-form');
+        const courseId = $form.attr('data-course-id');
+        const itemId = $form.attr('data-item-id');
+        const itemType = $form.attr('data-item-type');
+
+        const data = {
+            course_id: courseId,
+            item_id: itemId,
+            item_type: itemType,
+            note: $form.find('textarea[name="notes"]').val(),
+            attachment: $form.find('input[name="attach"]').val(),
+        }
+
+        $this.addClass('loadingbar primary').prop('disabled', true);
+
+
+        $.post('/course/learning/personalNotes', data, function (result) {
+            if (result && result.code === 200) {
+                $.toast({
+                    heading: personalNoteLang,
+                    text: personalNoteStoredSuccessfullyLang,
+                    bgColor: '#43d477',
+                    textColor: 'white',
+                    hideAfter: 10000,
+                    position: 'bottom-right',
+                    icon: 'success'
+                });
+            }
+
+            $this.removeClass('loadingbar primary').prop('disabled', false);
+        }).fail(function () {
+            $.toast({
+                heading: oopsLang,
+                text: somethingWentWrongLang,
+                bgColor: '#f63c3c',
+                textColor: 'white',
+                hideAfter: 10000,
+                position: 'bottom-right',
+                icon: 'error'
+            });
+
+            $this.removeClass('loadingbar primary').prop('disabled', false);
+        })
+
+    });
+
+    $('body').on('click', '.js-clear-personal-note', function (e) {
+        e.preventDefault();
+
+        const $this = $(this);
+        const $form = $this.closest('.js-personal-notes-form');
+
+        $form.find('textarea[name="notes"]').val('')
+        $form.find('input[name="attach"]').val('')
+    });
+
 })(jQuery);

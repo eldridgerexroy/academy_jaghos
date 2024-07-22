@@ -31,6 +31,21 @@
     @endif
     {{-- ./ FAQ --}}
 
+    {{-- Related Course --}}
+    @if(!empty($product->relatedCourses) and $product->relatedCourses->count() > 0)
+
+        <div class="mt-20">
+            <h2 class="section-title after-line">{{ trans('update.related_courses') }}</h2>
+
+            @foreach($product->relatedCourses as $relatedCourse)
+                @if($relatedCourse->course)
+                    @include('web.default.includes.webinar.list-card',['webinar' => $relatedCourse->course])
+                @endif
+            @endforeach
+        </div>
+    @endif
+    {{-- ./ Related Course --}}
+
     @if(!empty(getStoreSettings('activate_comments')) and getStoreSettings('activate_comments'))
         {{-- product Comments --}}
         @include('web.default.includes.comments',[

@@ -13,16 +13,21 @@ class Channel extends BasePaymentChannel implements IChannel
 {
     protected $currency;
     protected $order_session_key;
+    protected $test_mode;
     protected $merchant_id;
     protected $api_secret;
+
+
+    protected array $credentialItems = [
+        'merchant_id',
+        'api_secret',
+    ];
 
     public function __construct(PaymentChannel $paymentChannel)
     {
         $this->currency = currency();
         $this->order_session_key = 'payhere.payments.order_id';
-
-        $this->merchant_id = env('PAYHERE_MERCHANT_ID');
-        $this->api_secret = env('PAYHERE_SECRET');
+        $this->setCredentialItems($paymentChannel);
     }
 
     public function paymentRequest(Order $order)
@@ -53,7 +58,7 @@ class Channel extends BasePaymentChannel implements IChannel
 
     private function action_url()
     {
-        return env('PAYHERE_TEST_MODE') ? 'https://sandbox.payhere.lk/pay/checkout' : 'https://www.payhere.lk/pay/checkout';
+        return $this->test_mode ? 'https://sandbox.payhere.lk/pay/checkout' : 'https://www.payhere.lk/pay/checkout';
     }
 
     private function makeCallbackUrl($status)

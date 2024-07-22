@@ -27,6 +27,12 @@ Route::group(['prefix' => 'api_sessions'], function () {
 
 Route::get('/mobile-app', 'Web\MobileAppController@index')->middleware(['share'])->name('mobileAppRoute');
 Route::get('/maintenance', 'Web\MaintenanceController@index')->middleware(['share'])->name('maintenanceRoute');
+Route::get('/restriction', 'Web\RestrictionController@index')->middleware(['share'])->name('restrictionRoute');
+
+Route::group(['prefix' => 'cookie-security'], function () {
+    Route::post('/all', 'Web\CookieSecurityController@setAll');
+    Route::post('/customize', 'Web\CookieSecurityController@setCustomize');
+});
 
 /* Emergency Database Update */
 Route::get('/emergencyDatabaseUpdate', function () {
@@ -50,7 +56,7 @@ Route::get('/emergencyDatabaseUpdate', function () {
     ]);
 });
 
-Route::group(['namespace' => 'Auth', 'middleware' => ['check_mobile_app', 'share', 'check_maintenance']], function () {
+Route::group(['namespace' => 'Auth', 'middleware' => ['share', 'check_maintenance', 'check_restriction']], function () {
     Route::get('/login', 'LoginController@showLoginForm');
     Route::post('/login', 'LoginController@login');
     Route::get('/logout', 'LoginController@logout');
@@ -71,7 +77,7 @@ Route::group(['namespace' => 'Auth', 'middleware' => ['check_mobile_app', 'share
     Route::get('/reff/{code}', 'ReferralController@referral');
 });
 
-Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impersonate', 'share', 'check_maintenance']], function () {
+Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impersonate', 'share', 'check_maintenance', 'check_restriction']], function () {
     Route::get('/stripe', function () {
         return view('web.default.cart.channels.stripe');
     });
@@ -106,6 +112,7 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
             Route::get('/{slug}/installments', 'WebinarController@getInstallmentsByCourse');
 
             Route::post('/learning/itemInfo', 'LearningPageController@getItemInfo');
+            Route::post('/learning/personalNotes', 'LearningPageController@personalNotes');
             Route::get('/learning/{slug}', 'LearningPageController@index');
             Route::get('/learning/{slug}/noticeboards', 'LearningPageController@noticeboards');
             Route::get('/assignment/{assignmentId}/download/{id}/attach', 'LearningPageController@downloadAssignment');
@@ -131,6 +138,10 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
             });
 
             Route::post('/direct-payment', 'WebinarController@directPayment');
+
+            Route::group(['prefix' => 'personal-notes'], function () {
+                Route::get('/{id}/download-attachment', 'CoursePersonalNotesController@downloadAttachment');
+            });
         });
     });
 
@@ -219,6 +230,10 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
 
     Route::group(['prefix' => 'search'], function () {
         Route::get('/', 'SearchController@index');
+    });
+
+    Route::group(['prefix' => 'tags'], function () {
+        Route::get('/{type}/{tag}', 'TagsController@index');
     });
 
     Route::group(['prefix' => 'categories'], function () {
@@ -349,11 +364,6 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
                 Route::get('/{post_id}/downloadAttachment', 'ForumController@postDownloadAttachment');
             });
         });
-    });
-
-    Route::group(['prefix' => 'cookie-security'], function () {
-        Route::post('/all', 'CookieSecurityController@setAll');
-        Route::post('/customize', 'CookieSecurityController@setCustomize');
     });
 
 

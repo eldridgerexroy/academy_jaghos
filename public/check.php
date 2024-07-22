@@ -333,7 +333,7 @@ if (function_exists('apache_get_modules')) {
    
 
     <h1>Server Requirements.</h1>
-    <p>Rocket LMS Version : 1.8.1</p>
+    <p>Rocket LMS Version : 1.9 (Full Version)</p>
     <br/>
 
     <p>

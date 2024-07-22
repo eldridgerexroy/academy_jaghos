@@ -22,11 +22,11 @@ class WebinarChapterItem extends Model
         $order = WebinarChapterItem::where('chapter_id', $chapterId)->count() + 1;
 
         WebinarChapterItem::updateOrCreate([
-            'user_id' => $userId,
             'chapter_id' => $chapterId,
             'item_id' => $itemId,
             'type' => $type,
         ], [
+            'user_id' => $userId,
             'order' => $order,
             'created_at' => time()
         ]);

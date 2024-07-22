@@ -12,6 +12,14 @@ use CashUAony\Phpanonymous\CashU;
 class Channel extends BasePaymentChannel implements IChannel
 {
     protected $currency;
+    protected $test_mode;
+    protected $encryption_key;
+    protected $merchant_id;
+
+    protected array $credentialItems = [
+        'merchant_id',
+        'encryption_key',
+    ];
 
     /**
      * Channel constructor.
@@ -20,10 +28,20 @@ class Channel extends BasePaymentChannel implements IChannel
     public function __construct(PaymentChannel $paymentChannel)
     {
         $this->currency = currency();
+        $this->setCredentialItems($paymentChannel);
+    }
+
+    private function handleConfigs()
+    {
+        \Config::set('cashu._merchant_id', $this->merchant_id);
+        \Config::set('cashu._encryption_key', $this->encryption_key);
+        \Config::set('cashu._testmod', $this->test_mode);
     }
 
     public function paymentRequest(Order $order)
     {
+        $this->handleConfigs();
+
         $generalSettings = getGeneralSettings();
         $user = $order->user;
 
@@ -50,6 +68,7 @@ class Channel extends BasePaymentChannel implements IChannel
 
     public function verify(Request $request)
     {
+        $this->handleConfigs();
 
         if (!empty($order)) {
             $order->update([

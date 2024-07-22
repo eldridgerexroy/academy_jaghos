@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mixins\Cashback\CashbackRules;
 use App\Mixins\Installment\InstallmentPlans;
 use App\Models\Category;
+use App\Models\Discount;
 use App\Models\ForumTopic;
 use App\Models\Newsletter;
 use App\Models\Product;
@@ -20,6 +21,7 @@ use App\Models\Role;
 use App\Models\Follow;
 use App\Models\Meeting;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -139,6 +141,21 @@ class UserController extends Controller
                 ->get();
         }
 
+        $instructorDiscounts = null;
+
+        if (!empty(getFeaturesSettings('frontend_coupons_status'))) {
+            $instructorDiscounts = Discount::query()
+                ->where('creator_id', $user->id)
+                ->where(function (Builder $query) {
+                    $query->where('source', 'all');
+                    $query->orWhere('source', Discount::$discountSourceMeeting);
+                })
+                ->where('status', 'active')
+                ->where('expired_at', '>', time())
+                ->get();
+        }
+
+
         $data = [
             'pageTitle' => $user->full_name . ' ' . trans('public.profile'),
             'user' => $user,
@@ -158,6 +175,7 @@ class UserController extends Controller
             'instructors' => $instructors,
             'forumTopics' => $this->getUserForumTopics($user->id),
             'cashbackRules' => $cashbackRules,
+            'instructorDiscounts' => $instructorDiscounts
         ];
 
         return view('web.default.user.profile', $data);
@@ -494,11 +512,20 @@ class UserController extends Controller
 
     public function makeNewsletter(Request $request)
     {
-        $this->validate($request, [
+        $data = $request->all();
+        $validator = Validator::make($data, [
             'newsletter_email' => 'required|email|max:255|unique:newsletters,email'
         ]);
 
-        $data = $request->all();
+        if ($validator->fails()) {
+            $toastData = [
+                'title' => trans('public.request_failed'),
+                'msg' => trans('update.entering_the_email_for_the_newsletter_is_required'),
+                'status' => 'error'
+            ];
+            return back()->with(['toast' => $toastData]);
+        }
+
         $user_id = null;
         $email = $data['newsletter_email'];
 

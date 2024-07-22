@@ -14,8 +14,10 @@ class CertificateTemplate extends Model implements TranslatableContract
     public $timestamps = false;
     protected $dateFormat = 'U';
     protected $guarded = ['id'];
+    static $templateWidth = 930;
+    static $templateHeight = 600;
 
-    public $translatedAttributes = ['title', 'body'];
+    public $translatedAttributes = ['title', 'body', 'elements'];
 
     public function getTitleAttribute()
     {
@@ -25,6 +27,17 @@ class CertificateTemplate extends Model implements TranslatableContract
     public function getBodyAttribute()
     {
         return getTranslateAttributeValue($this, 'body');
+    }
+
+    public function getElementsAttribute()
+    {
+        $elements = getTranslateAttributeValue($this, 'elements');
+
+        if (!empty($elements)) {
+            $elements = json_decode($elements, true);
+        }
+
+        return $elements;
     }
 
     public function getRtlAttribute()

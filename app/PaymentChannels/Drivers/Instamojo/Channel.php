@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\PaymentChannel;
 use App\PaymentChannels\BasePaymentChannel;
 use App\PaymentChannels\IChannel;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Instamojo\Instamojo;
 
@@ -13,26 +14,63 @@ class Channel extends BasePaymentChannel implements IChannel
 {
     protected $currency;
     protected $order_session_key;
-    protected $api;
+
+    protected $test_mode;
+    protected $client_id;
+    protected $client_secret;
+    protected $authType;
+    protected $username;
+    protected $password;
+
+    protected array $credentialItems = [
+        'client_id',
+        'client_secret',
+        'authType',
+        'username',
+        'password',
+    ];
+
 
     public function __construct(PaymentChannel $paymentChannel)
     {
-        $this->currency = currency();
+        $this->currency = "INR";//currency();
         $this->order_session_key = 'instamojo.payments.order_id';
+        $this->setCredentialItems($paymentChannel);
+    }
 
-        $test_mode = env('INSTAMOJO_TEST_MODE') ?? false;
-        $client_id = env('INSTAMOJO_CLIENT_ID');
-        $client_secret = env('INSTAMOJO_CLIENT_SECRET');
-        $authType = env('INSTAMOJO_AUTH_TYPE');
-        $username = env('INSTAMOJO_USERNAME');
-        $password = env('INSTAMOJO_PASSWORD');
+    private function handleAccessToken()
+    {
+        // https://docs.instamojo.com/reference/generate-access-token-application-based-authentication
 
-        $this->api = Instamojo::init($authType, [
-            "client_id" => $client_id,
-            "client_secret" => $client_secret,
-            "username" => $username, /** In case of user based authentication**/
-            "password" => $password/** In case of user based authentication**/
-        ], $test_mode);
+        try {
+            $client = new Client();
+
+            $response = $client->post('https://api.instamojo.com/oauth2/token/', [
+                'form_params' => [
+                    'grant_type' => 'client_credentials',
+                    'client_id' => $this->client_id,
+                    'client_secret' => $this->client_secret
+                ]
+            ]);
+
+            $body = $response->getBody();
+            $data = json_decode($body, true);
+            
+        } catch (\Exception $e) {
+            dd($e);
+        }
+
+        dd($data);
+    }
+
+    private function makeApi()
+    {
+        return Instamojo::init($this->authType, [
+            "client_id" => $this->client_id,
+            "client_secret" => $this->client_secret,
+            "username" => $this->username, /** In case of user based authentication**/
+            "password" => $this->password/** In case of user based authentication**/
+        ], $this->test_mode);
     }
 
     public function paymentRequest(Order $order)
@@ -40,7 +78,11 @@ class Channel extends BasePaymentChannel implements IChannel
         $user = $order->user;
 
         try {
-            $response = $this->api->createPaymentRequest([
+            $this->handleAccessToken();
+
+            $api = $this->makeApi();
+
+            $response = $api->createPaymentRequest([
                 "purpose" => 'order payment',
                 "amount" => $this->makeAmountByCurrency($order->total_amount, $this->currency),
                 "send_email" => false,
@@ -51,10 +93,10 @@ class Channel extends BasePaymentChannel implements IChannel
             ]);
 
             session()->put($this->order_session_key, $order->id);
-
+            dd($response);
             return $response['longurl'];
         } catch (\Exception $e) {
-            print('Error: ' . $e->getMessage());
+            dd($e);
         }
     }
 
@@ -78,7 +120,9 @@ class Channel extends BasePaymentChannel implements IChannel
                 ->first();
 
             if (!empty($order)) {
-                $response = $this->api->getPaymentRequestDetails($data['payment_request_id'] ?? null);
+                $api = $this->makeApi();
+
+                $response = $api->getPaymentRequestDetails($data['payment_request_id'] ?? null);
 
                 $orderStatus = Order::$fail;
 
@@ -93,7 +137,7 @@ class Channel extends BasePaymentChannel implements IChannel
 
             return $order;
         } catch (\Exception $e) {
-            dd($e,1);
+            dd($e, 1);
             print('Error: ' . $e->getMessage());
         }
     }

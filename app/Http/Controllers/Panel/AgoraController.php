@@ -14,8 +14,10 @@ class AgoraController extends Controller
 
     public function __construct()
     {
-        $this->appId = env('AGORA_APP_ID');
-        $this->appCertificate = env('AGORA_APP_CERTIFICATE');
+        $settings = getFeaturesSettings();
+
+        $this->appId = !empty($settings['agora_app_id']) ? $settings['agora_app_id'] : '';
+        $this->appCertificate = !empty($settings['agora_app_certificate']) ? $settings['agora_app_certificate'] : '';
     }
 
     /*public function index(Request $request)

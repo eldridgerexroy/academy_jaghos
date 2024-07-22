@@ -68,24 +68,26 @@
                             <div class="image-box">
                                 <img src="{{ $upcomingCourse->getImage() }}" class="img-cover" alt="">
 
-                                @if(!empty($upcomingCourse->webinar_id))
-                                    <span class="badge badge-secondary">{{  trans('update.released') }}</span>
-                                @else
-                                    @switch($upcomingCourse->status)
-                                        @case(\App\Models\UpcomingCourse::$active)
-                                            <span class="badge badge-primary">{{  trans('public.published') }}</span>
-                                            @break
-                                        @case(\App\Models\UpcomingCourse::$isDraft)
-                                            <span class="badge badge-danger">{{ trans('public.draft') }}</span>
-                                            @break
-                                        @case(\App\Models\UpcomingCourse::$pending)
-                                            <span class="badge badge-warning">{{ trans('public.waiting') }}</span>
-                                            @break
-                                        @case(\App\Models\UpcomingCourse::$inactive)
-                                            <span class="badge badge-danger">{{ trans('public.rejected') }}</span>
-                                            @break
-                                    @endswitch
-                                @endif
+                                <div class="badges-lists">
+                                    @if(!empty($upcomingCourse->webinar_id))
+                                        <span class="badge badge-secondary">{{  trans('update.released') }}</span>
+                                    @else
+                                        @switch($upcomingCourse->status)
+                                            @case(\App\Models\UpcomingCourse::$active)
+                                                <span class="badge badge-primary">{{  trans('public.published') }}</span>
+                                                @break
+                                            @case(\App\Models\UpcomingCourse::$isDraft)
+                                                <span class="badge badge-danger">{{ trans('public.draft') }}</span>
+                                                @break
+                                            @case(\App\Models\UpcomingCourse::$pending)
+                                                <span class="badge badge-warning">{{ trans('public.waiting') }}</span>
+                                                @break
+                                            @case(\App\Models\UpcomingCourse::$inactive)
+                                                <span class="badge badge-danger">{{ trans('public.rejected') }}</span>
+                                                @break
+                                        @endswitch
+                                    @endif
+                                </div>
 
                                 @if(!empty($upcomingCourse->course_progress))
                                     <div class="progress">
@@ -112,20 +114,28 @@
                                                     <a href="{{ $upcomingCourse->webinar->getUrl() }}" class="webinar-actions d-block text-primary">{{ trans('update.view_course') }}</a>
                                                 @else
                                                     @if($upcomingCourse->status == \App\Models\UpcomingCourse::$isDraft)
-                                                        <a href="/panel/upcoming_courses/{{ $upcomingCourse->id }}/step/4" class="js-send-for-reviewer webinar-actions btn-transparent d-block text-primary">{{ trans('update.send_for_reviewer') }}</a>
+                                                        @can('panel_upcoming_courses_create')
+                                                            <a href="/panel/upcoming_courses/{{ $upcomingCourse->id }}/step/4" class="js-send-for-reviewer webinar-actions btn-transparent d-block text-primary">{{ trans('update.send_for_reviewer') }}</a>
+                                                        @endcan
                                                     @elseif($upcomingCourse->status == \App\Models\UpcomingCourse::$active)
                                                         <button type="button" data-id="{{ $upcomingCourse->id }}" class="js-mark-as-released webinar-actions btn-transparent d-block text-primary">{{ trans('update.mark_as_released') }}</button>
                                                     @endif
 
-                                                    <a href="/panel/upcoming_courses/{{ $upcomingCourse->id }}/edit" class="webinar-actions d-block mt-10">{{ trans('public.edit') }}</a>
+                                                    @can('panel_upcoming_courses_create')
+                                                        <a href="/panel/upcoming_courses/{{ $upcomingCourse->id }}/edit" class="webinar-actions d-block mt-10">{{ trans('public.edit') }}</a>
+                                                    @endcan
                                                 @endif
 
                                                 @if($upcomingCourse->status == \App\Models\UpcomingCourse::$active)
-                                                    <a href="/panel/upcoming_courses/{{ $upcomingCourse->id }}/followers" class="webinar-actions d-block mt-10">{{ trans('update.view_followers') }}</a>
+                                                    @can('panel_upcoming_courses_followers')
+                                                        <a href="/panel/upcoming_courses/{{ $upcomingCourse->id }}/followers" class="webinar-actions d-block mt-10">{{ trans('update.view_followers') }}</a>
+                                                    @endcan
                                                 @endif
 
                                                 @if($upcomingCourse->creator_id == $authUser->id)
-                                                    <a href="/panel/upcoming_courses/{{ $upcomingCourse->id }}/delete" class="webinar-actions d-block mt-10 text-danger delete-action">{{ trans('public.delete') }}</a>
+                                                    @can('panel_upcoming_courses_delete')
+                                                        <a href="/panel/upcoming_courses/{{ $upcomingCourse->id }}/delete" class="webinar-actions d-block mt-10 text-danger delete-action">{{ trans('public.delete') }}</a>
+                                                    @endcan
                                                 @endif
                                             </div>
                                         </div>

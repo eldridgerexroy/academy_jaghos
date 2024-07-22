@@ -44,7 +44,11 @@
                 <button type="button" id="saveAsDraft" class=" btn btn-sm btn-primary">{{ trans('public.save_as_draft') }}</button>
 
                 @if(!empty($bundle) and $bundle->creator_id == $authUser->id)
-                    <a href="/panel/bundles/{{ $bundle->id }}/delete?redirect_to=/panel/bundles" class="delete-action bundle-actions btn btn-sm btn-danger mt-20 mt-md-0">{{ trans('public.delete') }}</a>
+                    @include('web.default.panel.includes.content_delete_btn', [
+                        'deleteContentUrl' => "/panel/bundles/{$bundle->id}/delete?redirect_to=/panel/bundles",
+                        'deleteContentClassName' => 'bundle-actions btn btn-danger btn-sm mt-20 mt-md-0',
+                        'deleteContentItem' => $bundle,
+                    ])
                 @endif
             </div>
         </div>

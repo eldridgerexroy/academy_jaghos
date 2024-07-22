@@ -15,6 +15,8 @@ class SaleController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize("panel_products_sales");
+
         $user = auth()->user();
 
         if (!$user->isOrganization() and !$user->isTeacher()) {

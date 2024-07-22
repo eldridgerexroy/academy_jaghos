@@ -19,6 +19,8 @@ class AccountingController extends Controller
 {
     public function index()
     {
+        $this->authorize("panel_financial_summary");
+
         $userAuth = auth()->user();
 
         $accountings = Accounting::where('user_id', $userAuth->id)
@@ -51,6 +53,8 @@ class AccountingController extends Controller
 
     public function account($id = null)
     {
+        $this->authorize("panel_financial_charge_account");
+
         $userAuth = auth()->user();
 
         $editOfflinePayment = null;
@@ -117,6 +121,8 @@ class AccountingController extends Controller
 
     public function charge(Request $request)
     {
+        $this->authorize("panel_financial_charge_account");
+
         $rules = [
             'amount' => 'required|numeric|min:0',
             'gateway' => 'required',

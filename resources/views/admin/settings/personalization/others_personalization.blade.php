@@ -31,12 +31,6 @@
                     </label>
                 </div>
 
-                <div class="form-group">
-                    <label>{{ trans('update.enter_guarantee_text') }}</label>
-                    <input type="text" name="value[guarantee_text]" value="{{ (!empty($itemValue) and !empty($itemValue['guarantee_text'])) ? $itemValue['guarantee_text'] : old('guarantee_text') }}" class="form-control "/>
-                </div>
-
-
                 <h5 class="text-dark font-20 mt-5">{{ trans('update.avatar_settings') }}</h5>
 
                 <div class="form-group">

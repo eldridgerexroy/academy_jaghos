@@ -432,8 +432,6 @@ return [
 'paid_failed' => 'Paid/Failed',
 'paid_waiting' => 'Paid/Pending',
 'paid_successful' => 'Paid/Successful',
-'paid_status' => 'Paid Status',
-'paid_date' => 'Paid Date',
 'success' => 'Successful',
 'invoice' => 'Invoice',
 'purchase_date' => 'Purchased Date',
@@ -605,6 +603,28 @@ return [
 'admin_universities_edit' => 'Universities Edit',
 'admin_universities_delete' => 'Universities Delete',
 
+// Request Recording
+'request_recording' =>  'Request Recordings',
+'webinar_recording' =>  'Webinar Recordings',
+
+// Syllabus
+'syllabus' => "Syllabus",
+'syllabus_detail' => 'Syllabus Detail',
+'admin_syllabus' => 'Syllabus',
+'admin_syllabus_list' => 'Syllabus List',
+'admin_syllabus_create' => 'Syllabus Create',
+'admin_syllabus_edit' => 'Syllabus Edit',
+'admin_syllabus_delete' => 'Syllabus Delete',
+
+// departments
+'department' => 'Department',
+'departments' => 'Departments',
+'admin_departments' => 'Department',
+'admin_departments_list' => 'Department List',
+'admin_departments_create' => 'Department Create',
+'admin_departments_edit' => 'Department Edit',
+'admin_departments_delete' => 'Department Delete',
+'departments_new_page_title' => 'New Departments',
 // Majors
 
 'major' => 'Major',
@@ -997,12 +1017,6 @@ return [
 'contacts_lists' => 'Contact Messages Lists',
 'contacts_message' => 'Contact Message',
 'user_role_updated' => 'The user role updated.',
-
-// Recording Request
-'webinar_recording' => 'Webinar Recordings',
-'request_recording' => 'Request Recording',
-'webinars_recording_detail' => 'Request Recording Detail',
-'webinars_recording_create' => 'Create Request Recording',
 
 //Classes
 
@@ -1550,5 +1564,13 @@ By enabling this feature, newly registered users will require approval using thi
 'notification_forms' => 'Forms',
 'notification_submit_form_by_users' => 'Form Submission (for Admin)',
 'form_title' => 'Form Title',
+'restriction_settings' => 'IP Restriction State',
+'upcoming_courses_lists_background' => 'Upcoming Courses List',
+'user_default_signature_background' => 'User Default Signature',
+'tags_background' => 'Tags Page',
+'seo_metas_tags' => 'Tags Page',
+'teacher' => 'Instructor',
+'discount_amount' => 'Discount Amount',
+'discount_title' => 'Discount Title',
 
 ];

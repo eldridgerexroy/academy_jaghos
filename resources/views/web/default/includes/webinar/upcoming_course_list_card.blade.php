@@ -1,8 +1,10 @@
 <div class="webinar-card webinar-list webinar-list-2 d-flex mt-30">
     <div class="image-box">
-        @if(!empty($upcomingCourse->webinar_id))
-            <span class="badge badge-secondary">{{ trans('update.released') }}</span>
-        @endif
+        <div class="badges-lists">
+            @if(!empty($upcomingCourse->webinar_id))
+                <span class="badge badge-secondary">{{ trans('update.released') }}</span>
+            @endif
+        </div>
 
         <a href="{{ $upcomingCourse->getUrl() }}">
             <img src="{{ $upcomingCourse->getImage() }}" class="img-cover" alt="{{ $upcomingCourse->title }}">

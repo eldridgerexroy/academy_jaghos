@@ -232,8 +232,7 @@ $custom-control-indicator-bg:$primary;*/
   --panel-bg: #fbfbfd;
   --success: #e7f4f0;
   --info: #ebf7ff;
-  /* --primary: #43d477; */
-  --primary: #01b7ff;
+  --primary: #43d477;
   --secondary: #1f3b64;
   --success: #e7f4f0;
   --info: #ebf7ff;
@@ -246,11 +245,11 @@ $custom-control-indicator-bg:$primary;*/
   --gray300: #ececec;
   --gray200: #f1f1f1;
   --gray100: #f9f9f9;
-  --primary-hover: #437dd4;
-  --primary-border: #437dd4;
-  --primary-border-hover: #437dd4;
-  --primary-btn-shadow: 0 3px 6px 0 rgba(67, 133, 194, 0.3);
-  --primary-btn-shadow-hover: 0 3px 10px 0 rgba(67, 133, 194, 0.3);
+  --primary-hover: #1FB354;
+  --primary-border: #43d477;
+  --primary-border-hover: #2aba5e;
+  --primary-btn-shadow: 0 3px 6px 0 rgb(64 213 125 / 30%);
+  --primary-btn-shadow-hover: 0 3px 8px 0 rgb(64 213 125 / 30%);
   --primary-btn-color: #ffffff;
   --primary-btn-color-hover: #ffffff;
   --secondary-hover: #162a47;
@@ -4806,13 +4805,13 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-primary {
-  color: #042c8c;
-  border-color: #042c8c;
+  color: #43d477;
+  border-color: #43d477;
 }
 .btn-outline-primary:hover {
   color: #ffffff;
-  background-color: #042c8c;
-  border-color: #042c8c;
+  background-color: #43d477;
+  border-color: #43d477;
 }
 .btn-outline-primary:focus, .btn-outline-primary.focus {
   box-shadow: 0 0 0 0 rgba(67, 212, 119, 0.5);
@@ -13236,6 +13235,7 @@ body.modal-open, body.swal2-shown {
 body {
   font-family: var(--font-family-base) !important;
   overflow: hidden;
+  background-color: var(--body_bg, #ffffff) !important;
 }
 @media (max-width: 767px) {
   body {
@@ -13326,6 +13326,12 @@ body {
 
 .font-12 {
   font-size: 0.75rem;
+  font-weight: normal;
+  line-height: 1.4;
+}
+
+.font-10 {
+  font-size: 0.625rem;
   font-weight: normal;
   line-height: 1.4;
 }
@@ -16351,6 +16357,33 @@ p {
   background-image: linear-gradient(to bottom, rgba(6, 6, 6, 0), rgba(0, 0, 0, 0.8));
   z-index: 1;
 }
+.blog-grid-card .blog-grid-image .badges-lists {
+  position: absolute;
+  top: 0;
+  left: 7px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.blog-grid-card .blog-grid-image .badges-lists .badge {
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 1.29;
+  color: #ffffff;
+  padding: 8px 15px;
+  border-radius: 15px 3px 15px 3px;
+  pointer-events: none;
+  margin-top: 8px;
+  margin-right: 8px;
+}
+.rtl .blog-grid-card .blog-grid-image .badges-lists {
+  left: auto;
+  right: 7px;
+}
+.rtl .blog-grid-card .blog-grid-image .badges-lists .badge {
+  margin-right: 0;
+  margin-left: 8px;
+}
 .blog-grid-card .blog-grid-image .created-at {
   font-size: 14px;
   font-weight: 500;
@@ -16511,10 +16544,15 @@ p {
   background-image: linear-gradient(to bottom, rgba(6, 6, 6, 0), rgba(0, 0, 0, 0.8));
   z-index: 1;
 }
-.webinar-card .image-box .badge {
+.webinar-card .image-box .badges-lists {
   position: absolute;
-  top: 7px;
+  top: 0;
   left: 7px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.webinar-card .image-box .badges-lists .badge {
   font-size: 12px;
   font-weight: normal;
   line-height: 1.29;
@@ -16522,6 +16560,16 @@ p {
   padding: 8px 15px;
   border-radius: 15px 3px 15px 3px;
   pointer-events: none;
+  margin-top: 8px;
+  margin-right: 8px;
+}
+.rtl .webinar-card .image-box .badges-lists {
+  left: auto;
+  right: 7px;
+}
+.rtl .webinar-card .image-box .badges-lists .badge {
+  margin-right: 0;
+  margin-left: 8px;
 }
 .webinar-card .image-box .progress {
   position: absolute;
@@ -16833,6 +16881,12 @@ p {
   top: -250px;
   margin-bottom: -250px;
 }
+.course-content-section .instructor-discount-card {
+  margin-top: 35px;
+}
+.course-content-section:not(.has-progress-bar) .instructor-discount-card {
+  margin-top: 75px !important;
+}
 @media (max-width: 991px) {
   .course-content-section:not(.has-progress-bar).course, .course-content-section:not(.has-progress-bar).text_lesson {
     top: -215px;
@@ -16888,6 +16942,9 @@ p {
 }
 .course-description img {
   max-width: 100% !important;
+}
+.course-description li {
+  list-style: inherit;
 }
 
 .accordion-row .collapse-chevron-icon {
@@ -17904,6 +17961,23 @@ p {
   visibility: hidden;
 }
 
+.empty-cart-container {
+  padding: 110px 32px;
+  border-radius: 15px;
+  border: solid 1px #ececec;
+  background-color: #fff;
+  margin-top: 74px;
+}
+.empty-cart-container .empty-cart-icon {
+  width: 256px;
+  height: 250px;
+}
+@media (max-width: 767px) {
+  .empty-cart-container {
+    padding: 50px 20px;
+  }
+}
+
 .search-top-banner img {
   position: absolute;
   left: 0;
@@ -18196,10 +18270,15 @@ p {
   background-image: linear-gradient(to bottom, rgba(6, 6, 6, 0), rgba(0, 0, 0, 0.8));
   z-index: 1;
 }
-.product-card .image-box .badge {
+.product-card .image-box .badges-lists {
   position: absolute;
-  top: 7px;
+  top: 0;
   left: 7px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.product-card .image-box .badges-lists .badge {
   font-size: 12px;
   font-weight: normal;
   line-height: 1.29;
@@ -18207,18 +18286,25 @@ p {
   padding: 8px 15px;
   border-radius: 15px 3px 15px 3px;
   pointer-events: none;
+  margin-top: 8px;
+  margin-right: 8px;
+}
+.rtl .product-card .image-box .badges-lists {
+  left: auto;
+  right: 7px;
+}
+.rtl .product-card .image-box .badges-lists .badge {
+  margin-right: 0;
+  margin-left: 8px;
 }
 .product-card .image-box .out-of-stock-badge {
   display: flex;
   align-items: center;
   justify-content: center;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
   border-radius: 15px;
   background-image: linear-gradient(to bottom, rgba(6, 6, 6, 0), rgba(0, 0, 0, 0.84));
+  margin-top: 8px;
+  margin-right: 8px;
 }
 .product-card .image-box .out-of-stock-badge span {
   font-size: 14px;
@@ -18229,6 +18315,10 @@ p {
   border-radius: 18px;
   pointer-events: none;
   background-color: rgba(0, 0, 0, 0.6);
+}
+.rtl .product-card .image-box .out-of-stock-badge {
+  margin-right: 0;
+  margin-left: 8px;
 }
 .product-card .image-box .hover-card-action {
   bottom: -20px;
@@ -19133,6 +19223,49 @@ p {
   color: var(--gray);
 }
 
+.instructor-discount-card {
+  background-color: var(--gray100);
+}
+.instructor-discount-card__code {
+  position: relative;
+  width: 122px;
+  height: 82px;
+  padding-right: 15px;
+  border-right: 1px dashed #ececec;
+}
+.instructor-discount-card__code:before, .instructor-discount-card__code:after {
+  content: "";
+  position: absolute;
+  right: -8px;
+  width: 15px;
+  height: 15px;
+  background-color: #fff;
+  border-radius: 50%;
+  z-index: 1;
+}
+.instructor-discount-card__code:before {
+  top: -7px;
+}
+.instructor-discount-card__code:after {
+  bottom: -7px;
+}
+.instructor-discount-card.is-cart-page .instructor-discount-card__code:before, .instructor-discount-card.is-cart-page .instructor-discount-card__code:after {
+  background-color: var(--body_bg, #ffffff);
+}
+
+.purchase-notification-image {
+  width: 73px;
+  min-width: 73px;
+  height: 73px;
+  border-radius: 5px;
+}
+.purchase-notification-image img {
+  border-radius: 5px;
+}
+.purchase-notification-time {
+  color: #bcc2cd;
+}
+
 .custom-table thead th, .custom-table thead td {
   font-size: 14px;
   font-weight: 500;
@@ -19589,54 +19722,4 @@ p {
 
 .custom-checkbox .custom-control-input:disabled:checked ~ .custom-control-label::before {
   opacity: 0.6 !important;
-}
-
-
-
-/* custom css - Sophistec Academy */
-.university-list-section {
-  padding-bottom: 100px;
-}
-.university-list-section .university-list-section-hero {
-  max-width: 400px;
-  max-height: 460px;
-  border-radius: 40px 4px 40px 4px;
-  box-shadow: 0 30px 60px 0 rgba(1, 11, 60, 0.14);
-}
-.university-list-section .university-list-section-circle, .university-list-section .university-list-section-dots {
-  position: absolute;
-  z-index: -1;
-}
-.university-list-section .university-list-section-circle {
-  top: -50px;
-  right: 10%;
-}
-.university-list-section .university-list-section-dots {
-  bottom: -25px;
-  left: -30px;
-  animation: hero-dot 5s linear 0s infinite alternate;
-}
-.university-list-section .example-instructor-card {
-  position: absolute;
-  bottom: 50px;
-  right: -15px;
-  z-index: 2;
-  animation-duration: 4s;
-  animation-fill-mode: both;
-  animation-iteration-count: infinite;
-  animation-name: hero-bounce;
-}
-.university-list-section .example-instructor-card .example-instructor-card-avatar {
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
-}
-@media (max-width: 767px) {
-  .university-list-section .university-list-section-hero {
-    max-width: 250px;
-    max-height: 270px;
-  }
-  .university-list-section .example-instructor-card {
-    right: -5px;
-  }
 }

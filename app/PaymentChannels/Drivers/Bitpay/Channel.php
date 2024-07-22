@@ -11,8 +11,20 @@ use Vrajroham\LaravelBitpay\LaravelBitpay;
 
 class Channel extends BasePaymentChannel implements IChannel
 {
-    protected $api_key;
-    protected $api_secret;
+    protected $currency;
+    protected $test_mode;
+
+    protected $private_key_path;
+    protected $public_key_path;
+    protected $key_storage_password;
+    protected $token;
+
+    protected array $credentialItems = [
+        'private_key_path',
+        'public_key_path',
+        'key_storage_password',
+        'token',
+    ];
 
     /**
      * Channel constructor.
@@ -20,16 +32,28 @@ class Channel extends BasePaymentChannel implements IChannel
      */
     public function __construct(PaymentChannel $paymentChannel)
     {
-
+        $this->currency = currency();
+        $this->setCredentialItems($paymentChannel);
     }
+
+    private function handleConfigs()
+    {
+        \Config::set('laravel-bitpay.private_key', $this->private_key_path);
+        \Config::set('laravel-bitpay.public_key', $this->public_key_path);
+        \Config::set('laravel-bitpay.network', $this->test_mode ? 'testnet' : 'livenet');
+        \Config::set('laravel-bitpay.key_storage_password', $this->key_storage_password);
+        \Config::set('laravel-bitpay.token', $this->token);
+    }
+
 
     public function paymentRequest(Order $order)
     {
-        $generalSettings = getGeneralSettings();
-        $currency = currency();
-        $user = $order->user;
-        $price = $this->makeAmountByCurrency($order->total_amount, $currency);
+        $this->handleConfigs();
 
+        $generalSettings = getGeneralSettings();
+
+        $user = $order->user;
+        $price = $this->makeAmountByCurrency($order->total_amount, $this->currency);
 
 
         $invoice = LaravelBitpay::Invoice();
@@ -49,7 +73,7 @@ class Channel extends BasePaymentChannel implements IChannel
         $invoice->setBuyer($buyer);
 
         // Set currency
-        $invoice->setCurrency($currency);
+        $invoice->setCurrency($this->currency);
 
         $invoice->setRedirectURL($this->makeCallbackUrl());
 
@@ -76,6 +100,8 @@ class Channel extends BasePaymentChannel implements IChannel
 
     public function verify(Request $request)
     {
+        $this->handleConfigs();
+
         $data = $request->all();
         $order_id = $data['order_id'];
 

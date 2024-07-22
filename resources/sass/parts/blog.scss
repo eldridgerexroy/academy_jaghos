@@ -24,6 +24,37 @@
             z-index: 1;
         }
 
+        .badges-lists {
+            position: absolute;
+            top: 0;
+            left: 7px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+
+            .badge {
+                font-size: 12px;
+                font-weight: normal;
+                line-height: 1.29;
+                color: #ffffff;
+                padding: 8px 15px;
+                border-radius: 15px 3px 15px 3px;
+                pointer-events: none;
+                margin-top: 8px;
+                margin-right: 8px;
+            }
+
+            .rtl & {
+                left: auto;
+                right: 7px;
+
+                .badge {
+                    margin-right: 0;
+                    margin-left: 8px;
+                }
+            }
+        }
+
         .created-at {
             font-size: 14px;
             font-weight: 500;

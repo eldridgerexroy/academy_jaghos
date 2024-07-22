@@ -386,6 +386,11 @@ body {
         right: 0;
         top: 30px;
         transform: translateY(-50%);
+
+        .rtl & {
+            right: auto;
+            left: 0;
+        }
     }
 }
 
@@ -445,6 +450,11 @@ body {
         margin-right: 5px;
         color: #43d477;
 
+        .rtl & {
+            margin-right: 0;
+            margin-left: 5px;
+        }
+
         &:before {
             content: '';
             position: absolute;
@@ -496,4 +506,25 @@ body {
         height: 37px;
         width: 100%;
     }
+}
+
+.learning-page-personal-note {
+    position: relative;
+
+    &:before {
+        content: "";
+        position: absolute;
+        top: -15px;
+        left: 0;
+        right: 0;
+        height: 15px;
+        background-color: #f7fafd;
+        border-radius: -10px;
+    }
+}
+
+.item-personal-note-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
 }

@@ -22,6 +22,8 @@ class QuizController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize("panel_quizzes_lists");
+
         $user = auth()->user();
 
         $allQuizzesLists = Quiz::select('id', 'webinar_id')
@@ -114,6 +116,8 @@ class QuizController extends Controller
 
     public function create(Request $request)
     {
+        $this->authorize("panel_quizzes_create");
+
         $user = auth()->user();
         $webinars = Webinar::where(function ($query) use ($user) {
             $query->where('teacher_id', $user->id)
@@ -138,6 +142,8 @@ class QuizController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize("panel_quizzes_create");
+
         $data = $request->get('ajax')['new'];
         $locale = $data['locale'] ?? getDefaultLocale();
 
@@ -228,6 +234,8 @@ class QuizController extends Controller
 
     public function edit(Request $request, $id)
     {
+        $this->authorize("panel_quizzes_create");
+
         $user = auth()->user();
         $webinars = Webinar::where(function ($query) use ($user) {
             $query->where('teacher_id', $user->id)
@@ -280,6 +288,8 @@ class QuizController extends Controller
 
     public function update(Request $request, $id)
     {
+        $this->authorize("panel_quizzes_create");
+
         $user = auth()->user();
         $data = $request->get('ajax')[$id];
 
@@ -350,7 +360,7 @@ class QuizController extends Controller
             ]);
 
 
-            $checkChapterItem = WebinarChapterItem::where('user_id', $quiz->creator_id)
+            $checkChapterItem = WebinarChapterItem::query()
                 ->where('item_id', $quiz->id)
                 ->where('type', WebinarChapterItem::$chapterQuiz)
                 ->first();
@@ -388,6 +398,8 @@ class QuizController extends Controller
 
     public function destroy(Request $request, $id)
     {
+        $this->authorize("panel_quizzes_delete");
+
         $user = auth()->user();
         $quiz = Quiz::where('id', $id)
             ->first();

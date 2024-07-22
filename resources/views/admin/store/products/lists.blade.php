@@ -288,31 +288,69 @@
                                             <td>
                                                 @switch($product->status)
                                                     @case(\App\Models\Product::$active)
-                                                    <div class="text-success font-600-bold">{{ trans('admin/main.published') }}</div>
-                                                    @break
+                                                        <div class="text-success font-600-bold">{{ trans('admin/main.published') }}</div>
+                                                        @break
                                                     @case(\App\Models\Product::$draft)
-                                                    <span class="text-dark">{{ trans('admin/main.is_draft') }}</span>
-                                                    @break
+                                                        <span class="text-dark">{{ trans('admin/main.is_draft') }}</span>
+                                                        @break
                                                     @case(\App\Models\Product::$pending)
-                                                    <span class="text-warning">{{ trans('admin/main.waiting') }}</span>
-                                                    @break
+                                                        <span class="text-warning">{{ trans('admin/main.waiting') }}</span>
+                                                        @break
                                                     @case(\App\Models\Product::$inactive)
-                                                    <span class="text-danger">{{ trans('public.rejected') }}</span>
-                                                    @break
+                                                        <span class="text-danger">{{ trans('public.rejected') }}</span>
+                                                        @break
                                                 @endswitch
                                             </td>
 
                                             <td width="120" class="btn-sm">
 
-                                                @can('admin_store_edit_product')
-                                                    <a href="{{ getAdminPanelUrl() }}/store/products/{{ $product->id }}/edit" target="_blank" class="btn-transparent btn-sm text-primary mt-1" data-toggle="tooltip" data-placement="top" title="{{ trans('admin/main.edit') }}">
-                                                        <i class="fa fa-edit"></i>
-                                                    </a>
-                                                @endcan
+                                                <div class="btn-group dropdown table-actions">
+                                                    <button type="button" class="btn-transparent dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i class="fa fa-ellipsis-v"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu text-left webinars-lists-dropdown">
 
-                                                @can('admin_store_delete_product')
-                                                    @include('admin.includes.delete_button',['url' => getAdminPanelUrl().'/store/products/'.$product->id.'/delete', 'btnClass' => 'btn-sm mt-1'])
-                                                @endcan
+                                                        @if(in_array($product->status, [\App\Models\Product::$pending, \App\Models\Product::$inactive]))
+                                                            @include('admin.includes.delete_button',[
+                                                                'url' => getAdminPanelUrl("/store/products/{$product->id}/approve"),
+                                                                'btnClass' => 'd-flex align-items-center text-success text-decoration-none btn-transparent btn-sm mb-1',
+                                                                'btnText' => '<i class="fa fa-check"></i><span class="ml-2">'. trans("admin/main.approve") .'</span>'
+                                                                ])
+                                                        @endif
+
+                                                        @if($product->status == \App\Models\Product::$pending)
+                                                            @include('admin.includes.delete_button',[
+                                                                'url' => getAdminPanelUrl("/store/products/{$product->id}/reject"),
+                                                                'btnClass' => 'd-flex align-items-center text-danger text-decoration-none btn-transparent btn-sm mb-1',
+                                                                'btnText' => '<i class="fa fa-times"></i><span class="ml-2">'. trans("admin/main.reject") .'</span>'
+                                                                ])
+                                                        @endif
+
+                                                        @if($product->status == \App\Models\Product::$active)
+                                                            @include('admin.includes.delete_button',[
+                                                                'url' => getAdminPanelUrl("/store/products/{$product->id}/unpublish"),
+                                                                'btnClass' => 'd-flex align-items-center text-danger text-decoration-none btn-transparent btn-sm mb-1',
+                                                                'btnText' => '<i class="fa fa-times"></i><span class="ml-2">'. trans("admin/main.unpublish") .'</span>'
+                                                                ])
+                                                        @endif
+
+                                                        @can('admin_store_edit_product')
+                                                            <a href="{{ getAdminPanelUrl() }}/store/products/{{ $product->id }}/edit" target="_blank" class="d-flex align-items-center text-dark text-decoration-none btn-transparent btn-sm text-primary mb-1 " title="{{ trans('admin/main.edit') }}">
+                                                                <i class="fa fa-edit"></i>
+                                                                <span class="ml-2">{{ trans('admin/main.edit') }}</span>
+                                                            </a>
+                                                        @endcan
+
+                                                        @can('admin_store_delete_product')
+                                                            @include('admin.includes.delete_button',[
+                                                                    'url' => getAdminPanelUrl().'/store/products/'.$product->id.'/delete',
+                                                                    'btnClass' => 'd-flex align-items-center text-dark text-decoration-none btn-transparent btn-sm mt-1',
+                                                                    'btnText' => '<i class="fa fa-times"></i><span class="ml-2">'. trans("admin/main.delete") .'</span>'
+                                                                    ])
+                                                        @endcan
+
+                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach

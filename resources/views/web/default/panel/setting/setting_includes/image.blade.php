@@ -42,6 +42,28 @@
                 </div>
             </div>
         </div>
+
+
+        <div class="col-12 col-lg-4">
+            <div class="form-group">
+                <label class="input-label">{{ trans('update.signature') }}</label>
+
+                <img src="{{ (!empty($user)) ? $user->getSignature() : '' }}" alt="" id="profileSignaturePreview" height="150" class="rounded-sm my-15 d-block w-100">
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button type="button" class="input-group-text panel-file-manager" data-input="signature_img" data-preview="holder">
+                                <i data-feather="arrow-up" width="18" height="18" class="text-white"></i>
+                            </button>
+                        </div>
+                        <input type="text" name="signature_img" id="signature_img" value="{{ !empty($user) ? $user->getSignature() : old('signature_img') }}" class="form-control " placeholder=""/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </section>
 

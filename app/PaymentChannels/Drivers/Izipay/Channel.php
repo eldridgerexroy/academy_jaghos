@@ -12,8 +12,22 @@ use Lyra\Client as LyraClient;
 class Channel extends BasePaymentChannel implements IChannel
 {
     protected $currency;
+    protected $test_mode;
     protected $client;
     protected $publicKey;
+    protected $username;
+    protected $password;
+    protected $endpoint;
+    protected $SHA256Key;
+
+    protected array $credentialItems = [
+        'username',
+        'password',
+        'endpoint',
+        'publicKey',
+        'SHA256Key',
+    ];
+
 
     /**
      * Channel constructor.
@@ -22,21 +36,20 @@ class Channel extends BasePaymentChannel implements IChannel
     public function __construct(PaymentChannel $paymentChannel)
     {
         $this->currency = currency();
+        $this->setCredentialItems($paymentChannel);
+    }
 
-        $username = env('IZIPAY_USERNAME');
-        $password = env('IZIPAY_PASSWORD');
-        $endpoint = env('IZIPAY_ENDPOINT');
+    private function handleClient()
+    {
         $clientEndpoint = url('');
-        $this->publicKey = env('IZIPAY_PUBLIC_KEY');
-        $SHA256Key = env('IZIPAY_SHA256_KEY');
 
         $client = new LyraClient();
-        $client->setUsername($username);
-        $client->setPassword($password);
-        $client->setEndpoint($endpoint);
+        $client->setUsername($this->username);
+        $client->setPassword($this->password);
+        $client->setEndpoint($this->endpoint);
         $client->setClientEndpoint($clientEndpoint);
         $client->setPublicKey($this->publicKey);
-        $client->setSHA256Key($SHA256Key);
+        $client->setSHA256Key($this->SHA256Key);
 
         $this->client = $client;
     }
@@ -46,6 +59,8 @@ class Channel extends BasePaymentChannel implements IChannel
      */
     public function paymentRequest(Order $order)
     {
+        $this->handleClient();
+
         // Send purchase request
         try {
             $store = [
@@ -87,6 +102,8 @@ class Channel extends BasePaymentChannel implements IChannel
 
     public function verify(Request $request)
     {
+        $this->handleClient();
+
         try {
             if (!$this->client->checkHash()) {
                 //something wrong, probably a fraud ....

@@ -40,7 +40,25 @@
                         </div>
                     </div>
 
-                    <div class="mt-20 pt-20  mt-md-40 pt-md-40">
+                    @php
+                        $hasCoupon = false;
+                    @endphp
+                    @if(
+                           !empty(getFeaturesSettings("frontend_coupons_display_type")) and
+                           getFeaturesSettings("frontend_coupons_display_type") == "before_content" and
+                           !empty($instructorDiscounts) and
+                           count($instructorDiscounts)
+                       )
+                        @php
+                            $hasCoupon = true;
+                        @endphp
+
+                        @foreach($instructorDiscounts as $instructorDiscount)
+                            @include('web.default.includes.discounts.instructor_discounts_card', ['discount' => $instructorDiscount, 'instructorDiscountClassName' => "mt-40  mt-md-80"])
+                        @endforeach
+                    @endif
+
+                    <div class="{{ $hasCoupon ? 'mt-20  mt-md-40' : 'mt-40  mt-md-80' }}">
                         <ul class="nav nav-tabs bg-secondary rounded-sm p-15 d-flex align-items-center justify-content-between" id="tabs-tab" role="tablist">
                             <li class="nav-item">
                                 <a class="position-relative font-14 text-white {{ (empty(request()->get('tab','')) or request()->get('tab','') == 'information') ? 'active' : '' }}" id="information-tab"
@@ -73,6 +91,18 @@
                         </div>
 
                     </div>
+
+
+                    @if(
+                           !empty(getFeaturesSettings("frontend_coupons_display_type")) and
+                           getFeaturesSettings("frontend_coupons_display_type") == "after_content" and
+                           !empty($instructorDiscounts) and
+                           count($instructorDiscounts)
+                       )
+                        @foreach($instructorDiscounts as $instructorDiscount)
+                            @include('web.default.includes.discounts.instructor_discounts_card', ['discount' => $instructorDiscount, 'instructorDiscountClassName' => "mt-20 pt-20  mt-md-40 pt-md-40"])
+                        @endforeach
+                    @endif
                 </div>
             </div>
 
@@ -164,7 +194,7 @@
                             <div class="mt-20 d-flex flex-column">
                                 @if($hasBought or !empty($bundle->getInstallmentOrder()))
                                     <button type="button" class="btn btn-primary" disabled>{{ trans('panel.purchased') }}</button>
-                                @elseif($bundle->price > 0)
+                                @elseif(!empty($bundle->price) and $bundle->price > 0)
                                     <button type="{{ $canSale ? 'submit' : 'button' }}" @if(!$canSale) disabled @endif class="btn btn-primary">
                                         @if(!$canSale)
                                             {{ trans('update.disabled_add_to_cart') }}
@@ -172,10 +202,6 @@
                                             {{ trans('public.add_to_cart') }}
                                         @endif
                                     </button>
-
-                                    @if($canSale and $bundle->subscribe)
-                                        <a href="/subscribes/apply/bundle/{{ $bundle->slug }}" class="btn btn-outline-primary btn-subscribe mt-20 @if(!$canSale) disabled @endif">{{ trans('public.subscribe') }}</a>
-                                    @endif
 
                                     @if($canSale and !empty($bundle->points))
                                         <a href="{{ !(auth()->check()) ? '/login' : '#' }}" class="{{ (auth()->check()) ? 'js-buy-with-point' : '' }} btn btn-outline-warning mt-20 {{ (!$canSale) ? 'disabled' : '' }}" rel="nofollow">
@@ -191,6 +217,10 @@
                                 @else
                                     <a href="{{ $canSale ? '/bundles/'. $bundle->slug .'/free' : '#' }}" class="btn btn-primary @if(!$canSale) disabled @endif">{{ trans('update.enroll_on_bundle') }}</a>
                                 @endif
+
+                                @if($canSale and $bundle->subscribe)
+                                    <a href="/subscribes/apply/bundle/{{ $bundle->slug }}" class="btn btn-outline-primary btn-subscribe mt-20 @if(!$canSale) disabled @endif">{{ trans('public.subscribe') }}</a>
+                                @endif
                             </div>
 
                         </form>
@@ -198,7 +228,7 @@
                         @if(!empty(getOthersPersonalizationSettings('show_guarantee_text')) and getOthersPersonalizationSettings('show_guarantee_text'))
                             <div class="mt-20 d-flex align-items-center justify-content-center text-gray">
                                 <i data-feather="thumbs-up" width="20" height="20"></i>
-                                <span class="ml-5 font-14">{{ getOthersPersonalizationSettings('guarantee_text') }}</span>
+                                <span class="ml-5 font-14">{{ trans('product.guarantee_text') }}</span>
                             </div>
                         @endif
 
@@ -316,7 +346,7 @@
 
                         <div class="d-flex flex-wrap mt-10">
                             @foreach($bundle->tags as $tag)
-                                <a href="" class="tag-item bg-gray200 p-5 font-14 text-gray font-weight-500 rounded">{{ $tag->title }}</a>
+                                <a href="/tags/bundles/{{ urlencode($tag->title) }}" class="tag-item bg-gray200 p-5 font-14 text-gray font-weight-500 rounded">{{ $tag->title }}</a>
                             @endforeach
                         </div>
                     </div>

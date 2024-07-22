@@ -26,42 +26,47 @@
         @if(empty($new_user) and !empty($currentStep))
             @switch($currentStep)
                 @case(2)
-                @include('web.default.panel.setting.setting_includes.image')
-                @break
+                    @include('web.default.panel.setting.setting_includes.image')
+                    @break
 
                 @case(3)
-                @include('web.default.panel.setting.setting_includes.about')
-                @break
+                    @include('web.default.panel.setting.setting_includes.about')
+                    @break
 
                 @case(4)
-                @include('web.default.panel.setting.setting_includes.education')
-                @break
+                    @include('web.default.panel.setting.setting_includes.education')
+                    @break
 
                 @case(5)
-                @include('web.default.panel.setting.setting_includes.experiences')
-                @break
+                    @include('web.default.panel.setting.setting_includes.experiences')
+                    @break
+
 
                 @case(6)
-                @include('web.default.panel.setting.setting_includes.occupations')
-                @break
+                    @if(!$user->isUser())
+                        @include('web.default.panel.setting.setting_includes.occupations')
+                    @else
+                        @include('web.default.panel.setting.setting_includes.identity_and_financial')
+                    @endif
+                    @break
 
                 @case(7)
-                @include('web.default.panel.setting.setting_includes.identity_and_financial')
-                @break
+                    @include('web.default.panel.setting.setting_includes.identity_and_financial')
+                    @break
 
                 @case(8)
-                @if(!$user->isUser())
+                    @if(!$user->isUser())
                         @include('web.default.panel.setting.setting_includes.zoom_api')
-                @else
+                    @else
                         @include('web.default.panel.setting.setting_includes.settings')
-                @endif
-                @break
+                    @endif
+                    @break
 
                 @case(9)
-                @if(!$user->isUser())
-                    @include('web.default.panel.setting.setting_includes.settings')
-                @endif
-                @break
+                    @if(!$user->isUser())
+                        @include('web.default.panel.setting.setting_includes.settings')
+                    @endif
+                    @break
             @endswitch
         @endif
     </form>

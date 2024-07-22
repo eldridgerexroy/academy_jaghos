@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Web\traits;
 
+use App\Models\CourseLearningLastView;
+use App\Models\CoursePersonalNote;
 use App\Models\File;
 use App\Models\Quiz;
 use App\Models\QuizzesResult;
@@ -33,6 +35,14 @@ trait LearningPageItemInfoTrait
         $type = $data['type'];
         $id = $data['id'];
 
+        CourseLearningLastView::query()->updateOrCreate([
+            'user_id' => auth()->id(),
+        ], [
+            'item_id' => $id,
+            'item_type' => $type,
+            'visited_at' => time()
+        ]);
+
         switch ($type) {
             case 'file':
                 return $this->getFileInfo($id);
@@ -56,9 +66,16 @@ trait LearningPageItemInfoTrait
 
     private function getFileInfo($id)
     {
+        $user = auth()->user();
+
         $file = File::select('id', 'downloadable', 'webinar_id', 'chapter_id', 'storage', 'online_viewer', 'file', 'file_type')
             ->where('id', $id)
             ->where('status', WebinarChapter::$chapterActive)
+            ->with([
+                'personalNote' => function ($query) use ($user) {
+                    $query->where('user_id', !empty($user) ? $user->id : null);
+                }
+            ])
             ->first();
 
         $checkSequenceContent = !empty($file) ? $file->checkSequenceContent() : null;
@@ -76,12 +93,15 @@ trait LearningPageItemInfoTrait
             $data = [
                 'file' => [
                     'id' => $file->id,
+                    'webinar_id' => $file->webinar_id,
                     'title' => $file->title,
                     'storage' => $file->storage,
                     'downloadable' => $file->downloadable ?? false,
                     'online_viewer' => $file->online_viewer ?? false,
                     'file_path' => ($file->online_viewer or $file->storage == "secure_host") ? $filePath : false,
                     'is_video' => $file->isVideo(),
+                    'personalNote' => $file->personalNote ?? null,
+                    'modelName' => $file->getMorphClass(),
                 ]
             ];
 
@@ -93,8 +113,15 @@ trait LearningPageItemInfoTrait
 
     private function getSessionInfo($id)
     {
+        $user = auth()->user();
+
         $session = Session::where('id', $id)
             ->where('status', WebinarChapter::$chapterActive)
+            ->with([
+                'personalNote' => function ($query) use ($user) {
+                    $query->where('user_id', !empty($user) ? $user->id : null);
+                }
+            ])
             ->first();
 
         $checkSequenceContent = !empty($session) ? $session->checkSequenceContent() : null;
@@ -107,12 +134,15 @@ trait LearningPageItemInfoTrait
             $data = [
                 'session' => [
                     'id' => $session->id,
+                    'webinar_id' => $session->webinar_id,
                     'title' => $session->title,
                     'is_finished' => $isFinished,
                     'is_started' => (time() > $session->date),
                     'password' => $session->api_secret,
                     'join_url' => !$isFinished ? $session->getJoinLink(true) : null,
-                    'start_data' => dateTimeFormat($session->date, 'j M Y H:i')
+                    'start_data' => dateTimeFormat($session->date, 'j M Y H:i'),
+                    'personalNote' => $session->personalNote ?? null,
+                    'modelName' => $session->getMorphClass(),
                 ]
             ];
 
@@ -168,6 +198,14 @@ trait LearningPageItemInfoTrait
         $user = auth()->user();
         $quiz = Quiz::where('id', $id)
             ->where('status', WebinarChapter::$chapterActive)
+            ->with([
+                'personalNote' => function ($query) use ($user) {
+                    $query->where('user_id', !empty($user) ? $user->id : null);
+                },
+                'quizResults' => function ($query) {
+                    $query->orderBy('created_at', 'desc');
+                }
+            ])
             ->first();
 
         if (!empty($quiz) and $this->checkCourseAccess($quiz->webinar_id)) {
@@ -209,11 +247,14 @@ trait LearningPageItemInfoTrait
             $data = [
                 'quiz' => [
                     'id' => $quiz->id,
+                    'webinar_id' => $quiz->webinar_id,
                     'title' => $quiz->title,
                     'can_try' => $quiz->can_try,
                     'has_expired' => $hasExpired,
                     'expired_message' => $expiredMessage,
                     'expire_time_message' => $expireTimeMessage,
+                    'personalNote' => $quiz->personalNote ?? null,
+                    'modelName' => $quiz->getMorphClass(),
                 ]
             ];
 
@@ -234,6 +275,9 @@ trait LearningPageItemInfoTrait
                     $query->with('file');
                 },
                 'learningStatus' => function ($query) use ($user) {
+                    $query->where('user_id', !empty($user) ? $user->id : null);
+                },
+                'personalNote' => function ($query) use ($user) {
                     $query->where('user_id', !empty($user) ? $user->id : null);
                 }
             ])
@@ -266,6 +310,7 @@ trait LearningPageItemInfoTrait
             $data = [
                 'textLesson' => [
                     'id' => $textLesson->id,
+                    'webinar_id' => $textLesson->webinar_id,
                     'title' => $textLesson->title,
                     'image' => !empty($textLesson->image) ? url($textLesson->image) : null,
                     'study_time' => $textLesson->study_time,
@@ -273,6 +318,8 @@ trait LearningPageItemInfoTrait
                     'content' => $textLesson->content,
                     'attachments' => $attachments,
                     'learningStatus' => $textLesson->learningStatus,
+                    'personalNote' => $textLesson->personalNote ?? null,
+                    'modelName' => $textLesson->getMorphClass(),
                 ]
             ];
 
@@ -281,4 +328,39 @@ trait LearningPageItemInfoTrait
 
         abort(403);
     }
+
+    public function personalNotes(Request $request)
+    {
+        $user = auth()->user();
+
+        $data = $request->all();
+        $validator = Validator::make($data, [
+            'course_id' => 'required',
+            'item_id' => 'required',
+            'item_type' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response([
+                'code' => 422,
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        CoursePersonalNote::query()->updateOrCreate([
+            'user_id' => $user->id,
+            'course_id' => $data['course_id'],
+            'targetable_id' => $data['item_id'],
+            'targetable_type' => $data['item_type'],
+        ], [
+            'note' => $data['note'] ?? null,
+            'attachment' => $data['attachment'] ?? null,
+            'created_at' => time()
+        ]);
+
+        return response()->json([
+            'code' => 200
+        ]);
+    }
+
 }

@@ -283,14 +283,11 @@ return [
     'registration_bonus' => 'Registration Bonus',
     'affiliate_bonus' => 'Sales Commission',
     'registration_date' => 'Registration Date',
-    'purchase_date' => 'Purchase Date',
     'user_registration_reward' => 'Your income from each referred user registration',
     'referred_user_purchase_commission' => 'Your commission from referred user purchases',
     'referred_user_registration_reward' => 'The referred user income when registers with your affiliate code',
     'your_affiliate_code' => 'Your affiliate code',
     'affiliate_url' => 'Your Affiliate URL',
-	  'content_defined' => 'Content Defined',
+	'content_defined' => 'Content Defined',
   	'purchased_courses' => 'Purchased Courses',
-
-    'request_recording' => 'Request Recording',
 ];

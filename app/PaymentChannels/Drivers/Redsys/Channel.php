@@ -12,10 +12,19 @@ use Ssheduardo\Redsys\Facades\Redsys;
 class Channel extends BasePaymentChannel implements IChannel
 {
     protected $currency;
+    protected $order_session_key;
     protected $key;
     protected $merchantCode;
-    protected $enviroment;
-    protected $order_session_key;
+    protected $tradename;
+    protected $terminal;
+    protected $test_mode;
+
+    protected array $credentialItems = [
+        'key',
+        'merchantCode',
+        'terminal',
+        'tradename',
+    ];
 
     /**
      * Channel constructor.
@@ -25,10 +34,7 @@ class Channel extends BasePaymentChannel implements IChannel
     {
         $this->currency = '978';//currency();
         $this->order_session_key = 'redsys.payments.order_id';
-
-        $this->key = env('REDSYS_KEY');
-        $this->merchantCode = env('REDSYS_MERCHANT_CODE');
-        $this->enviroment = env('REDSYS_ENVIROMENT');
+        $this->setCredentialItems($paymentChannel);
     }
 
     /**
@@ -45,7 +51,7 @@ class Channel extends BasePaymentChannel implements IChannel
             Redsys::setMerchantcode($this->merchantCode); //Reemplazar por el código que proporciona el banco
             Redsys::setCurrency($this->currency);
             Redsys::setTransactiontype('0');
-            Redsys::setTerminal('1');
+            Redsys::setTerminal($this->terminal);
             Redsys::setMethod('T'); //Solo pago con tarjeta, no mostramos iupay
             Redsys::setNotification($this->makeCallbackUrl($order, 'success')); //Url de notificacion
             Redsys::setUrlOk($this->makeCallbackUrl($order, 'ok')); //Url OK
@@ -54,7 +60,7 @@ class Channel extends BasePaymentChannel implements IChannel
             Redsys::setTradeName('Tienda S.L');
             Redsys::setTitular("pay order " . $order->id);
             Redsys::setProductDescription("pay order " . $order->id);
-            Redsys::setEnviroment($this->enviroment); //Entorno test
+            Redsys::setEnviroment($this->test_mode ? 'test' : 'live'); //Entorno test
 
             $signature = Redsys::generateMerchantSignature($this->key);
             Redsys::setMerchantSignature($signature);

@@ -15,6 +15,8 @@ class SupportsController extends Controller
 {
     public function index(Request $request, $id = null)
     {
+        $this->authorize("panel_support_lists");
+
         $user = auth()->user();
 
         $userWebinarsIds = $user->webinars->pluck('id')->toArray();
@@ -42,7 +44,7 @@ class SupportsController extends Controller
                 },
                 'webinar' => function ($query) {
                     $query->with(['teacher' => function ($query) {
-                        $query->select('id', 'full_name', 'avatar');
+                        $query->select('id', 'full_name', 'avatar', 'avatar_settings');
                     }]);
                 },
                 'conversations' => function ($query) {
@@ -127,6 +129,8 @@ class SupportsController extends Controller
 
     public function tickets(Request $request, $id = null)
     {
+        $this->authorize("panel_support_tickets");
+
         $user = auth()->user();
 
         $query = Support::whereNotNull('department_id')
@@ -245,6 +249,8 @@ class SupportsController extends Controller
 
     public function create()
     {
+        $this->authorize("panel_support_create");
+
         $departments = SupportDepartment::all();
         $user = auth()->user();
 
@@ -269,6 +275,8 @@ class SupportsController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize("panel_support_create");
+
         $user = auth()->user();
 
         $this->validate($request, [
@@ -349,7 +357,7 @@ class SupportsController extends Controller
         }
 
         $support->update([
-            'status' => ($support->user_id == $user->id) ? 'open' : 'replied',
+            'status' => ($support->user_id == $user->id) ? 'open' : 'supporter_replied',
             'updated_at' => time()
         ]);
 

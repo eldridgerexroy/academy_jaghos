@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\BlogCategory;
+use App\Models\Translation\BlogCategoryTranslation;
 use Illuminate\Http\Request;
 
 class BlogCategoriesController extends Controller
@@ -11,6 +12,7 @@ class BlogCategoriesController extends Controller
     public function index()
     {
         $this->authorize('admin_blog_categories');
+        removeContentLocale();
 
         $blogCategories = BlogCategory::withCount('blog')->get();
 
@@ -27,21 +29,33 @@ class BlogCategoriesController extends Controller
         $this->authorize('admin_blog_categories_create');
 
         $this->validate($request, [
-            'title' => 'required|string|unique:blog_categories',
+            'title' => 'required|string',
         ]);
 
-        BlogCategory::create([
-            'title' => $request->get('title')
+        $data = $request->all();
+
+        $category = BlogCategory::create([
+            'slug' => BlogCategory::makeSlug($data['title']),
         ]);
 
-        return redirect(getAdminPanelUrl().'/blog/categories');
+        BlogCategoryTranslation::query()->updateOrCreate([
+            'blog_category_id' => $category->id,
+            'locale' => mb_strtolower($data['locale']),
+        ], [
+            'title' => $data['title'],
+        ]);
+
+        return redirect(getAdminPanelUrl() . '/blog/categories');
     }
 
-    public function edit($category_id)
+    public function edit(Request $request, $category_id)
     {
         $this->authorize('admin_blog_categories_edit');
 
         $editCategory = BlogCategory::findOrFail($category_id);
+
+        $locale = $request->get('locale', app()->getLocale());
+        storeContentLocale($locale, $editCategory->getTable(), $editCategory->id);
 
         $data = [
             'pageTitle' => trans('admin/pages/blog.blog_categories'),
@@ -59,13 +73,18 @@ class BlogCategoriesController extends Controller
             'title' => 'required',
         ]);
 
-        $editCategory = BlogCategory::findOrFail($category_id);
+        $category = BlogCategory::findOrFail($category_id);
 
-        $editCategory->update([
-            'title' => $request->get('title')
+        $data = $request->all();
+
+        BlogCategoryTranslation::query()->updateOrCreate([
+            'blog_category_id' => $category->id,
+            'locale' => mb_strtolower($data['locale']),
+        ], [
+            'title' => $data['title'],
         ]);
 
-        return redirect(getAdminPanelUrl().'/blog/categories');
+        return redirect(getAdminPanelUrl() . '/blog/categories');
     }
 
     public function delete($category_id)
@@ -76,6 +95,6 @@ class BlogCategoriesController extends Controller
 
         $editCategory->delete();
 
-        return redirect(getAdminPanelUrl().'/blog/categories');
+        return redirect(getAdminPanelUrl() . '/blog/categories');
     }
 }

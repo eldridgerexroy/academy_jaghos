@@ -75,23 +75,32 @@ class Cart extends Model
 
         if (!empty($carts) and count($carts)) {
             foreach ($carts as $cart) {
-                if ((!empty($cart->ticket_id) or !empty($cart->special_offer_id)) and !empty($cart->webinar)) {
-                    $totalPrice += $cart->webinar->price - $cart->webinar->getDiscount($cart->ticket);
-                } else if (!empty($cart->webinar_id) and !empty($cart->webinar)) {
-                    $totalPrice += $cart->webinar->price;
-                } else if (!empty($cart->bundle_id) and !empty($cart->bundle)) {
-                    $totalPrice += $cart->bundle->price;
-                } else if (!empty($cart->reserve_meeting_id) and !empty($cart->reserveMeeting)) {
-                    $totalPrice += $cart->reserveMeeting->paid_amount;
-                } else if (!empty($cart->product_order_id) and !empty($cart->productOrder) and !empty($cart->productOrder->product)) {
-                    $product = $cart->productOrder->product;
-
-                    $totalPrice += (($product->price * $cart->productOrder->quantity) - $product->getDiscountPrice());
-                }
+                $totalPrice += self::getItemPrice($cart);
             }
         }
 
         return $totalPrice;
+    }
+
+    public static function getItemPrice($cart)
+    {
+        $price = 0;
+
+        if ((!empty($cart->ticket_id) or !empty($cart->special_offer_id)) and !empty($cart->webinar)) {
+            $price += $cart->webinar->price - $cart->webinar->getDiscount($cart->ticket);
+        } else if (!empty($cart->webinar_id) and !empty($cart->webinar)) {
+            $price += $cart->webinar->price;
+        } else if (!empty($cart->bundle_id) and !empty($cart->bundle)) {
+            $price += $cart->bundle->price;
+        } else if (!empty($cart->reserve_meeting_id) and !empty($cart->reserveMeeting)) {
+            $price += $cart->reserveMeeting->paid_amount;
+        } else if (!empty($cart->product_order_id) and !empty($cart->productOrder) and !empty($cart->productOrder->product)) {
+            $product = $cart->productOrder->product;
+
+            $price += (($product->price * $cart->productOrder->quantity) - $product->getDiscountPrice());
+        }
+
+        return $price;
     }
 
     public function getItemInfo()

@@ -13,6 +13,8 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('ai_contents', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
+
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->enum('service_type', ['text', 'image']);

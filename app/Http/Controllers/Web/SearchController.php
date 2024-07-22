@@ -23,7 +23,7 @@ class SearchController extends Controller
                 ->whereTranslationLike('title', "%$search%")
                 ->with([
                     'teacher' => function ($query) {
-                        $query->select('id', 'full_name', 'avatar');
+                        $query->select('id', 'full_name', 'avatar', 'avatar_settings');
                     },
                     'reviews'
                 ])
@@ -33,7 +33,7 @@ class SearchController extends Controller
                 ->whereTranslationLike('title', "%$search%")
                 ->with([
                     'creator' => function ($query) {
-                        $query->select('id', 'full_name', 'avatar');
+                        $query->select('id', 'full_name', 'avatar', 'avatar_settings');
                     }
                 ])
                 ->get();

@@ -11,6 +11,20 @@ use Illuminate\Http\Request;
 class Channel extends BasePaymentChannel implements IChannel
 {
     protected $currency;
+    protected $command;
+    protected $access_code;
+    protected $merchant_identifier;
+    protected $merchant_reference;
+    protected $signature;
+    protected $test_mode;
+
+    protected array $credentialItems = [
+        'command',
+        'access_code',
+        'merchant_identifier',
+        'merchant_reference',
+        'signature',
+    ];
 
     /**
      * Channel constructor.
@@ -19,6 +33,7 @@ class Channel extends BasePaymentChannel implements IChannel
     public function __construct(PaymentChannel $paymentChannel)
     {
         $this->currency = currency();
+        $this->setCredentialItems($paymentChannel);
     }
 
     public function paymentRequest(Order $order)
@@ -29,15 +44,15 @@ class Channel extends BasePaymentChannel implements IChannel
         $currency = currency();
 
         $requestParams = array(
-            'command' => env('PAYFORT_COMMAND'),
-            'access_code' => env('PAYFORT_ACCESS_CODE'),
-            'merchant_identifier' => env('PAYFORT_MERCHANT_IDENTIFIER'),
-            'merchant_reference' => env('PAYFORT_MERCHANT_REFERENCE'),
+            'command' => $this->command,
+            'access_code' => $this->access_code,
+            'merchant_identifier' => $this->merchant_identifier,
+            'merchant_reference' => $this->merchant_reference,
             'amount' => $price,
             'currency' => $currency,
             'language' => 'en',
             'customer_email' => $user->email ?? $generalSettings['site_email'],
-            'signature' => env('PAYFORT_SIGNATURE'),
+            'signature' => $this->signature,
             'order_description' => $generalSettings['site_name'] . ' payment',
         );
 

@@ -39,6 +39,36 @@
       'Debugbar' => 'Barryvdh\\Debugbar\\Facades\\Debugbar',
     ),
   ),
+  'barryvdh/laravel-dompdf' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Barryvdh\\DomPDF\\ServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'Pdf' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
+      'PDF' => 'Barryvdh\\DomPDF\\Facade\\Pdf',
+    ),
+  ),
+  'blade-ui-kit/blade-icons' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'BladeUI\\Icons\\BladeIconsServiceProvider',
+    ),
+  ),
+  'carlos-meneses/laravel-mpdf' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Mccarlosen\\LaravelMpdf\\LaravelMpdfServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'PDF' => 'Mccarlosen\\LaravelMpdf\\Facades\\LaravelMpdf',
+    ),
+  ),
   'cviebrock/eloquent-sluggable' => 
   array (
     'providers' => 
@@ -60,6 +90,20 @@
       0 => 'Fruitcake\\Cors\\CorsServiceProvider',
     ),
   ),
+  'guysolamour/laravel-cinetpay' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Guysolamour\\Cinetpay\\ServiceProvider',
+    ),
+  ),
+  'haggag/laravel-tap-payment' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Essam\\TapPayment\\TapServiceProvider',
+    ),
+  ),
   'intervention/image' => 
   array (
     'providers' => 
@@ -69,6 +113,17 @@
     'aliases' => 
     array (
       'Image' => 'Intervention\\Image\\Facades\\Image',
+    ),
+  ),
+  'jenssegers/agent' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Jenssegers\\Agent\\AgentServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'Agent' => 'Jenssegers\\Agent\\Facades\\Agent',
     ),
   ),
   'joisarjignesh/bigbluebutton' => 
@@ -102,6 +157,13 @@
     'aliases' => 
     array (
       'Zoom' => 'Jubaer\\Zoom\\Facades\\Zoom',
+    ),
+  ),
+  'kyrax324/laravel-ipay88' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'IPay88\\IPay88ServiceProvider',
     ),
   ),
   'laravel/sail' => 
@@ -183,6 +245,17 @@
       0 => 'Carbon\\Laravel\\ServiceProvider',
     ),
   ),
+  'niklasravnsborg/laravel-pdf' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'niklasravnsborg\\LaravelPdf\\PdfServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'PDF' => 'niklasravnsborg\\LaravelPdf\\Facades\\Pdf',
+    ),
+  ),
   'nunomaduro/collision' => 
   array (
     'providers' => 
@@ -202,6 +275,13 @@
     'providers' => 
     array (
       0 => 'OpenAI\\Laravel\\ServiceProvider',
+    ),
+  ),
+  'saade/blade-iconsax' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Saade\\BladeIconsax\\BladeIconsaxServiceProvider',
     ),
   ),
   'sebacarrasco93/laravel-payku' => 
@@ -225,6 +305,17 @@
     'aliases' => 
     array (
       'Payment' => 'Shetabit\\Payment\\Facade\\Payment',
+    ),
+  ),
+  'simplesoftwareio/simple-qrcode' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'SimpleSoftwareIO\\QrCode\\QrCodeServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'QrCode' => 'SimpleSoftwareIO\\QrCode\\Facades\\QrCode',
     ),
   ),
   'spatie/laravel-google-calendar' => 
@@ -258,6 +349,24 @@
     'aliases' => 
     array (
       'Redsys' => 'Ssheduardo\\Redsys\\Facades\\Redsys',
+    ),
+  ),
+  'stijnvanouplines/blade-country-flags' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'StijnVanouplines\\BladeCountryFlags\\BladeCountryFlagsServiceProvider',
+    ),
+  ),
+  'torann/geoip' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Torann\\GeoIP\\GeoIPServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'GeoIP' => 'Torann\\GeoIP\\Facades\\GeoIP',
     ),
   ),
   'tymon/jwt-auth' => 

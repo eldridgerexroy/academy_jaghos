@@ -102,7 +102,7 @@ class NotificationsController extends Controller
         }
 
 
-        return redirect(getAdminPanelUrl().'/notifications/posted');
+        return redirect(getAdminPanelUrl() . '/notifications/posted');
     }
 
     public function edit($id)
@@ -159,7 +159,7 @@ class NotificationsController extends Controller
             'created_at' => time()
         ]);
 
-        return redirect(getAdminPanelUrl().'/notifications');
+        return redirect(getAdminPanelUrl() . '/notifications');
     }
 
     public function delete($id)
@@ -170,28 +170,30 @@ class NotificationsController extends Controller
 
         $notification->delete();
 
-        return redirect(getAdminPanelUrl().'/notifications');
+        return redirect(getAdminPanelUrl() . '/notifications');
     }
 
     public function markAllRead()
     {
         $this->authorize('admin_notifications_markAllRead');
 
-        $adminUser = User::find(1);
+        $adminUser = User::getMainAdmin();
 
-        $unreadNotifications = $adminUser->getUnReadNotifications();
+        if (!empty($adminUser)) {
+            $unreadNotifications = $adminUser->getUnReadNotifications();
 
-        if (!empty($unreadNotifications) and !$unreadNotifications->isEmpty()) {
-            foreach ($unreadNotifications as $unreadNotification) {
-                NotificationStatus::updateOrCreate(
-                    [
-                        'user_id' => $adminUser->id,
-                        'notification_id' => $unreadNotification->id,
-                    ],
-                    [
-                        'seen_at' => time()
-                    ]
-                );
+            if (!empty($unreadNotifications) and !$unreadNotifications->isEmpty()) {
+                foreach ($unreadNotifications as $unreadNotification) {
+                    NotificationStatus::updateOrCreate(
+                        [
+                            'user_id' => $adminUser->id,
+                            'notification_id' => $unreadNotification->id,
+                        ],
+                        [
+                            'seen_at' => time()
+                        ]
+                    );
+                }
             }
         }
 
@@ -202,18 +204,19 @@ class NotificationsController extends Controller
     {
         $this->authorize('admin_notifications_edit');
 
-        $adminUser = User::find(1);
+        $adminUser = User::getMainAdmin();
 
-        NotificationStatus::updateOrCreate(
-            [
-                'user_id' => $adminUser->id,
-                'notification_id' => $id,
-            ],
-            [
-                'seen_at' => time()
-            ]
-        );
-
+        if (!empty($adminUser)) {
+            NotificationStatus::updateOrCreate(
+                [
+                    'user_id' => $adminUser->id,
+                    'notification_id' => $id,
+                ],
+                [
+                    'seen_at' => time()
+                ]
+            );
+        }
 
         return response()->json([], 200);
     }

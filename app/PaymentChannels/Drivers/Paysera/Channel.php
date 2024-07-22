@@ -16,6 +16,11 @@ class Channel extends BasePaymentChannel implements IChannel
     protected $api_secret;
     protected $test_mode;
 
+    protected array $credentialItems = [
+        'api_key',
+        'api_secret',
+    ];
+
     /**
      * Channel constructor.
      * @param PaymentChannel $paymentChannel
@@ -23,9 +28,7 @@ class Channel extends BasePaymentChannel implements IChannel
     public function __construct(PaymentChannel $paymentChannel)
     {
         $this->currency = currency();
-        $this->api_key = env('PAYSERA_KEY');
-        $this->api_secret = env('PAYSERA_SECRET');
-        $this->test_mode = env('PAYSERA_TEST_MODE');
+        $this->setCredentialItems($paymentChannel);
     }
 
     public function paymentRequest(Order $order)

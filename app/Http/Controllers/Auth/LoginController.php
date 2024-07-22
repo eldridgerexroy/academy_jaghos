@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Web\CartManagerController;
+use App\Mixins\Logs\UserLoginHistoryMixin;
 use App\Models\Reward;
 use App\Models\RewardAccounting;
 use App\Models\UserSession;
@@ -106,6 +107,9 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         $user = auth()->user();
+
+        $userLoginHistoryMixin = new UserLoginHistoryMixin();
+        $userLoginHistoryMixin->storeUserLogoutHistory($user);
 
         $this->guard()->logout();
 
@@ -242,6 +246,10 @@ class LoginController extends Controller
 
             if ($checkConfirmed['status'] == 'send') {
                 return redirect('/verification');
+            } elseif ($checkConfirmed['status'] == 'verified') {
+                $user->update([
+                    'status' => User::$active,
+                ]);
             }
         } elseif ($verify) {
             session()->forget('verificationId');
@@ -278,8 +286,11 @@ class LoginController extends Controller
         $cartManagerController = new CartManagerController();
         $cartManagerController->storeCookieCartsToDB();
 
+        $userLoginHistoryMixin = new UserLoginHistoryMixin();
+        $userLoginHistoryMixin->storeUserLoginHistory($user);
+
         if ($user->isAdmin()) {
-            return redirect(getAdminPanelUrl() . '');
+            return redirect(getAdminPanelUrl());
         } else {
             return redirect('/panel');
         }

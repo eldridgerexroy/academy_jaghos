@@ -25,6 +25,10 @@
                     </span>
                 @endif
             </div>
+
+            {{-- User Menu --}}
+            @include('web.default.includes.top_nav.user_menu')
+
         </div>
     </div>
 </div>

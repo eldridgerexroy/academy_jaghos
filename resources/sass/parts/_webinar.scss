@@ -25,17 +25,35 @@
             z-index: 1;
         }
 
-        .badge {
+        .badges-lists {
             position: absolute;
-            top: 7px;
+            top: 0;
             left: 7px;
-            font-size: 12px;
-            font-weight: normal;
-            line-height: 1.29;
-            color: #ffffff;
-            padding: 8px 15px;
-            border-radius: 15px 3px 15px 3px;
-            pointer-events: none;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+
+            .badge {
+                font-size: 12px;
+                font-weight: normal;
+                line-height: 1.29;
+                color: #ffffff;
+                padding: 8px 15px;
+                border-radius: 15px 3px 15px 3px;
+                pointer-events: none;
+                margin-top: 8px;
+                margin-right: 8px;
+            }
+
+            .rtl & {
+                left: auto;
+                right: 7px;
+
+                .badge {
+                    margin-right: 0;
+                    margin-left: 8px;
+                }
+            }
         }
 
         .progress {

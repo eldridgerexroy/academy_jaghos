@@ -6,15 +6,22 @@ use App\Models\Order;
 use App\Models\PaymentChannel;
 use App\PaymentChannels\BasePaymentChannel;
 use App\PaymentChannels\IChannel;
-use Cassandra\Numeric;
 use Illuminate\Http\Request;
 use Razorpay\Api\Api;
 
 class Channel extends BasePaymentChannel implements IChannel
 {
     protected $currency;
+    protected $test_mode;
     protected $api_key;
     protected $api_secret;
+
+
+    protected array $credentialItems = [
+        'api_key',
+        'api_secret',
+    ];
+
 
     /**
      * Channel constructor.
@@ -23,8 +30,7 @@ class Channel extends BasePaymentChannel implements IChannel
     public function __construct(PaymentChannel $paymentChannel)
     {
         $this->currency = currency();
-        $this->api_key = env('RAZORPAY_API_KEY');
-        $this->api_secret = env('RAZORPAY_API_SECRET');
+        $this->setCredentialItems($paymentChannel);
     }
 
     public function paymentRequest(Order $order)

@@ -113,17 +113,19 @@
             </div>
         </div>
 
-        <div class="form-group mt-30 d-flex align-items-center justify-content-between">
-            <label class="cursor-pointer input-label" for="certificateSwitch">{{ trans('update.include_certificate') }}</label>
-            <div class="custom-control custom-switch">
-                <input type="checkbox" name="certificate" class="custom-control-input" id="certificateSwitch" {{ ((!empty($webinar) && $webinar->certificate) or old('certificate') == 'on') ? 'checked' :  '' }}>
-                <label class="custom-control-label" for="certificateSwitch"></label>
+        @if(!empty(getCertificateMainSettings("status")))
+            <div class="form-group mt-30 d-flex align-items-center justify-content-between">
+                <label class="cursor-pointer input-label" for="certificateSwitch">{{ trans('update.include_certificate') }}</label>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" name="certificate" class="custom-control-input" id="certificateSwitch" {{ ((!empty($webinar) && $webinar->certificate) or old('certificate') == 'on') ? 'checked' :  '' }}>
+                    <label class="custom-control-label" for="certificateSwitch"></label>
+                </div>
             </div>
-        </div>
 
-        <div>
-            <p class="font-12 text-gray">- {{ trans('update.certificate_completion_hint') }}</p>
-        </div>
+            <div>
+                <p class="font-12 text-gray">- {{ trans('update.certificate_completion_hint') }}</p>
+            </div>
+        @endif
 
         <div class="form-group mt-30 d-flex align-items-center justify-content-between">
             <label class="cursor-pointer input-label" for="downloadableSwitch">{{ trans('home.downloadable') }}</label>

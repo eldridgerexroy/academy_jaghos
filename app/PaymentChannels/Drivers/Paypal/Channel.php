@@ -26,6 +26,14 @@ class Channel extends BasePaymentChannel implements IChannel
 {
     private $_api_context;
     protected $currency;
+    protected $client_id;
+    protected $secret;
+    protected $test_mode;
+
+    protected array $credentialItems = [
+        'client_id',
+        'secret',
+    ];
 
     /**
      * Channel constructor.
@@ -34,18 +42,28 @@ class Channel extends BasePaymentChannel implements IChannel
     public function __construct(PaymentChannel $paymentChannel)
     {
         $this->currency = currency();
+        $this->setCredentialItems($paymentChannel);
+    }
 
-        $paypal_conf = \Config::get('paypal');
+    private function handleContext()
+    {
+        \Config::set("paypal.currency", $this->currency);
 
-        $this->_api_context = new ApiContext(new OAuthTokenCredential(
-                $paypal_conf['client_id'],
-                $paypal_conf['secret'])
-        );
-        $this->_api_context->setConfig($paypal_conf['settings']);
+        $this->_api_context = new ApiContext(new OAuthTokenCredential($this->client_id, $this->secret));
+
+        $this->_api_context->setConfig([
+            'mode' => $this->test_mode ? 'sandbox' : 'live',
+            'http.ConnectionTimeOut' => 30,
+            'log.LogEnabled' => true,
+            'log.FileName' => storage_path() . '/logs/paypal.log',
+            'log.LogLevel' => 'ERROR'
+        ]);
     }
 
     public function paymentRequest(Order $order)
     {
+        $this->handleContext();
+
         $payer = new Payer();
         $payer->setPaymentMethod("paypal");
 
@@ -146,6 +164,8 @@ class Channel extends BasePaymentChannel implements IChannel
 
     public function verify(Request $request)
     {
+        $this->handleContext();
+
         $user = auth()->user();
 
         $payment_id = $request->paymentId;

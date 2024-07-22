@@ -69,10 +69,11 @@
                     @endif
                 </a>
             </div>
+
             <div class="footer-social">
                 @if(!empty($socials) and count($socials))
                     @foreach($socials as $social)
-                        <a href="{{ $social['link'] }}">
+                        <a href="{{ $social['link'] }}" target="_blank">
                             <img src="{{ $social['image'] }}" alt="{{ $social['title'] }}" class="mr-15">
                         </a>
                     @endforeach
@@ -82,9 +83,9 @@
     </div>
 
     @if(getOthersPersonalizationSettings('platform_phone_and_email_position') == 'footer')
-        <div class="footer-copyright-card"> 
+        <div class="footer-copyright-card">
             <div class="container d-flex align-items-center justify-content-between py-15">
-                <div class="font-14 text-white">{{ trans('update.platform_copyright_hint') }}<a style="color: white;" href='https://sophistec.dev/en'  target='_blank'>Sophistec</a>.</div>
+                <div class="font-14 text-white">{{ trans('update.platform_copyright_hint') }}</div>
 
                 <div class="d-flex align-items-center justify-content-center">
                     @if(!empty($generalSettings['site_phone']))

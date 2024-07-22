@@ -100,6 +100,10 @@ class UpcomingCourse extends Model implements TranslatableContract
         return $this->hasMany('App\Models\WebinarExtraDescription', 'upcoming_course_id', 'id');
     }
 
+    public function relatedCourses()
+    {
+        return $this->morphMany('App\Models\RelatedCourse', 'targetable');
+    }
 
     /**
      * Return the sluggable configuration array for this model.

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\traits\ProductBadgeTrait;
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use App\Models\BlogCategory;
@@ -14,6 +15,8 @@ use Illuminate\Http\Request;
 
 class BlogController extends Controller
 {
+    use ProductBadgeTrait;
+
     public function index(Request $request)
     {
         removeContentLocale();
@@ -191,6 +194,9 @@ class BlogController extends Controller
             'meta_description' => $data['meta_description'],
             'content' => $data['content'],
         ]);
+
+        // Product Badge
+        $this->handleProductBadges($post, $data);
 
         removeContentLocale();
 

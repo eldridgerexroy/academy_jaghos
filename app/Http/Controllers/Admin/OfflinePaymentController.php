@@ -158,6 +158,7 @@ class OfflinePaymentController extends Controller
             'created_at' => time(),
         ]);
 
+        dd(1);
         $offlinePayment->update(['status' => OfflinePayment::$approved]);
 
         $notifyOptions = [

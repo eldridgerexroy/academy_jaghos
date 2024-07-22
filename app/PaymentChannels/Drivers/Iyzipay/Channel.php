@@ -22,11 +22,19 @@ use Iyzipay\Options;
 class Channel extends BasePaymentChannel implements IChannel
 {
     protected $currency;
+    protected $test_mode;
     protected $api_key;
     protected $api_secret;
+    protected $base_url;
     protected $IOptions;
     protected $locale;
     protected $order_session_key;
+
+    protected array $credentialItems = [
+        'api_key',
+        'api_secret',
+        'base_url',
+    ];
 
     /**
      * Channel constructor.
@@ -36,19 +44,23 @@ class Channel extends BasePaymentChannel implements IChannel
     {
         $this->currency = currency(); // \Iyzipay\Model\Currency;
         $this->order_session_key = 'iyzipay.payments.order_id';
+        $this->setCredentialItems($paymentChannel);
 
         $this->locale = Locale::EN;
-        $this->api_key = env('IYZIPAY_API_KEY');
-        $this->api_secret = env('IYZIPAY_API_SECRET');
+    }
 
+    private function handleOptions()
+    {
         $this->IOptions = new Options();
         $this->IOptions->setApiKey($this->api_key);
         $this->IOptions->setSecretKey($this->api_secret);
-        $this->IOptions->setBaseUrl(env('IYZIPAY_BASE_URL'));
+        $this->IOptions->setBaseUrl($this->base_url);
     }
 
     public function paymentRequest(Order $order)
     {
+        $this->handleOptions();
+
         $generalSettings = getGeneralSettings();
         $user = $order->user;
 
@@ -135,6 +147,8 @@ class Channel extends BasePaymentChannel implements IChannel
 
     public function verify(Request $request)
     {
+        $this->handleOptions();
+
         session()->forget($this->order_session_key);
 
         $token = $request->get('token');

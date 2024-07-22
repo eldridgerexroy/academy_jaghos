@@ -1,6 +1,7 @@
 (function ($) {
     "use strict";
- 
+
+
     $('body').on('click', '.js-pay-promotion', function (e) {
         e.preventDefault();
         var $this = $(this);

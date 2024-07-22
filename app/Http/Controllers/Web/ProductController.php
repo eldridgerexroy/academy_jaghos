@@ -9,6 +9,7 @@ use App\Mixins\Cashback\CashbackRules;
 use App\Mixins\Installment\InstallmentPlans;
 use App\Models\AdvertisingBanner;
 use App\Models\Cart;
+use App\Models\Discount;
 use App\Models\Follow;
 use App\Models\Product;
 use App\Models\ProductCategory;
@@ -18,6 +19,7 @@ use App\Models\ProductSelectedSpecification;
 use App\Models\ProductSpecification;
 use App\Models\RewardAccounting;
 use App\Models\Sale;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -279,6 +281,24 @@ class ProductController extends Controller
             $cashbackRules = $cashbackRulesMixin->getRules('store_products', $product->id, $product->type, $product->category_id, $product->creator_id);
         }
 
+        $instructorDiscounts = null;
+
+        if (!empty(getFeaturesSettings('frontend_coupons_status'))) {
+            $instructorDiscounts = Discount::query()
+                ->where('creator_id', $product->creator_id)
+                ->where(function (Builder $query) use ($product) {
+                    $query->where('source', 'all');
+                    $query->orWhere(function (Builder $query) use ($product) {
+                        $query->where('source', Discount::$discountSourceProduct);
+                        $query->where('product_type', $product->type);
+                    });
+                })
+                ->where('status', 'active')
+                ->where('expired_at', '>', time())
+                ->get();
+        }
+
+
         $pageRobot = getPageRobot('product_show'); // return => index
 
         $data = [
@@ -300,6 +320,7 @@ class ProductController extends Controller
             'activeSpecialOffer' => $product->getActiveDiscount(),
             'hasInstallments' => (!empty($installments) and count($installments)),
             'cashbackRules' => $cashbackRules,
+            'instructorDiscounts' => $instructorDiscounts,
         ];
 
         return view(getTemplate() . '.products.show', $data);

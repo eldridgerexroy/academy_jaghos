@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mixins\Logs\UserLoginHistoryMixin;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -104,6 +105,13 @@ class LoginController extends Controller
         $this->validate($request, $rules);
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
+            $user = auth()->user();
+
+            if (!empty($user)) {
+                $userLoginHistoryMixin = new UserLoginHistoryMixin();
+                $userLoginHistoryMixin->storeUserLoginHistory($user);
+            }
+
             return Redirect::to(getAdminPanelUrl());
         }
 
@@ -114,6 +122,11 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
+        $user = auth()->user();
+
+        $userLoginHistoryMixin = new UserLoginHistoryMixin();
+        $userLoginHistoryMixin->storeUserLogoutHistory($user);
+
         Auth::logout();
         return redirect(getAdminPanelUrl() . '/login');
     }

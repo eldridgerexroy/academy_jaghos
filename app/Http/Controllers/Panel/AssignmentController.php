@@ -21,6 +21,8 @@ class AssignmentController extends Controller
 {
     public function myAssignments(Request $request)
     {
+        $this->authorize("panel_assignments_lists");
+
         if (!getFeaturesSettings('webinar_assignment_status')) {
             abort(403);
         }
@@ -142,6 +144,8 @@ class AssignmentController extends Controller
 
     public function myCoursesAssignments(Request $request)
     {
+        $this->authorize("panel_assignments_my_courses_assignments");
+
         if (!getFeaturesSettings('webinar_assignment_status')) {
             abort(403);
         }
@@ -211,6 +215,8 @@ class AssignmentController extends Controller
 
     public function students(Request $request, $id)
     {
+        $this->authorize("panel_assignments_students");
+
         if (!getFeaturesSettings('webinar_assignment_status')) {
             abort(403);
         }

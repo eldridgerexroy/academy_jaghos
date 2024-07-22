@@ -65,8 +65,16 @@ class VerificationController extends Controller
         return redirect('/login');
     }
 
-    public function checkConfirmed($user = null, $username, $value)
+    public function checkConfirmed($user, $username, $value)
     {
+        $disableRegistrationVerificationProcess = getGeneralOptionsSettings('disable_registration_verification_process');
+
+        if (!empty($disableRegistrationVerificationProcess)) {
+            return [
+                'status' => 'verified'
+            ];
+        }
+
         if (!empty($value)) {
             $verification = Verification::where($username, $value)
                 ->where('expired_at', '>', time())

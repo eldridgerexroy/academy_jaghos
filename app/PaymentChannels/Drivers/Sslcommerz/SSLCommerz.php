@@ -18,11 +18,14 @@ class SSLCommerz
     protected $store_pass;
     public $error = '';
 
-    public function __construct()
+    public function __construct($store_id, $store_pass, $test_mode)
     {
-        $this->setSSLCommerzMode(env('SSLCZ_TEST_MODE'));
-        $this->store_id = env('SSLCZ_STORE_ID');
-        $this->store_pass = env('SSLCZ_STORE_PASSWD');
+
+
+        $this->setSSLCommerzMode($test_mode);
+
+        $this->store_id = $store_id;
+        $this->store_pass = $store_pass;
         $this->sslc_submit_url = "https://" . $this->sslc_mode . ".sslcommerz.com/gwprocess/v3/api.php";
         $this->sslc_validation_url = "https://" . $this->sslc_mode . ".sslcommerz.com/validator/api/validationserverAPI.php";
     }

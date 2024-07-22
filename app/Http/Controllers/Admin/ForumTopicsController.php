@@ -26,7 +26,7 @@ class ForumTopicsController extends Controller
             ->orderBy('created_at', 'desc')
             ->with([
                 'creator' => function ($query) {
-                    $query->select('id', 'full_name', 'avatar');
+                    $query->select('id', 'full_name', 'avatar', 'avatar_settings');
                 },
                 'posts' => function ($query) {
                     $query->orderBy('created_at', 'desc');

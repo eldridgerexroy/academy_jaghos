@@ -18,14 +18,17 @@ class Channel extends BasePaymentChannel implements IChannel
     protected $merchant_login_id;
     protected $merchant_transaction_key;
 
+    protected array $credentialItems = [
+        'merchant_login_id',
+        'merchant_transaction_key',
+    ];
+
     public function __construct(PaymentChannel $paymentChannel)
     {
         $this->currency = currency();
         $this->order_session_key = 'authorizenet.payments.order_id';
 
-        $this->test_mode = env('AUTHORIZENET_TEST_MODE');
-        $this->merchant_login_id = env('AUTHORIZENET_MERCHANT_LOGIN_ID');
-        $this->merchant_transaction_key = env('AUTHORIZENET_MERCHANT_TRANSACTION_KEY');
+        $this->setCredentialItems($paymentChannel);
     }
 
     public function paymentRequest(Order $order)

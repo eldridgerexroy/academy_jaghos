@@ -1,8 +1,18 @@
-@extends('web.default.layouts.app', ['appFooter' => false, 'appHeader' => false, 'justMobileApp' => true])
 
 @php
     $mobileAppSettings = getMobileAppSettings();
+
+    $layoutOptions = [
+        'appHeader' => false,
+        'justMobileApp' => true
+    ];
+
+    if (empty($mobileAppSettings['show_app_footer'])) {
+        $layoutOptions['appFooter'] = true;
+    }
 @endphp
+
+@extends('web.default.layouts.app', $layoutOptions)
 
 @section('content')
     <section class="mobile-app-section my-50 position-relative">
