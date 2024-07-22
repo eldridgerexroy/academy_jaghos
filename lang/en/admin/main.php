@@ -604,6 +604,10 @@ return [
 'admin_universities_edit' => 'Universities Edit',
 'admin_universities_delete' => 'Universities Delete',
 
+// Request Recording
+'request_recording' =>  'Request Recordings',
+'webinar_recording' =>  'Webinar Recordings',
+
 // Syllabus
 'syllabus' => "Syllabus",
 'syllabus_detail' => 'Syllabus Detail',
