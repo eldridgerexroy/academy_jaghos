@@ -432,6 +432,8 @@ return [
 'paid_failed' => 'Paid/Failed',
 'paid_waiting' => 'Paid/Pending',
 'paid_successful' => 'Paid/Successful',
+'paid_status' => 'Paid Status',
+'paid_date' => 'Paid Date',
 'success' => 'Successful',
 'invoice' => 'Invoice',
 'purchase_date' => 'Purchased Date',
@@ -625,6 +627,7 @@ return [
 'admin_departments_edit' => 'Department Edit',
 'admin_departments_delete' => 'Department Delete',
 'departments_new_page_title' => 'New Departments',
+
 // Majors
 
 'major' => 'Major',
@@ -644,6 +647,9 @@ return [
 'admin_major_create' => 'Majors Create',
 'admin_major_edit' => 'Majors Edit',
 'admin_major_delete' => 'Majors Delete',
+
+// Finance Manager
+'finance_manager' => 'Finance Manager',
 
 // Pages Title
 

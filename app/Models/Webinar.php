@@ -831,8 +831,13 @@ class Webinar extends Model implements TranslatableContract
             $result = $salesCount < $this->capacity;
         }
 
-        if ($result and $this->type == 'webinar') {
-            $result = ($this->start_date > time());
+        if ($result && $this->type == 'webinar') {
+            if ($this->end_date == 0) {
+                // $result = (time() < $this->start_date);
+                $result = true;
+            } else {
+                $result = (time() <= $this->end_date);
+            }
         }
 
         return $result;
@@ -931,12 +936,16 @@ class Webinar extends Model implements TranslatableContract
             }
         }
 
-        if ($this->start_date > time()) {
+        // if ($this->start_date > time()) {
+        //     $isProgressing = true;
+        // }
+        // if start_data < x < end_date or if end date 0 just focus on start_date
+        if (time() > $this->start_date && ($this->end_date == 0 || time() < $this->end_date)) {
             $isProgressing = true;
         }
 
         return $isProgressing;
-    }
+    } 
 
     public function getShareLink($social)
     {

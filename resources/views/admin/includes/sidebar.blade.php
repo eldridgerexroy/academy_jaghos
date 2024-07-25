@@ -1191,6 +1191,30 @@
                 </li>
             @endcan
 
+            <!-- CUSTOM FINANCIAL -->
+            @can('admin_documents')
+                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/finance_manager*', false))) ? 'active' : '' }}">
+                    <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>{{ trans('admin/main.finance_manager') }}</span>
+                    </a>
+                    <ul class="dropdown-menu">
+
+                        @can('admin_documents_list')
+                            <li class="{{ (request()->is(getAdminPanelUrl('/finance_manager', false))) ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/finance_manager">{{ trans('admin/main.list') }}</a>
+                            </li>
+                        @endcan
+
+                        @can('admin_documents_create')
+                            <li class="{{ (request()->is(getAdminPanelUrl('/finance_manager/new', false))) ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/finance_manager/new">{{ trans('admin/main.new') }}</a>
+                            </li>
+                        @endcan
+                    </ul>
+                </li>
+            @endcan
+
             @can('admin_sales_list')
                 <li class="{{ (request()->is(getAdminPanelUrl('/financial/sales*', false))) ? 'active' : '' }}">
                     <a href="{{ getAdminPanelUrl() }}/financial/sales" class="nav-link">

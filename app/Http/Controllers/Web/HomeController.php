@@ -20,6 +20,7 @@ use App\Models\TrendCategory;
 use App\Models\UpcomingCourse;
 use App\Models\Webinar;
 use App\Models\Testimonial;
+use App\Models\University;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -349,6 +350,8 @@ class HomeController extends Controller
             }
         }
 
+        $universities = University::all();
+
         $data = [
             'pageTitle' => $pageTitle,
             'pageDescription' => $pageDescription,
@@ -380,6 +383,7 @@ class HomeController extends Controller
             'rewardProgramSection' => $rewardProgramSection ?? null,
             'becomeInstructorSection' => $becomeInstructorSection ?? null,
             'forumSection' => $forumSection ?? null,
+            'universities' => $universities
         ];
 
         return view(getTemplate() . '.pages.home', $data);

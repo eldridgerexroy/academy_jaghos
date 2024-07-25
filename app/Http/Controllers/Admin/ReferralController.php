@@ -73,12 +73,12 @@ class ReferralController extends Controller
                     ->with(['affiliateCode', 'userGroup']);
             },
         ])
-            ->groupBy('affiliate_user_id')
-            ->orderBy('created_at', 'desc')
-            ->get();
-        
-        foreach ($affiliates as $affiliate) {
-            $userId = $affiliate->affiliate_user_id;
+        ->groupBy('affiliate_user_id')
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+        foreach ($affiliates as &$affiliate) {
+            $userId = $affiliate['affiliate_user_id'];
         
             $accountings = Accounting::where('user_id', $userId)
                 ->where('is_affiliate_commission', true)
@@ -99,9 +99,10 @@ class ReferralController extends Controller
                 }
             }
         
-            $affiliate->amount = $totalAmount;
-            $affiliate->paid_count = $paidCount . "/" . $accountings->count();
-            $affiliate->all_paid = ($paidCount == $accountings->count());
+            $affiliate['amount'] = $totalAmount;
+            $affiliate['paid_count'] = $paidCount . "/" . $accountings->count();
+            $affiliate['all_paid'] = ($paidCount == $accountings->count());
+            $affiliate['affiliateDetail'] = $accountings;
         }
             
         $data = [

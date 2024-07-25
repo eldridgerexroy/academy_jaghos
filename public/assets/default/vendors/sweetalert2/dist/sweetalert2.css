@@ -144,7 +144,7 @@
 .swal2-container {
   display: flex;
   position: fixed;
-  z-index: 1060;
+  z-index: 106000;
   top: 0;
   right: 0;
   bottom: 0;

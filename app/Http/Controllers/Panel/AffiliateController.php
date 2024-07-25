@@ -13,7 +13,7 @@ class AffiliateController extends Controller
 {
     public function affiliates()
     {
-        $this->authorize("panel_marketing_affiliates");
+        // $this->authorize("panel_marketing_affiliates");
 
         $user = auth()->user();
 

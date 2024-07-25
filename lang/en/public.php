@@ -73,6 +73,7 @@ return [
     'additional_information' => 'Additional Information',
     'capacity' => 'Capacity',
     'start_date' => 'Start Date',
+    'end_date' => 'End Date',
     'time' => 'Time',
     'date' => 'Date',
     'date_created' => 'Date Created',

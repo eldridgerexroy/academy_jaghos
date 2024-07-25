@@ -81,7 +81,7 @@
                                         <!-- <th>{{ trans('admin/main.status') }}</th> -->
                                         <th>{{ trans('admin/main.paid_status') }}</th>
                                         <th>{{ trans('admin/main.paid_date') }}</th>
-                                        <th>{{ trans('admin/main.actions') }}</th>
+                                        <!-- <th>{{ trans('admin/main.actions') }}</th> -->
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -103,7 +103,7 @@
                                         <td><b>{{ handlePrice($affiliate->amount) }}</b></td>
                                         <!-- <td>{{ $affiliate->affiliateUser->affiliate ? trans('admin/main.yes') : trans('admin/main.no') }}</td> -->
                                         <td>
-                                            @if($affiliate->paid_status)
+                                            @if($affiliate->all_paid)
                                                 <span class="badge badge-success">Paid</span>
                                             @else
                                                 <span class="badge badge-danger">Unpaid</span>
@@ -118,13 +118,13 @@
                                                     style="border:0px; background-color:white">
                                                     
                                                 <span class="badge badge-primary">View Details</span>
-                                            </button>
+                                            </button> 
                                         </td>
-                                        <td>
+                                        <!-- <td>
                                             <a href="{{ getAdminPanelUrl() }}/users/{{ $affiliate->affiliateUser->id }}/edit" class="btn-transparent text-primary" data-toggle="tooltip" data-placement="top" title="{{ trans('admin/main.edit') }}">
                                                 <i class="fa fa-edit"></i>
                                             </a>
-                                        </td>
+                                        </td> -->
                                     </tr>
                                     @endforeach
                                 </tbody>

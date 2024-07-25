@@ -168,7 +168,8 @@ class WebinarController extends Controller
                     break;
                 case 'active_in_progress':
                     $query->where('webinars.status', 'active')
-                        ->where('start_date', '<=', $time)
+                        ->where('end_date', '>=', $time)
+                        // ->where('end_date', '<=', $time)
                         ->join('sessions', 'webinars.id', '=', 'sessions.webinar_id')
                         ->select('webinars.*', 'sessions.date', DB::raw('max(`date`) as last_date'))
                         ->groupBy('sessions.webinar_id')
@@ -176,7 +177,8 @@ class WebinarController extends Controller
                     break;
                 case 'active_finished':
                     $query->where('webinars.status', 'active')
-                        ->where('start_date', '<=', $time)
+                        ->where('end_date', '<=', $time)
+                        // ->where('end_date', '>=', $time)
                         ->join('sessions', 'webinars.id', '=', 'sessions.webinar_id')
                         ->select('webinars.*', 'sessions.date', DB::raw('max(`date`) as last_date'))
                         ->groupBy('sessions.webinar_id');
@@ -342,6 +344,7 @@ class WebinarController extends Controller
             'category_id' => 'required',
             'duration' => 'required|numeric',
             'start_date' => 'required_if:type,webinar',
+            'end_date' => 'required_if:type,webinar',
             'capacity' => 'required_if:type,webinar',
         ]);
 
@@ -528,6 +531,8 @@ class WebinarController extends Controller
             abort(404);
         }
 
+        // dd($webinar);
+
         $locale = $request->get('locale', getDefaultLocale());
         storeContentLocale($locale, $webinar->getTable(), $webinar->id);
 
@@ -588,6 +593,7 @@ class WebinarController extends Controller
 
         if ($webinar->isWebinar()) {
             $rules['start_date'] = 'required|date';
+            $rules['end_date'] = 'required|date';
             $rules['duration'] = 'required';
             $rules['capacity'] = 'required|integer';
         }
@@ -634,10 +640,13 @@ class WebinarController extends Controller
             }
 
             $startDate = convertTimeToUTCzone($data['start_date'], $data['timezone']);
+            $endDate = convertTimeToUTCzone($data['end_date'], $data['timezone']);
 
             $data['start_date'] = $startDate->getTimestamp();
+            $data['end_date'] = $endDate->getTimestamp();
         } else {
             $data['start_date'] = null;
+            $data['end_date'] = null;
         }
 
 
@@ -733,6 +742,7 @@ class WebinarController extends Controller
             'capacity' => $data['capacity'] ?? null,
             'sales_count_number' => $data['sales_count_number'] ?? null,
             'start_date' => $data['start_date'],
+            'end_date' => $data['end_date'],
             'timezone' => $data['timezone'] ?? null,
             'duration' => $data['duration'] ?? null,
             'support' => $data['support'],

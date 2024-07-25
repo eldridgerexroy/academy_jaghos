@@ -37,10 +37,12 @@ class AuthServiceProvider extends ServiceProvider
 
         $this->registerPolicies();
 
-        $minutes = 60 * 60; // 1 hour
-        $sections = Cache::remember('sections', $minutes, function () {
-            return Section::all();
-        });
+        // $minutes = 60 * 60; // 1 hour
+        // $sections = Cache::remember('sections', $minutes, function () {
+        //     return Section::all();
+        // });
+
+        $sections = Section::all();
 
         $scopes = [];
         foreach ($sections as $section) {
@@ -49,8 +51,5 @@ class AuthServiceProvider extends ServiceProvider
                 return $user->hasPermission($section->name);
             });
         }
-
-
-        //
     }
 }

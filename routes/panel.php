@@ -300,13 +300,13 @@ Route::group(['namespace' => 'Panel', 'prefix' => 'panel', 'middleware' => ['imp
         });
     });
 
-    Route::group(['prefix' => 'marketing', 'middleware' => 'user.not.access'], function () {
-        Route::get('/special_offers', 'SpecialOfferController@index')->name('special_offer_index');
-        Route::post('/special_offers/store', 'SpecialOfferController@store');
-        Route::get('/special_offers/{id}/disable', 'SpecialOfferController@disable');
-        Route::get('/promotions', 'MarketingController@promotions');
-        Route::post('/pay-promotion', 'MarketingController@payPromotion');
-    });
+    // Route::group(['prefix' => 'marketing', 'middleware' => 'user.not.access'], function () {
+    //     Route::get('/special_offers', 'SpecialOfferController@index')->name('special_offer_index');
+    //     Route::post('/special_offers/store', 'SpecialOfferController@store');
+    //     Route::get('/special_offers/{id}/disable', 'SpecialOfferController@disable');
+    //     Route::get('/promotions', 'MarketingController@promotions');
+    //     Route::post('/pay-promotion', 'MarketingController@payPromotion');
+    // });
 
     Route::group(['prefix' => 'marketing'], function () {
         Route::get('/affiliates', 'AffiliateController@affiliates');

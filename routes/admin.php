@@ -570,6 +570,15 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
             });
         });
 
+        // custom financial manager
+
+        Route::group(['prefix' => 'finance_manager'], function () {
+            Route::get('/', 'FinanceManagerController@index');
+            // Route::get('/{id}/refund', 'SaleController@refund');
+            // Route::get('/{id}/invoice', 'SaleController@invoice');
+            // Route::get('/export', 'SaleController@exportExcel');
+        });
+
         Route::group(['prefix' => 'financial'], function () {
 
             Route::group(['prefix' => 'sales'], function () {

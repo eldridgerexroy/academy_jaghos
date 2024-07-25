@@ -11,6 +11,7 @@ class Role extends Model
     static $user = 'user';
     static $teacher = 'teacher';
     static $organization = 'organization';
+    static $sponsoraffiliate = 'sponsors';
 
     protected $guarded = ['id'];
 
@@ -20,6 +21,7 @@ class Role extends Model
             case self::$admin:
             case self::$user:
             case self::$organization:
+            case self::$sponsoraffiliate:
             case self::$teacher:
                 return false;
                 break;
@@ -66,6 +68,15 @@ class Role extends Model
         $id = 3; // teacher role id
 
         $role = self::where('name', self::$organization)->first();
+
+        return !empty($role) ? $role->id : $id;
+    }
+
+    public static function getSponsorAffiliateRoleId()
+    {
+        $id = 9; // sponsor affiliate role id
+
+        $role = self::where('name', self::$sponsoraffiliate)->first();
 
         return !empty($role) ? $role->id : $id;
     }

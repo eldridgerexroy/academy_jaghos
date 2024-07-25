@@ -106,6 +106,12 @@ class User extends Authenticatable
     {
         return $this->role_name === Role::$organization;
     }
+    
+    // custom addition
+    public function isSponsorAffiliate()
+    {
+        return $this->role_name === Role::$sponsoraffiliate;
+    }
 
     public function hasPermission($section_name)
     {

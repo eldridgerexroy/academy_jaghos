@@ -284,7 +284,7 @@
 
                                             <div class="row mt-15">
                                                 @if(empty($webinar) or (!empty($webinar) and $webinar->isWebinar()))
-                                                    <div class="col-12 col-md-6 js-start_date {{ (!empty(old('type')) and old('type') != \App\Models\Webinar::$webinar) ? 'd-none' : '' }}">
+                                                    <div class="col- col-md-6 js-start_date {{ (!empty(old('type')) and old('type') != \App\Models\Webinar::$webinar) ? 'd-none' : '' }}">
                                                         <div class="form-group">
                                                             <label class="input-label">{{ trans('public.start_date') }}</label>
                                                             <div class="input-group">
@@ -302,9 +302,31 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                @endif
 
-                                                <div class="col-12 col-md-6">
+                                                    
+                                                    <div class="col-12 col-md-6 js-end_date {{ (!empty(old('type')) and old('type') != \App\Models\Webinar::$webinar) ? 'd-none' : '' }}">
+                                                        <div class="form-group">
+                                                            <label class="input-label">{{ trans('public.end_date') }}</label>
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-text" id="dateInputGroupPrepend">
+                                                                        <i class="fa fa-calendar-alt "></i>
+                                                                    </span>
+                                                                </div>
+                                                                <input type="text" name="end_date" value="{{ (!empty($webinar) and $webinar->end_date) ? dateTimeFormat($webinar->end_date, 'Y-m-d H:i', false, false, $webinar->timezone) : old('end_date') }}" class="form-control @error('end_date')  is-invalid @enderror datetimepicker" aria-describedby="dateInputGroupPrepend"/>
+                                                                @error('end_date')
+                                                                <div class="invalid-feedback">
+                                                                    {{ $message }}
+                                                                </div>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            </div>
+
+                                            <div class="row mt-15">
+                                                <div class="col-12 col-md-12">
                                                     <div class="form-group">
                                                         <label class="input-label">{{ trans('public.duration') }} ({{ trans('public.minutes') }})</label>
                                                         <div class="input-group">

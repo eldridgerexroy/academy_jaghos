@@ -22,7 +22,7 @@ return [
     'skillful_teachers' => 'Skillful Instructors',
     'skillful_teachers_hint' => 'Start learning from experienced instructors.',
 
-    'live_classes' => 'Live Classes',
+    'live_classes' => 'Live Classes', 
     'live_classes_hint' => 'Improve your skills using live knowledge flow.',
 
     'happy_students' => 'Happy Students',
@@ -69,8 +69,14 @@ return [
 
     'instructors' => 'Instructors',
     'all_instructors' => 'All Instructors',
-    'instructors_hint' => '#Learn from the experienced & skillful instructors',
+    'instructors_hint' => 'Learn from experienced and skillful instructors from top universities in Indonesia, Taiwan, and Korea.',
     'reserve_a_live_class' => 'Reserve a live meeting',
+
+    'universities' => "Our Students' Universities",
+    'universities_hint' => 'Our students hail from prestigious universities worldwide, bringing diverse knowledge and perspectives. Here are some of the esteemed institutions they represent:',
+
+    'supported_by' => "We are Supported By",
+    'supported_by_hint' => 'Here are some of our esteemed supporters:',
 
     'organization' => 'Organization',
     'organizations' => 'Organizations',
