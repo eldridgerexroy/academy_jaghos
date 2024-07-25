@@ -157,6 +157,8 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
             Route::get('/{id}/edit', 'UniversityController@edit');
             Route::post('/{id}/update', 'UniversityController@update');
             Route::get('/{id}/delete', 'UniversityController@destroy');
+
+            Route::post('/{university}/majors', 'UniversityController@storeMajor')->name('universities.majors.store');
         });
 
         Route::group(['prefix' => 'majors'], function () {
@@ -168,7 +170,7 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
             Route::get('/{id}/delete', 'MajorController@destroy');
 
         });
-        
+
         Route::group(['prefix' => 'syllabus'], function () {
             // Route::get('/', 'SyllabusController@index')->name('admin.syllabus.index');
             Route::get('/create/{id}', 'SyllabusController@create');
@@ -186,8 +188,7 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
                 Route::post('/{id}/update', 'SyllabusTopicController@update');
                 Route::get('/{id}/delete', 'SyllabusTopicController@destroy');
             });
-        });
-        
+        });        
 
         Route::group(['prefix' => 'departments'], function () {
             Route::get('/', 'DepartmentController@index')->name('admin.departments.index');

@@ -9,7 +9,7 @@ return [
 */
 
 // General | Side Menu | Buttons
-
+'back' => 'Back',
 'crm' => 'CRM',
 'content' => 'Content',
 'lists' => 'List',

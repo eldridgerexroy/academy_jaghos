@@ -540,7 +540,7 @@
             {{-- UNIVERSITIES CUSTOM --}}
             <li class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/universities', false)) ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
-                    <i class="fas fa-users"></i>
+                    <i class="fas fa-university"></i>
                     <span>{{ trans('admin/main.universities') }}</span>
                 </a>
                 <ul class="dropdown-menu">
@@ -553,24 +553,59 @@
                 </ul>
             </li>
 
+            {{-- DEPARTMENTS CUSTOM --}}
+            <li class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/departments', false)) ? 'active' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fas fa-building"></i>
+                    <span>{{ trans('admin/main.departments') }}</span>
+                </a>
+
+                <ul class="dropdown-menu">
+                    <li class="{{ (request()->is(getAdminPanelUrl('/departments', false))) ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ getAdminPanelUrl() }}/departments">{{ trans('admin/main.admin_departments_list') }}</a>
+                    </li>
+                    <li class="{{ (request()->is(getAdminPanelUrl('/departments/create', false))) ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ getAdminPanelUrl() }}/departments/create">{{ trans('admin/main.admin_departments_create') }}</a>
+                    </li>
+                </ul>
+            </li>
+            {{-- END DEPARTMENTS CUSTOM --}}
 
             {{-- MAJOR CUSTOM --}}
-            <li class="nav-item dropdown {{ request()->is(getAdminPanelUrl('majors', false)) ? 'active' : '' }}">
+            <li class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/majors', false)) ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
-                    <i class="fas fa-users"></i>
+                    <i class="fas fa-book"></i>
                     <span>{{ trans('admin/main.majors') }}</span>
                 </a>
 
                 <ul class="dropdown-menu">
-                    <li class="{{ (request()->is(getAdminPanelUrl('majors', false))) ? 'active' : '' }}">
+                    <li class="{{ (request()->is(getAdminPanelUrl('/majors', false))) ? 'active' : '' }}">
                         <a class="nav-link" href="{{ getAdminPanelUrl() }}/majors">{{ trans('admin/main.admin_major_list') }}</a>
                     </li>
-                    <li class="{{ (request()->is(getAdminPanelUrl('majors/create', false))) ? 'active' : '' }}">
+                    <li class="{{ (request()->is(getAdminPanelUrl('/majors/create', false))) ? 'active' : '' }}">
                         <a class="nav-link" href="{{ getAdminPanelUrl() }}/majors/create">{{ trans('admin/main.admin_major_create') }}</a>
                     </li>
                 </ul>
             </li>
             {{-- END MAJOR CUSTOM --}}
+
+            {{-- SYLLABUS CUSTOM --}}
+            <li class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/syllabus', false)) ? 'active' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fas fa-file-alt"></i>
+                    <span>{{ trans('admin/main.syllabus') }}</span>
+                </a>
+
+                <ul class="dropdown-menu">
+                    <!-- <li class="{{ (request()->is(getAdminPanelUrl('/syllabus', false))) ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ getAdminPanelUrl() }}/syllabus">{{ trans('admin/main.admin_syllabus_list') }}</a>
+                    </li> -->
+                    <li class="{{ (request()->is(getAdminPanelUrl('/syllabus/create', false))) ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ getAdminPanelUrl() }}/syllabus/create/new">{{ trans('admin/main.admin_syllabus_create') }}</a>
+                    </li>
+                </ul>
+            </li>
+            {{-- END SYLLABUS CUSTOM --}}
 
             @if(
                 $authUser->can('admin_forum') or

@@ -40,21 +40,39 @@
                                     <div class="form-group">
                                         <label>{{ trans('admin/main.university') }}</label>
                                         <select name="university_id" class="form-control select2">
+                                        @if($university)
                                             <option value="{{ $university->id }}" {{ !empty($syllabus) && $syllabus->university_id == $university->id ? 'selected' : '' }}>{{ $university->name }}</option>
+                                        @else
+                                            @foreach($universities as $university)
+                                            <option value="{{ $university->id }}" {{ !empty($syllabus) && $syllabus->university_id == $university->id ? 'selected' : '' }}>{{ $university->name }}</option>
+                                            @endforeach
+                                        @endif
                                         </select>
                                     </div>
 
                                     <div class="form-group">
                                         <label>{{ trans('admin/main.major') }}</label>
                                         <select name="major_id" class="form-control select2">
-                                            <option value="{{ $major->id }}" {{ !empty($syllabus) && $syllabus->major_id == $major->id ? 'selected' : '' }}>{{ $major->name }}</option>
+                                            @if($major)
+                                                <option value="{{ $major->id }}" {{ !empty($syllabus) && $syllabus->major_id == $major->id ? 'selected' : '' }}>{{ $major->name }}</option>
+                                            @else
+                                                @foreach($majors as $major)
+                                                <option value="{{ $major->id }}" {{ !empty($syllabus) && $syllabus->major_id == $major->id ? 'selected' : '' }}>{{ $major->name }}</option>
+                                                @endforeach
+                                            @endif
                                         </select>
                                     </div>
 
                                     <div class="form-group">
                                         <label>{{ trans('admin/main.department') }}</label>
                                         <select name="department_id" class="form-control select2">
-                                            <option value="{{ $department->id }}" {{ !empty($syllabus) && $syllabus->department_id == $department->id ? 'selected' : '' }}>{{ $department->name }}</option>
+                                            @if($department)
+                                                <option value="{{ $department->id }}" {{ !empty($syllabus) && $syllabus->department_id == $department->id ? 'selected' : '' }}>{{ $department->name }}</option>
+                                            @else
+                                                @foreach($departments as $department)
+                                                <option value="{{ $department->id }}" {{ !empty($syllabus) && $syllabus->department_id == $department->id ? 'selected' : '' }}>{{ $department->name }}</option>
+                                                @endforeach
+                                            @endif
                                         </select>
                                     </div>
 
