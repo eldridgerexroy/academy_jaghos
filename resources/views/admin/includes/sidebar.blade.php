@@ -536,6 +536,8 @@
                     </ul>
                 </li>
             @endif
+            
+            <li class="menu-header">Custom</li>
 
             {{-- UNIVERSITIES CUSTOM --}}
             <li class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/universities', false)) ? 'active' : '' }}">
@@ -549,6 +551,22 @@
                     </li>
                     <li class="{{ (request()->is(getAdminPanelUrl('/universities/create', false))) ? 'active' : '' }}">
                         <a class="nav-link" href="{{ getAdminPanelUrl() }}/universities/create">{{ trans('admin/main.admin_universities_create') }}</a>
+                    </li>
+                </ul>
+            </li>
+
+            {{-- UNIVERSITIES CUSTOM --}}
+            <li class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/universities/application', false)) ? 'active' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fas fa-university"></i>
+                    <span>{{ trans('admin/pages/universities.university_application') }}</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="{{ (request()->is(getAdminPanelUrl('/universities/application', false))) ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ getAdminPanelUrl() }}/universities/application">{{ trans('admin/main.admin_universities_list') }}</a>
+                    </li>
+                    <li class="{{ (request()->is(getAdminPanelUrl('/universities/application/create', false))) ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ getAdminPanelUrl() }}/universities/application/create">{{ trans('admin/main.admin_universities_create') }}</a>
                     </li>
                 </ul>
             </li>

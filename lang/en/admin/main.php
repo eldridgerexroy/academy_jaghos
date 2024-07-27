@@ -102,6 +102,7 @@ return [
 'cancel' => 'Cancel',
 'created_at' => 'Created Date',
 'updated_at' => 'Updated Date',
+'update' => 'Update',
 'add' => 'Add',
 'remove' => 'Remove',
 'category' => 'Category',
@@ -604,6 +605,7 @@ return [
 'admin_universities_create' => 'Universities Create',
 'admin_universities_edit' => 'Universities Edit',
 'admin_universities_delete' => 'Universities Delete',
+'admin_universities_application' => 'Universities Application',
 
 // Request Recording
 'request_recording' =>  'Request Recordings',

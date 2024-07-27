@@ -48,8 +48,8 @@
                                             <tr>
                                                 <td>{{ $university->id }}</td>
                                                 <td class="text-left">{{ $university->name }}</td>
-                                                <td>{{ $university->city }}</td>
-                                                <td>{{ $university->country }}</td>
+                                                <td>{{ $university->city->name }}</td>
+                                                <td>{{ $university->country->name }}</td>
                                                 <td>
                                                     @if($university->picture)
                                                         <img src="{{ '/store/' . $university->picture }}" alt="University Picture" style="max-width: 100px;">

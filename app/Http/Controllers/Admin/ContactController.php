@@ -56,7 +56,7 @@ class ContactController extends Controller
         $contact->save();
 
         if (!empty($contact->email)) {
-            \Mail::to($contact->email)->send(new sendContactReply($contact));
+            Mail::to($contact->email)->send(new sendContactReply($contact));
         }
 
         return redirect(getAdminPanelUrl().'/contacts');

@@ -28,4 +28,9 @@ class UniversityMajor extends Model
     {
         return $this->belongsTo(University::class, 'university_id');
     }
+
+    public function universityApplications()
+    {
+        return $this->hasMany(UniversityApplication::class, 'university_major_id');
+    }
 }

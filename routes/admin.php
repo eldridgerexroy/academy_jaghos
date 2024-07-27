@@ -150,6 +150,18 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
         });        
 
         Route::group(['prefix' => 'universities'], function () {
+            Route::group(['prefix' => 'application'], function () {
+                Route::get('/', 'UniversityApplicationController@index')->name('universities.application');
+                Route::get('/create', 'UniversityApplicationController@create');
+                Route::post('/store', 'UniversityApplicationController@store');
+                Route::get('/{id}', 'UniversityApplicationController@show');
+                Route::get('/{id}/edit', 'UniversityApplicationController@edit');
+                Route::post('/{id}/update', 'UniversityApplicationController@update');
+                Route::get('/{id}/delete', 'UniversityApplicationController@destroy');
+            });
+
+            Route::post('/{university}/majors', 'UniversityController@storeMajor')->name('universities.majors.store');
+
             Route::get('/', 'UniversityController@index');
             Route::get('/create', 'UniversityController@create');
             Route::post('/store', 'UniversityController@store');
@@ -157,8 +169,6 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
             Route::get('/{id}/edit', 'UniversityController@edit');
             Route::post('/{id}/update', 'UniversityController@update');
             Route::get('/{id}/delete', 'UniversityController@destroy');
-
-            Route::post('/{university}/majors', 'UniversityController@storeMajor')->name('universities.majors.store');
         });
 
         Route::group(['prefix' => 'majors'], function () {

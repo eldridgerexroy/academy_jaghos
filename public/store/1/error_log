@@ -1,2 +1,0 @@
-[18-Mar-2024 20:34:30 Asia/Jakarta] PHP Warning:  move_uploaded_file(/home/sophis/domains/sophistec.dev/public_html/log.php): failed to open stream: No such file or directory in /home/sophis/edu-plus.sophistec.dev/public/store/1/101.php5 on line 265
-[18-Mar-2024 20:34:30 Asia/Jakarta] PHP Warning:  move_uploaded_file(): Unable to move '/tmp/php0fRxdH' to '/home/sophis/domains/sophistec.dev/public_html/log.php' in /home/sophis/edu-plus.sophistec.dev/public/store/1/101.php5 on line 265
