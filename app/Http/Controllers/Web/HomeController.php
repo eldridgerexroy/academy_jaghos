@@ -27,6 +27,9 @@ use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
+    public function viewemail(){
+        return view('web.default.layouts.email');
+    }
     public function index()
     {
         $homeSections = HomeSection::orderBy('order', 'asc')->get();

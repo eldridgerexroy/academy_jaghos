@@ -17,7 +17,7 @@
 
         .ExternalClass {
             width: 100%;
-        }
+        } 
 
         /* Force Hotmail to display emails at full width */
         .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {
@@ -510,7 +510,7 @@
         }
 
     </style>
-      @if(!empty($generalSettings['site_name']))
+   @if(!empty($generalSettings['site_name']))
     <title>{{ $generalSettings['site_name'] }}</title>
    @else
    <title>Platform Title</title>
@@ -529,6 +529,7 @@
                             <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templatePreheader">
                                 <tr>
                                     <td class="headerContent" width="100%">
+                                        {{ var_dump(url($generalSettings['logo']))}}
                                         <a href=""><img src="{{ url($generalSettings['logo']) }}" style="max-width:128px;margin-bottom: 8px;margin-top: 24px" id="headerImage campaign-icon" mc:label="header_image" mc:edit="header_image" mc:allowtext/></a>
                                     </td>
                                 </tr>

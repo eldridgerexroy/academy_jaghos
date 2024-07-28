@@ -1,52 +1,31 @@
-<?php
-
-/**
- * Recursively scan a directory for files with a specific extension.
- *
- * @param string $dir The directory to scan.
- * @param string $ext The file extension to look for.
- * @return array The list of files with the specified extension.
- */
-function scanDirForFilesWithExtension(string $dir, string $ext): array {
-    $files = [];
-    $items = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
-    foreach ($items as $item) {
-        if ($item->isFile() && $item->getExtension() === $ext) {
-            $files[] = $item->getPathname();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Login Test</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+        function handleCredentialResponse(response) {
+            console.log("Encoded JWT ID token: " + response.credential);
+            // Optionally decode the ID token for more information
+            // You can use the token for your backend authentication
         }
-    }
-    return $files;
-}
 
-/**
- * Check a file for the presence of closures.
- *
- * @param string $file The file to check.
- * @return bool True if the file contains a closure, false otherwise.
- */
-function fileContainsClosure(string $file): bool {
-    $contents = file_get_contents($file);
-    return strpos($contents, 'function') !== false;
-}
-
-// Scan the config directory for PHP files
-$configDir = __DIR__ . '/config';
-$phpFiles = scanDirForFilesWithExtension($configDir, 'php');
-
-// Check each PHP file for closures
-$filesWithClosures = [];
-foreach ($phpFiles as $file) {
-    if (fileContainsClosure($file)) {
-        $filesWithClosures[] = $file;
-    }
-}
-
-// Output the results
-if (empty($filesWithClosures)) {
-    echo "No closures found in configuration files.\n";
-} else {
-    echo "The following configuration files contain closures:\n";
-    foreach ($filesWithClosures as $file) {
-        echo $file . "\n";
-    }
-}
+        window.onload = function () {
+            google.accounts.id.initialize({
+                client_id: '59090348286-rt0js2aijchn4r6hi3e23vbjgut3enlo.apps.googleusercontent.com.apps.googleusercontent.com',
+                callback: handleCredentialResponse
+            });
+            google.accounts.id.renderButton(
+                document.getElementById("buttonDiv"),
+                { theme: "outline", size: "large" } // customization attributes
+            );
+        }
+    </script>
+</head>
+<body>
+    <h1>Google Login Test</h1>
+    <div id="buttonDiv"></div>
+</body>
+</html>
