@@ -52,7 +52,7 @@
                                                 <td>{{ $university->country->name }}</td>
                                                 <td>
                                                     @if($university->picture)
-                                                        <img src="{{ '/store/' . $university->picture }}" alt="University Picture" style="max-width: 100px;">
+                                                        <img src="{{ asset('store/1/academy/' . $university['picture']) }}" alt="{{$university->name}}" class="img-cover">
                                                     @else
                                                         No Picture
                                                     @endif
