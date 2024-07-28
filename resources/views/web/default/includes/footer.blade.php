@@ -89,16 +89,14 @@
 
                 <div class="d-flex align-items-center justify-content-center">
                     @if(!empty($generalSettings['site_phone']))
-                        <div class="d-flex align-items-center text-white font-14">
+                        <div class="d-flex align-items-center text-white font-14 mx-2">
                             <i data-feather="phone" width="20" height="20" class="mr-10"></i>
                             {{ $generalSettings['site_phone'] }}
                         </div>
                     @endif
 
                     @if(!empty($generalSettings['site_email']))
-                        <div class="border-left mx-5 mx-lg-15 h-100"></div>
-
-                        <div class="d-flex align-items-center text-white font-14">
+                        <div class="d-flex align-items-center text-white font-14 mx-2">
                             <i data-feather="mail" width="20" height="20" class="mr-10"></i>
                             {{ $generalSettings['site_email'] }}
                         </div>

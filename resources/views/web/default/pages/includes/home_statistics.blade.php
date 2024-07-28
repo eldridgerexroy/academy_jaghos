@@ -4,7 +4,7 @@
 
 @if(!empty($statisticsSettings['enable_statistics']))
     @if(!empty($statisticsSettings['display_default_statistics']) and !empty($homeDefaultStatistics))
-        <div class="stats-container {{ ($heroSection == "2") ? 'page-has-hero-section-2' : '' }}">
+        <div class=" stats-container {{ ($heroSection == "2") ? 'page-has-hero-section-2' : '' }}">
             <div class="container">
                 <div class="row">
                     <div class="col-sm-6 col-lg-3 mt-25 mt-lg-0">

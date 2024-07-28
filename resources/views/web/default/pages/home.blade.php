@@ -33,7 +33,7 @@
                     <div class="row slider-content align-items-center hero-section2 flex-column-reverse flex-md-row">
                         <div class="col-12 col-md-7 col-lg-6">
                             <h1 class="text-secondary font-weight-bold">{{ $heroSectionData['title'] }}</h1>
-                            <p class="slide-hint text-gray mt-20">{!! nl2br($heroSectionData['description']) !!}</p>
+                            <p class="slide-hint text-gray mt-20 text-justify">{!! nl2br($heroSectionData['description']) !!}</p>
 
                             <form action="/search" method="3
                             t" class="d-inline-flex mt-30 mt-lg-30 w-100">
@@ -72,29 +72,38 @@
         </section>
     @endif
 
-    {{-- Custom | University --}}
-    <section class="home-sections home-sections-swiper container university-list-section position-relative">
+    {{-- Custom | Empowering Students --}}
+    
+    <section class="home-sections home-sections-swiper container find-instructor-section position-relative" style="margin-bottom: 4rem;">
         <div class="row align-items-center">
-            <div class="col-12 col-lg-6 mt-20 mt-lg-0">
-                <div class="position-relative">
-                    <img src="{{ $forumSection['image'] }}" class="university-list-section-hero" alt="{{ $forumSection['title'] }}">
-                    <img src="/assets/default/img/home/circle-4.png" class="university-list-section-circle" alt="circle">
-                    <img src="/assets/default/img/home/dot.png" class="university-list-section-dots" alt="dots">
+            <div class="col-12 col-lg-6 mt-10 mt-lg-0">
+                <div class="position-relative ">
+                    <img src="{{ $forumSection['image'] }}" class="find-instructor-section-hero" alt="{{ $forumSection['title'] }}">
+                    <img src="/assets/default/img/home/circle-4.png" class="find-instructor-section-circle" alt="circle">
+                    <img src="/assets/default/img/home/dot.png" class="find-instructor-section-dots" alt="dots">
                 </div>
             </div>
+
             <div class="col-12 col-lg-6">
-                <div>
-                    <h2 class="font-36 font-weight-bold text-dark">Empowering Students Across Multiple International Universities</h2>
-                    <p class="font-16 font-weight-normal text-gray mt-10">Join our community of successful students thriving in <b>Australia, Germany, Taiwan</b>, and beyond. Discover the opportunities we provide to help you achieve your academic and career goals.</p>
+                <div class="">
+                    <div class="mt-35 d-flex align-items-center">
+                        <div>
+                            <h2 class="font-36 font-weight-bold text-dark ">Empowering Students Across Multiple International Universities</h2>
+                            <p class="font-16 font-weight-normal text-gray mt-10 text-justify">Join our community of successful students thriving in <b>Australia, Germany, Taiwan</b>, and beyond. Discover the opportunities we provide to help you achieve your academic and career goals with top-notch education and support worldwide.</p>
+                            <p class="font-16 font-weight-normal text-gray mt-10 text-justify">We offer a range of preparatory programs designed to equip you with the skills and knowledge needed for university success. From personalized guidance to specialized courses, our resources will ensure you're ready to excel in your chosen field.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
 
+    <!-- <div class="col-12 col-lg-6">
+    </div> -->
+
     {{-- Statistics --}}
     @include('web.default.pages.includes.home_statistics')
-
 
     @foreach($homeSections as $homeSection)
 
@@ -195,62 +204,13 @@
                                 <div class="shadow-effect">
                                     <div class="instructors-card d-flex flex-column align-items-center justify-content-center">
                                         <div class="instructors-card-avatar">
-                                            <img src="{{ asset('store/1/academy/' . $university['picture']) }}" alt="{{ $university['name'] }}" class="img-cover">
+                                            <img src="{{ asset('store/1/academy/' . $university['picture']) }}" alt="$university->name" class="img-cover">
                                         </div>
                                         <div class="instructors-card-info mt-10 text-center">
                                             <a href="{{ $university['link'] }}" target="_blank">
-                                                <h3 class="font-16 font-weight-bold text-dark-blue">{{ $university['name'] }}</h3>
+                                                <h3 class="font-16 font-weight-bold text-dark-blue">{{$university->name}}</h3>
                                             </a>
-                                            <p class="font-14 text-gray mt-5">{{ $university['city'] }}, {{ $university['country'] }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </section>
-
-            {{-- Supported By --}}
-            <section class="home-sections container">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h2 class="section-title">{{ trans('home.supported_by') }}</h2>
-                        <p class="section-hint">{{ trans('home.supported_by_hint') }}</p>
-                    </div>
-                </div>
-
-                <div class="position-relative mt-20 ltr">
-                    <div class="owl-carousel customers-testimonials instructors-swiper-container">
-                        @php 
-                            $supported_by = [
-                                [
-                                    'name' => 'Sophistec',
-                                    'type' => 'Parent Company',
-                                    'image' => 'sophistec.jpg',
-                                    'link' => '#'
-                                ],
-                                [
-                                    'name' => 'Laco',
-                                    'type' => 'Mandarin Course',
-                                    'image' => 'laco.jpg',
-                                    'link' => '#'
-                                ]
-                            ];
-                        @endphp
-                         
-                        @foreach($supported_by as $supported)
-                            <div class="item">
-                                <div class="shadow-effect">
-                                    <div class="instructors-card d-flex flex-column align-items-center justify-content-center">
-                                        <div class="instructors-card-avatar">
-                                            <img src="{{ asset('store/1/academy/supported/' . $supported['image']) }}" alt="{{ $supported['name'] }}" class="img-cover">
-                                        </div>
-                                        <div class="instructors-card-info mt-10 text-center">
-                                            <a href="{{ $supported['link'] }}" target="_blank">
-                                                <h3 class="font-16 font-weight-bold text-dark-blue">{{ $supported['name'] }}</h3>
-                                            </a>
-                                            <p class="font-14 text-gray mt-5">{{ $supported['type'] }}</p>
+                                            <p class="font-14 text-gray mt-5">{{ $university->city->name }}, {{ $university->country->name }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -708,7 +668,7 @@
             </div>
         @endif
 
-        <!-- @if($homeSection->name == \App\Models\HomeSection::$find_instructors and !empty($findInstructorSection))
+        @if($homeSection->name == \App\Models\HomeSection::$find_instructors and !empty($findInstructorSection))
             <section class="home-sections home-sections-swiper container find-instructor-section position-relative">
                 <div class="row align-items-center">
                     <div class="col-12 col-lg-6">
@@ -748,9 +708,9 @@
                     </div>
                 </div>
             </section>
-        @endif -->
+        @endif
 
-        <!-- @if($homeSection->name == \App\Models\HomeSection::$reward_program and !empty($rewardProgramSection))
+        @if($homeSection->name == \App\Models\HomeSection::$reward_program and !empty($rewardProgramSection))
             <section class="home-sections home-sections-swiper container reward-program-section position-relative">
                 <div class="row align-items-center">
                     <div class="col-12 col-lg-6">
@@ -788,9 +748,9 @@
                     </div>
                 </div>
             </section>
-        @endif -->
+        @endif
 
-        <!-- @if($homeSection->name == \App\Models\HomeSection::$become_instructor and !empty($becomeInstructorSection))
+        @if($homeSection->name == \App\Models\HomeSection::$become_instructor and !empty($becomeInstructorSection))
             <section class="home-sections home-sections-swiper container find-instructor-section position-relative">
                 <div class="row align-items-center">
                     <div class="col-12 col-lg-6">
@@ -830,7 +790,7 @@
                     </div>
                 </div>
             </section>
-        @endif -->
+        @endif
 
         @if($homeSection->name == \App\Models\HomeSection::$forum_section and !empty($forumSection))
             <section class="home-sections home-sections-swiper container find-instructor-section position-relative">
@@ -1015,6 +975,55 @@
         @endif
 
     @endforeach
+    
+    {{-- Supported By --}}
+    <section class="home-sections container">
+        <div class="d-flex justify-content-between">
+            <div>
+                <h2 class="section-title">{{ trans('home.supported_by') }}</h2>
+                <p class="section-hint">{{ trans('home.supported_by_hint') }}</p>
+            </div>
+        </div>
+
+        <div class="position-relative mt-20 ltr">
+            <div class="owl-carousel customers-testimonials instructors-swiper-container">
+                @php 
+                    $supported_by = [
+                        [
+                            'name' => 'Sophistec',
+                            'type' => 'Parent Company',
+                            'image' => 'sophistec.jpg',
+                            'link' => '#'
+                        ],
+                        [
+                            'name' => 'Laco',
+                            'type' => 'Mandarin Course',
+                            'image' => 'laco.jpg',
+                            'link' => '#'
+                        ]
+                    ];
+                @endphp
+                    
+                @foreach($supported_by as $supported)
+                    <div class="item">
+                        <div class="shadow-effect">
+                            <div class="instructors-card d-flex flex-column align-items-center justify-content-center">
+                                <div class="instructors-card-avatar">
+                                    <img src="{{ asset('store/1/academy/supported/' . $supported['image']) }}" alt="{{ $supported['name'] }}" class="img-cover">
+                                </div>
+                                <div class="instructors-card-info mt-10 text-center">
+                                    <a href="{{ $supported['link'] }}" target="_blank">
+                                        <h3 class="font-16 font-weight-bold text-dark-blue">{{ $supported['name'] }}</h3>
+                                    </a>
+                                    <p class="font-14 text-gray mt-5">{{ $supported['type'] }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
 @endsection
 
 @push('scripts_bottom')

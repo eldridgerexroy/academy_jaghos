@@ -91,20 +91,9 @@ class UniversityController extends Controller
 
         $this->validate($request, [
             'name' => 'required|min:3|max:64|unique:universities,name',
-            'country_id' => 'required|exists:countries,id',  // Validate country_id
-            'city_id' => 'required|exists:cities,id',        // Validate city_id
-            'picture' => 'nullable|image|max:2048',          // 2MB max size
-            'individual_application_quota' => 'nullable|integer',
-            'individual_application_required_documents' => 'nullable|string',
-            'individual_application_quota_transfer' => 'nullable|integer',
-            'united_distribution_quota_total' => 'nullable|integer',
-            'united_distribution_quota_total_s1' => 'nullable|integer',
-            'united_distribution_quota_total_s2' => 'nullable|integer',
-            'united_distribution_quota_total_s3' => 'nullable|integer',
-            'united_distribution_quota_total_s4' => 'nullable|integer',
-            'united_distribution_quota_total_s5' => 'nullable|integer',
-            'english_program' => 'nullable|boolean',
-            '5_graduate_system_can_apply' => 'nullable|boolean',
+            'country_id' => 'required|exists:countries,id',
+            'city_id' => 'required|exists:cities,id',
+            'picture' => 'nullable|image|max:2048', 
         ]);
 
         $data = $request->all();
@@ -125,8 +114,8 @@ class UniversityController extends Controller
     public function edit($id)
     {
         $university = University::findOrFail($id);
-        $countries = Country::all();  // Fetch all countries
-        $cities = City::all();        // Fetch all cities
+        $countries = Country::all();
+        $cities = City::all();
 
         $data = [
             'pageTitle' => trans('admin/main.edit'),
@@ -146,20 +135,9 @@ class UniversityController extends Controller
 
         $this->validate($request, [
             'name' => 'required|min:3|max:64|unique:universities,name,' . $id,
-            'country_id' => 'required|exists:countries,id',  // Validate country_id
-            'city_id' => 'required|exists:cities,id',        // Validate city_id
-            'picture' => 'nullable|image|max:2048',          // 2MB max size
-            'individual_application_quota' => 'nullable|integer',
-            'individual_application_required_documents' => 'nullable|string',
-            'individual_application_quota_transfer' => 'nullable|integer',
-            'united_distribution_quota_total' => 'nullable|integer',
-            'united_distribution_quota_total_s1' => 'nullable|integer',
-            'united_distribution_quota_total_s2' => 'nullable|integer',
-            'united_distribution_quota_total_s3' => 'nullable|integer',
-            'united_distribution_quota_total_s4' => 'nullable|integer',
-            'united_distribution_quota_total_s5' => 'nullable|integer',
-            'english_program' => 'nullable|boolean',
-            '5_graduate_system_can_apply' => 'nullable|boolean',
+            'country_id' => 'required|exists:countries,id', 
+            'city_id' => 'required|exists:cities,id', 
+            'picture' => 'nullable|image|max:2048',
         ]);
 
         $data = $request->all();

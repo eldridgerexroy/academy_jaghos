@@ -869,7 +869,7 @@ return [
 'be_the_first_to_answer_this_question' => 'Be the first person who answers this question.',
 
 // Forum
-'need_help?' => 'Need help?',
+'need_help?' => 'Need Help?',
 'create_a_topic_in_forum' => 'Create a topic in the forum...',
 'forum_top_section_hint' => 'If you need help with any included topic, you can create a topic in the forum and start communication with other users.',
 'search_discussions' => 'Search discussions...',
@@ -1825,7 +1825,7 @@ return [
 "select_position" => "Select Position",
 "header" => "Header",
 "footer" => "Footer",
-"platform_copyright_hint" => "All rights are reserved for learning management system platform",
+"platform_copyright_hint" => "All rights are reserved for Sophistec Academy",
 "admin_template" => "Admin Template",
 "front_template" => "Front Template",
 

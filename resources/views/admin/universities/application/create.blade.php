@@ -37,7 +37,7 @@
                     <div class="card-body">
                         <form action="{{ getAdminPanelUrl() }}/universities/application/{{ empty($universities) ? $university->id.'/update' : 'store' }}" method="POST" enctype="multipart/form-data">
                             @csrf
-                            <div class="row">
+                            <div class="row"> 
                                 <div class="col-12 col-md-6 col-lg-6">
                                     <div class="form-group @error('university_id') is-invalid @enderror">
                                         <label>{{ trans('admin/main.university') }}</label>

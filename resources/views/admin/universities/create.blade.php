@@ -47,19 +47,45 @@
                                             @enderror
                                         </div>
 
-                                        <div class="form-group @error('city') is-invalid @enderror">
-                                            <label>{{ trans('admin/pages/universities.city') }}</label>
-                                            <input type="text" name="city" class="form-control" value="{{ !empty($university) ? $university->city : old('city') }}" placeholder=""/>
-                                            @error('city')
-                                                <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="form-group @error('country_id') is-invalid @enderror">
+                                            <label>{{ trans('admin/pages/universities.country') }}</label>
+                                            <select name="country_id" class="form-control select2">
+                                                @if(!empty($university->country_id)) 
+                                                    <option value="">{{ trans('admin/main.select') }} {{ trans('admin/pages/universities.country') }}</option>
+                                                    @foreach($countries as $country)
+                                                    <option value="{{ $country->id }}" {{ (empty($universities) && $country->id == old('country_id', $university->country_id)) ? 'selected' : '' }}>
+                                                        {{ $country->name }}
+                                                    </option>
+                                                    @endforeach
+                                                @else
+                                                    <option selected value="{{ $university->university_major }}" {{ (empty($universities) && $university->id == old('university_id', $university->university_id)) ? 'selected' : '' }}>
+                                                    {{ $university->universityMajor->major->name }}
+                                                    </option>
+                                                @endif
+                                            </select>
+                                            @error('country_id')
+                                            <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
 
-                                        <div class="form-group @error('country') is-invalid @enderror">
-                                            <label>{{ trans('admin/pages/universities.country') }}</label>
-                                            <input type="text" name="country" class="form-control" value="{{ !empty($university) ? $university->country : old('country') }}" placeholder=""/>
-                                            @error('country')
-                                                <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="form-group @error('city_id') is-invalid @enderror">
+                                            <label>{{ trans('admin/pages/universities.city') }}</label>
+                                            <select name="city_id" class="form-control select2">
+                                                @if(!empty($university->city_id)) 
+                                                    <option value="">{{ trans('admin/main.select') }} {{ trans('admin/pages/universities.city') }}</option>
+                                                    @foreach($cities as $city)
+                                                    <option value="{{ $city->id }}" {{ (empty($universities) && $city->id == old('city_id', $university->city_id)) ? 'selected' : '' }}>
+                                                        {{ $city->name }}
+                                                    </option>
+                                                    @endforeach
+                                                @else
+                                                    <option selected value="{{ $university->university_major }}" {{ (empty($universities) && $university->id == old('university_id', $university->university_id)) ? 'selected' : '' }}>
+                                                    {{ $university->universityMajor->major->name }}
+                                                    </option>
+                                                @endif
+                                            </select>
+                                            @error('city_id')
+                                            <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
 

@@ -49,8 +49,8 @@ return [
     'trending_categories' => 'Trending Categories',
     'trending_categories_hint' => '#Browse trending & popular learning topics',
 
-    'best_sellers' => 'Bestselling Courses',
-    'best_sellers_hint' => '#Learn from bestselling courses',
+    'best_sellers' => 'Best Selling Courses',
+    'best_sellers_hint' => '#Learn from best selling courses',
 
     'best_rates' => 'Best Rated Courses',
     'best_rates_hint' => '#Enjoy high quality and best rated content',
