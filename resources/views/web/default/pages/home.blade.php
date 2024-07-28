@@ -204,7 +204,7 @@
                                 <div class="shadow-effect">
                                     <div class="instructors-card d-flex flex-column align-items-center justify-content-center">
                                         <div class="instructors-card-avatar">
-                                            <img src="{{ asset('store/1/academy/' . $university['picture']) }}" alt="$university->name" class="img-cover">
+                                            <img src="{{ asset('store/1/academy/' . $university['picture']) }}" alt="{{$university->name}}" class="img-cover">
                                         </div>
                                         <div class="instructors-card-info mt-10 text-center">
                                             <a href="{{ $university['link'] }}" target="_blank">
