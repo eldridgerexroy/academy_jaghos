@@ -71,7 +71,7 @@
                             getFeaturesSettings("frontend_coupons_display_type") == "before_content" and
                             !empty($instructorDiscounts) and
                             count($instructorDiscounts)
-                        )
+                        ) 
                         @foreach($instructorDiscounts as $instructorDiscount)
                             @include('web.default.includes.discounts.instructor_discounts_card', ['discount' => $instructorDiscount, 'instructorDiscountClassName' => "mt-35"])
                         @endforeach

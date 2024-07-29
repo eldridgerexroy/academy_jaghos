@@ -992,13 +992,25 @@
                         [
                             'name' => 'Sophistec',
                             'type' => 'Parent Company',
-                            'image' => 'sophistec.jpg',
+                            'image' => 'sophistec.png',
                             'link' => '#'
                         ],
                         [
                             'name' => 'Laco',
                             'type' => 'Mandarin Course',
-                            'image' => 'laco.jpg',
+                            'image' => 'laco.png',
+                            'link' => '#'
+                        ],
+                        [
+                            'name' => 'ICATI',
+                            'type' => 'Ikatan Citra Alumni Taiwan Indonesia',
+                            'image' => 'icati-jatim.png',
+                            'link' => '#'
+                        ],
+                        [
+                            'name' => 'PPI Hsinchu',
+                            'type' => 'Persatuan Pelajar Indonesia',
+                            'image' => 'ppi-hsinchu.png',
                             'link' => '#'
                         ]
                     ];

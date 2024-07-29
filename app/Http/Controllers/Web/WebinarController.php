@@ -341,7 +341,7 @@ class WebinarController extends Controller
 
     private function checkQuizzesResults($user, $quizzes)
     {
-        $canDownloadCertificate = false;
+        $canDownloadCertificate = false; 
 
         foreach ($quizzes as $quiz) {
             $quiz = $this->checkQuizResults($user, $quiz);

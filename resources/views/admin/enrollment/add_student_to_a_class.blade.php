@@ -26,9 +26,10 @@
 
                                         <div class="form-group">
                                             <label class="input-label">{{trans('admin/main.class')}}</label>
-                                            <select name="webinar_id" class="form-control search-webinar-select2"
-                                                    data-placeholder="Search classes">
-
+                                            <select name="webinar_id" class="form-control select2">
+                                                @foreach($courses as $course)
+                                                    <option value="{{$course->id}}">{{$course->slug}}</option>
+                                                @endforeach
                                             </select>
 
                                             @error('webinar_id')
@@ -38,8 +39,10 @@
 
                                         <div class="form-group">
                                             <label class="input-label d-block">{{ trans('admin/main.user') }}</label>
-                                            <select name="user_id" class="form-control search-user-select2" data-placeholder="{{ trans('public.search_user') }}">
-
+                                            <select name="user_id" class="form-control select2">
+                                                @foreach($users as $user)
+                                                    <option value="{{$user->id}}">{{$user->full_name}}</option>
+                                                @endforeach
                                             </select>
                                             @error('user_id')
                                             <div class="invalid-feedback d-block">{{ $message }}</div>

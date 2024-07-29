@@ -32,6 +32,7 @@ return [
     'offline_courses_hint' => 'Learn without any geographical & time limitations.',
 
     'hours' => 'Hours',
+    'hours_per_meet' => 'Hours / Meet',
 
     'featured_classes' => 'Featured Courses',
     'featured_webinars' => 'Featured Courses',

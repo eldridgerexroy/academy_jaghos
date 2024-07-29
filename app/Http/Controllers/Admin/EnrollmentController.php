@@ -35,7 +35,7 @@ class EnrollmentController extends Controller
             ])
             ->paginate(10);
 
-        foreach ($sales as $sale) {
+        foreach ($sales as $sale) { 
             $sale = $this->makeTitle($sale);
 
             if (empty($sale->saleLog)) {
@@ -132,8 +132,13 @@ class EnrollmentController extends Controller
     {
         $this->authorize('admin_enrollment_add_student_to_items');
 
+        $courses = Webinar::where('status','active')->get();
+        $users = User::where('role_id', 1)->get();
+
         $data = [
-            'pageTitle' => trans('update.add_student_to_a_class')
+            'pageTitle' => trans('update.add_student_to_a_class'),
+            'courses' => $courses,
+            'users' => $users
         ];
 
         return view('admin.enrollment.add_student_to_a_class', $data);
