@@ -116,5 +116,15 @@ return [
     'status' => 'Status',
     'from_date' => 'From Date',
     'to_date' => 'To Date',
-    'document_number' => 'Document ID'
+    'document_number' => 'Document ID',
+
+
+    // financial manager
+    'income_per_month' => "Monthly Income",
+    'expense_per_month' => "Monthly Expense",
+    'total_amount' => "Total Amount",
+    'company_share' => "Company Share",
+    'user_share' => "User Share",
+    'sales_count' => "Sales Count",
+    'financial_total' => "Total",
 ];

@@ -537,6 +537,43 @@
                 </li>
             @endif
             
+            <li class="menu-header">Custom Finance</li>
+            <!-- CUSTOM FINANCIAL -->
+            @can('admin_documents')
+                <li class="{{ (request()->is(getAdminPanelUrl('/finance_manager/income', false))) ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ getAdminPanelUrl() }}/finance_manager/income">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        Monthly Income 
+                    </a>
+                </li>
+                <li class="{{ (request()->is(getAdminPanelUrl('/finance_manager/expense', false))) ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ getAdminPanelUrl() }}/finance_manager/expense">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        Monthly Expense
+                    </a>
+                </li>
+                <!-- <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/finance_manager*', false))) ? 'active' : '' }}">
+                    <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>{{ trans('admin/main.finance_manager') }}</span>
+                    </a>
+                    <ul class="dropdown-menu">
+
+                        @can('admin_documents_list')
+                            <li class="{{ (request()->is(getAdminPanelUrl('/finance_manager', false))) ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/finance_manager">Sales</a>
+                            </li>
+                        @endcan
+
+                        @can('admin_documents_create')
+                            <li class="{{ (request()->is(getAdminPanelUrl('/finance_manager/new', false))) ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/finance_manager/new">Income</a>
+                            </li>
+                        @endcan
+                    </ul>
+                </li> -->
+            @endcan
+            
             <li class="menu-header">Custom</li>
 
             {{-- UNIVERSITIES CUSTOM --}}
@@ -1238,30 +1275,6 @@
                         @can('admin_documents_create')
                             <li class="{{ (request()->is(getAdminPanelUrl('/financial/documents/new', false))) ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ getAdminPanelUrl() }}/financial/documents/new">{{ trans('admin/main.new') }}</a>
-                            </li>
-                        @endcan
-                    </ul>
-                </li>
-            @endcan
-
-            <!-- CUSTOM FINANCIAL -->
-            @can('admin_documents')
-                <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/finance_manager*', false))) ? 'active' : '' }}">
-                    <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
-                        <i class="fas fa-file-invoice-dollar"></i>
-                        <span>{{ trans('admin/main.finance_manager') }}</span>
-                    </a>
-                    <ul class="dropdown-menu">
-
-                        @can('admin_documents_list')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/finance_manager', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/finance_manager">{{ trans('admin/main.list') }}</a>
-                            </li>
-                        @endcan
-
-                        @can('admin_documents_create')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/finance_manager/new', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/finance_manager/new">{{ trans('admin/main.new') }}</a>
                             </li>
                         @endcan
                     </ul>

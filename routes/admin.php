@@ -584,7 +584,9 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
         // custom financial manager
 
         Route::group(['prefix' => 'finance_manager'], function () {
-            Route::get('/', 'FinanceManagerController@index');
+            Route::get('/income', 'FinanceManagerController@indexIncome');
+            Route::get('/expense', 'FinanceManagerController@indexExpense');
+            Route::post('/update-amounts', 'FinanceManagerController@updateAmounts')->name('update-sales-amounts');
             // Route::get('/{id}/refund', 'SaleController@refund');
             // Route::get('/{id}/invoice', 'SaleController@invoice');
             // Route::get('/export', 'SaleController@exportExcel');

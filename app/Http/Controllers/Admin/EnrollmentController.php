@@ -185,6 +185,7 @@ class EnrollmentController extends Controller
             $checkUserHasBought = false;
             $isOwner = false;
             $product = null;
+            $amount = 0;
 
             if (!empty($data['webinar_id'])) {
                 $course = Webinar::find($data['webinar_id']);
@@ -258,6 +259,10 @@ class EnrollmentController extends Controller
                 }
             }
 
+            if($itemColumnName == "webinar_id"){
+                $amount = 400000;
+            }
+
             if (!empty($itemType) and !empty($itemId) and !empty($itemColumnName) and !empty($sellerId)) {
 
                 $productOrder = null;
@@ -284,8 +289,8 @@ class EnrollmentController extends Controller
                     'type' => $itemType,
                     'manual_added' => true,
                     'payment_method' => Sale::$credit,
-                    'amount' => 0,
-                    'total_amount' => 0,
+                    'amount' => $amount,
+                    'total_amount' => $amount,
                     'created_at' => time(),
                 ]);
 
