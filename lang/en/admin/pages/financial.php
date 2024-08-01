@@ -126,5 +126,5 @@ return [
     'company_share' => "Company Share",
     'user_share' => "User Share",
     'sales_count' => "Sales Count",
-    'financial_total' => "Total",
+    'total' => "Total",
 ];

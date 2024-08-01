@@ -540,18 +540,19 @@
             <li class="menu-header">Custom Finance</li>
             <!-- CUSTOM FINANCIAL -->
             @can('admin_documents')
-                <li class="{{ (request()->is(getAdminPanelUrl('/finance_manager/income', false))) ? 'active' : '' }}">
+                <li class="{{ (request()->fullUrlIs(getAdminPanelUrl('/finance_manager/income') . '*')) ? 'active' : '' }}">
                     <a class="nav-link" href="{{ getAdminPanelUrl() }}/finance_manager/income">
                         <i class="fas fa-file-invoice-dollar"></i>
                         Monthly Income 
                     </a>
                 </li>
-                <li class="{{ (request()->is(getAdminPanelUrl('/finance_manager/expense', false))) ? 'active' : '' }}">
+                <li class="{{ (request()->fullUrlIs(getAdminPanelUrl('/finance_manager/expense') . '*')) ? 'active' : '' }}">
                     <a class="nav-link" href="{{ getAdminPanelUrl() }}/finance_manager/expense">
                         <i class="fas fa-file-invoice-dollar"></i>
                         Monthly Expense
                     </a>
                 </li>
+
                 <!-- <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/finance_manager*', false))) ? 'active' : '' }}">
                     <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                         <i class="fas fa-file-invoice-dollar"></i>
