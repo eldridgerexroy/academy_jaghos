@@ -356,6 +356,14 @@ Route::group(['prefix' => $prefix, 'namespace' => 'Admin', 'middleware' => ['web
 
             Route::get('/{id}/statistics', 'WebinarStatisticController@index');
 
+            // schedule
+            Route::get('/{id}/schedule', 'WebinarScheduleController@webinarSchedule');
+            Route::group(['prefix' => 'schedule'], function () {
+                Route::get('/', 'WebinarScheduleController@index'); 
+                Route::post('/store', 'WebinarScheduleController@store')->name('admin.webinar_schedule.store');
+                Route::get('/{id}/delete', 'WebinarScheduleController@destroy');
+            });
+
             Route::group(['prefix' => 'request_recording'], function () {
                 Route::get('/', 'WebinarRecordingRequestController@index');
                 Route::post('/store', 'WebinarRecordingRequestController@store');

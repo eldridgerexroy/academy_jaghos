@@ -9,6 +9,7 @@ return [
 */
 
 // General | Side Menu | Buttons
+'schedule' => 'Schedule',
 'back' => 'Back',
 'crm' => 'CRM',
 'content' => 'Content',
@@ -610,6 +611,8 @@ return [
 // Request Recording
 'request_recording' =>  'Request Recordings',
 'webinar_recording' =>  'Webinar Recordings',
+
+'webinar_schedule' => 'Webinar Schedule',
 
 // Syllabus
 'syllabus' => "Syllabus",

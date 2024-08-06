@@ -74,7 +74,7 @@ return [
     'webinars_reports' => 'Webinars reports',
     'webinars_reports_lists_lead' => 'List of webinars reports. You can edit or delete any row.',
 
-    //Webinar Recording Request
+    // Webinar Recording Request
     'webinars_recording_request_title' => 'Webinar Recording Request',
     'webinars_recording_request_reason' => 'Request Reason',
     'webinars_recording_request_requester' => 'Requester Name',
@@ -86,7 +86,7 @@ return [
     'webinars_recording_request_link' => 'Recording Link',
     
 
-    //Webinar Recording 
+    // Webinar Recording 
     'webinars_recording_title' => 'Webinar Recordings',
     'webinars_recording_webinar' => 'Course',
     'webinars_recording_reason' => 'Reason',
@@ -97,4 +97,13 @@ return [
     'webinars_recording_actions' => 'Actions',
     'webinars_recording_date' => 'Course Date',
     'webinars_recording_link' => 'Recording Link',
+
+
+    // Webinar Schedule   
+    'webinar_schedule' => 'Webinar Schedule', 
+    'select_webinar' => 'Webinar',   
+    'days_of_week' => 'Days',  
+    'start_time' => 'Start Time',  
+    'end_time' => 'End Time',    
+    'timezone' => 'Timezone',                       
 ];

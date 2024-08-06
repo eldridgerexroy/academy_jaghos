@@ -401,6 +401,10 @@
                                                                 <i class="fa fa-edit"></i>
                                                                 <span class="ml-2">{{ trans('admin/main.edit') }}</span>
                                                             </a>
+                                                            <a href="{{ getAdminPanelUrl() }}/webinars/{{ $webinar->id }}/schedule" target="_blank" class="d-flex align-items-center text-dark text-decoration-none btn-transparent btn-sm text-primary mt-1 " title="{{ trans('admin/main.schedule') }}">
+                                                                <i class="fa fa-clock"></i>
+                                                                <span class="ml-2">{{ trans('admin/main.schedule') }}</span>
+                                                            </a>
                                                         @endcan
 
                                                         @can('admin_webinars_delete')

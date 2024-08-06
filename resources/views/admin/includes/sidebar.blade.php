@@ -552,30 +552,17 @@
                         Monthly Expense
                     </a>
                 </li>
-
-                <!-- <li class="nav-item dropdown {{ (request()->is(getAdminPanelUrl('/finance_manager*', false))) ? 'active' : '' }}">
-                    <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
-                        <i class="fas fa-file-invoice-dollar"></i>
-                        <span>{{ trans('admin/main.finance_manager') }}</span>
-                    </a>
-                    <ul class="dropdown-menu">
-
-                        @can('admin_documents_list')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/finance_manager', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/finance_manager">Sales</a>
-                            </li>
-                        @endcan
-
-                        @can('admin_documents_create')
-                            <li class="{{ (request()->is(getAdminPanelUrl('/finance_manager/new', false))) ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ getAdminPanelUrl() }}/finance_manager/new">Income</a>
-                            </li>
-                        @endcan
-                    </ul>
-                </li> -->
             @endcan
             
             <li class="menu-header">Custom</li>
+
+            {{-- WEBINAR CUSTOM --}}
+            <li class="{{ (request()->fullUrlIs(getAdminPanelUrl('/webinars/schedule') . '*')) ? 'active' : '' }}">
+                <a class="nav-link" href="{{ getAdminPanelUrl() }}/webinars/schedule">
+                    <i class="fas fa-graduation-cap"></i>
+                    Live Classes Schedule
+                </a>
+            </li>
 
             {{-- UNIVERSITIES CUSTOM --}}
             <li class="nav-item dropdown {{ request()->is(getAdminPanelUrl('/universities', false)) ? 'active' : '' }}">

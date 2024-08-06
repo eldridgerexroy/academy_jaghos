@@ -95,6 +95,8 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
 
     Route::get('/', 'HomeController@index');
     
+    Route::get('/schedule', 'WebinarScheduleController@index')->name('webinar_schedule');
+    
     Route::get('/view-email-template', 'HomeController@viewEmail')->name('emaillayout');
 
     Route::get('/getDefaultAvatar', 'DefaultAvatarController@make');
@@ -403,4 +405,3 @@ Route::group(['namespace' => 'Web', 'middleware' => ['check_mobile_app', 'impers
     Route::post('/forms/{url}/store', 'FormsController@store');
 
 });
-
